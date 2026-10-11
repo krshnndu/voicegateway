@@ -1,6 +1,6 @@
 # 0004: One combined FastAPI server
 
-- Status: accepted
+- Status: superseded by 0006
 - Date: 2026-05 (recorded 2026-10-10)
 
 ## Context
