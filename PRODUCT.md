@@ -11,7 +11,7 @@ A self-hosted platform that profiles LiveKit voice agents end to end, from the p
 
 ## Users and the job
 
-Developers and small teams who run LiveKit voice agents on their own infrastructure. When a call goes wrong (slow replies, a dropped caller, a confused agent), they need to see what happened in that call and why, in minutes. They work in a browser dashboard next to their agent code, the LiveKit server and their usual metrics tools. Coding agents can ask the same questions through MCP.
+Developers and small teams who run LiveKit voice agents on their own infrastructure. When a call goes wrong (slow replies, a dropped caller, a confused agent), they need to see what happened in that call and why, in minutes. They use it in development for test calls and in production for incidents and sizing servers. They work in a browser dashboard next to their agent code, the LiveKit server and their usual metrics tools. Coding agents can ask the same questions through MCP.
 
 ## The problem
 
@@ -60,5 +60,7 @@ Proposed targets, for review:
 1. One command to run it. Every extra step loses a user.
 2. Unknown stays unknown. Never fill a gap with zero or a guess; mark anything inferred.
 3. Never lose data quietly. An event is either stored or visibly rejected.
-4. Your data stays on your servers.
-5. Built for people first; agents read the same data through MCP.
+4. Never in the call path. If VoiceGateway is slow or down, the agent's call carries on unaffected.
+5. Measured, not claimed. Every number on screen comes from the call, never from an estimate.
+6. Your data stays on your servers.
+7. Built for people first; agents read the same data through MCP.
