@@ -1,60 +1,43 @@
 # Product
 
-<!-- impeccable:product-schema 1 -->
-
 <!--
-What this project is and why it exists. No technical choices here; those go in ARCHITECTURE.md.
-This file follows the PRODUCT.md layout used by impeccable (github.com/pbakaus/impeccable), so /impeccable init can interview you and fill it in.
-Replace every TODO line. Delete a section only if it truly does not apply.
+What VoiceGateway is and why it exists. No technical choices here; those go in ARCHITECTURE.md.
+Brand and accessibility live in DESIGN.md. Evidence and open questions live in docs/progress.md.
+Replace every TODO line with your own words.
 -->
 
-## Platform
+## What it is
 
-TODO: web, ios, android or adaptive.
+TODO: One sentence.
 
-## Users
+## Users and the job
 
-TODO: The primary user, their situation and the job they are trying to get done.
-Example: "Front-desk staff at small clinics, between patients, who need to book follow-ups in under a minute."
+TODO: Who uses it, in what situation, and the job they are trying to get done. Include where they use it (laptop, terminal, browser) and what tools it sits next to.
 
-## Product Purpose
+## The problem
 
-TODO: What the product does, why it exists, and what success means in one measurable sentence.
-Example: "Success: 80 percent of follow-ups booked without a phone call."
+TODO: What breaks today without VoiceGateway.
 
 ## Positioning
 
-TODO: The one thing this product does that a nearby alternative cannot truthfully claim.
+TODO: The one claim that Langfuse, Helicone or LiveKit Cloud cannot truthfully make.
 
-## Operating Context
+## V1 capabilities
 
-TODO: Where and how it is used: devices, environments, tools it sits next to, workflows it fits into.
+TODO: Three to five things V1 must do.
 
-## Capabilities and Constraints
+## Out of scope for V1
 
-TODO: What it must do (core capabilities) and the hard limits it must respect (budget, regulation, performance, deadlines).
+TODO: What V1 will not do, with one reason for each.
 
-## Out of Scope
+## Success at launch
 
-TODO: What this version will not do, with one reason for each. Example: "Payments: handled by the clinic's existing system."
+TODO: How you will know the launch worked, in numbers.
 
-## Failure Modes
+## Failure modes
 
-TODO: The ways this product could fail quietly, so the checks in docs/specs/ can catch them.
-Example: "Booking succeeds on screen but the reminder is never sent."
+TODO: The ways it could fail quietly. Example: a call recorded as $0 because the model was unrated.
 
-## Brand Commitments
+## Principles
 
-TODO: Existing name, voice and assets that must be kept. Delete this section if there are none.
-
-## Evidence on Hand
-
-TODO: Real content, data, or testimonials that exist today, with file paths. State what does not exist so nothing gets invented.
-
-## Product Principles
-
-TODO: Three to five lasting principles that settle trade-offs. Example: "Fewer steps beats more options."
-
-## Accessibility & Inclusion
-
-TODO: Required standard (for example WCAG 2.2 AA) and any known user needs.
+TODO: Three to five lasting principles that settle trade-offs.
