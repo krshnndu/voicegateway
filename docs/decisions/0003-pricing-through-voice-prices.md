@@ -1,6 +1,6 @@
 # 0003: Price every modality through voice-prices
 
-- Status: accepted
+- Status: superseded by 0010
 - Date: recorded 2026-10-10 (the choice predates this record)
 
 ## Context
