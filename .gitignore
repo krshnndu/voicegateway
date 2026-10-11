@@ -1,10 +1,15 @@
-# Claude Code: the shared setup (commands, skills, agents, settings.json) is
-# committed; personal settings and impeccable's downloaded engine are not.
+# Claude Code: only the shared setup is committed, named one by one so a
+# contributor's personal skills and agents never show up as untracked.
+# Personal settings and impeccable's downloaded engine stay out too.
 .claude/*
 !.claude/commands/
-!.claude/skills/
-!.claude/agents/
 !.claude/settings.json
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/impeccable/
+!.claude/agents/
+.claude/agents/*
+!.claude/agents/impeccable-*.md
 .claude/skills/impeccable/scripts/bin/
 .impeccable/config.local.json
 .mcp.json
