@@ -12,7 +12,6 @@
 !.claude/agents/impeccable-*.md
 .claude/skills/impeccable/scripts/bin/
 .impeccable/config.local.json
-.mcp.json
 prompt.md
 src/voicegateway/_version.py
 .venv
