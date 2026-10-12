@@ -1,14 +1,8 @@
 # CLAUDE.md
 
-<!--
-Rules Claude reads at the start of every session.
-Keep this file under 80 lines. Put facts in PRODUCT.md, ARCHITECTURE.md and DESIGN.md, and keep only rules and pointers here.
-Every TODO line must be replaced before the first build. Run tools/scripts/check-placeholders.sh to find them.
--->
-
 ## Project
 
-TODO: One sentence on what this project is. Example: "A web app that lets small clinics book follow-up calls."
+VoiceGateway: a self-hosted platform that profiles LiveKit voice agents end to end, one view per call, from the phone line to the model.
 
 ## Source of truth
 
@@ -23,20 +17,41 @@ Read these before any feature work. Do not restate their contents here.
 
 ## Stack
 
-TODO: Language, framework, database, hosting, with pinned major versions. Example: "Python 3.12, FastAPI 0.115, PostgreSQL 16."
+Go 1.26 (one binary, `voicegateway`), Postgres 16, ClickHouse 26.1, Redis 8, MinIO. Dashboard: React 19, TypeScript 5, Vite, Tailwind v4, shadcn/ui. SDK: Python 3.11 to 3.13. Exact versions live in go.mod, package.json, uv.lock and deploy/compose.yaml.
 
 ## Commands
 
-TODO: Replace with the real commands.
+Every task goes through the root Makefile.
 
-- Install: TODO
-- Run locally: TODO
-- Test: TODO
-- Lint and format: TODO
+- Run locally: `make dev` (compose stack, web, worker, Vite dev server)
+- Test: `make test` (Go with `-race`, web, SDK); `make e2e` for test/
+- Lint and format: `make lint`; pre-commit runs the same on commit
 
 ## Boundaries
 
-TODO: The rules that keep the architecture intact. Example: "The web app never queries the database directly; it calls the API."
+- web never writes to ClickHouse; worker never answers HTTP. The Redis stream is their only contract.
+- Flat packages under `internal/`. Share only `event`, `stream`, `store`. No `utils/`, `common/`, `shared/`, `pkg/`.
+- Interfaces live in the package that uses them. Wiring is constructor injection in `internal/app` only.
+- The dashboard reads only through web's API, never a database.
+
+## Code quality
+
+- Every commit passes the pre-commit hooks. Go: gofumpt, goimports, golangci-lint (vet, staticcheck, errcheck, gosec), `go mod tidy` clean. `sdk/python`: ruff, ruff format, mypy. `dashboard/`: eslint, prettier, `tsc --noEmit`.
+- Tests prove behaviour; coverage is not the goal. One test per rule that matters (a join, an ack after insert, unknown is not zero). Table-driven, run with `-race`.
+- Run the real thing instead of mocking it: Redis, ClickHouse and Postgres through testcontainers-go, webhooks from `livekit-server --dev`. Use `testing/synctest` for timers and batch flushes.
+- Frontend: Vitest with Testing Library, Playwright for user flows. Python SDK: pytest with LiveKit Agents' own test helpers (testing-livekit-agents skill).
+
+## Before writing code
+
+- Use the framework's own way first. LiveKit tokens, webhooks, egress and SIP types: livekit skills and the livekit-docs MCP. ClickHouse and Redis: their skills. Go libraries: Context7. Our own code: gopls MCP.
+- UI: compose screens from pre-built components (shadcn/ui, Magic UI and other shadcn registries, via the shadcn and magicui MCPs). No hand-written component markup, CSS or SVG when a library component exists.
+- Build from scratch only when no library method exists, and say so in the PR.
+- When we adopt a framework with an official skill or docs MCP, install it at project scope. If it cannot be installed, ask me.
+
+## Versions
+
+- Pin exact versions: the `go` and `toolchain` lines, dev tools (golangci-lint, sqlc, goose, gofumpt) as `tool` directives in go.mod, images by tag and digest, npm with save-exact and the lockfile, Python dev tools in uv.lock.
+- Exception: the published Python SDK declares compatible ranges for runtime dependencies so it does not break users' installs. Its lockfile stays exact.
 
 ## Never do
 
@@ -44,7 +59,9 @@ TODO: The rules that keep the architecture intact. Example: "The web app never q
 - Never invent data, API responses or test results. If something is unknown, say so.
 - Never mark a phase done until its acceptance checks pass.
 - Never change behaviour outside the current spec without asking first.
-- TODO: Add project-specific prohibitions.
+- Never show a missing value as zero. Unknown stays unknown; inferred values say so.
+- Never log raw webhook or request bodies.
+- Never panic in the pipeline; return wrapped errors.
 
 ## How to ask me
 

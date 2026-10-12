@@ -26,7 +26,7 @@ The only open-source, self-hosted tool that puts SIP, media server and agent tur
 1. Call trace: every call with its transcript, per-turn latency for STT, LLM and TTS, and usage (tokens, audio seconds, characters).
 2. Media server and SIP: room, participant and SIP events, plus compute and memory of the servers, tied to the calls they served.
 3. Live view: calls in progress, updating as they happen.
-4. One install: `docker compose up` brings up the whole platform; one line in the agent connects it.
+4. One install: `docker compose up` brings up the whole platform; one line in the agent connects it, or OpenTelemetry with no code.
 5. MCP access: coding agents can query calls and traces.
 
 ## Out of scope for V1

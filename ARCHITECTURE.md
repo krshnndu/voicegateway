@@ -7,7 +7,7 @@ Each major choice links to a record in docs/decisions/.
 
 ## Overview
 
-VoiceGateway is one Go binary, `voicegw`, run in two roles: `web` takes data in and serves the dashboard and API, `worker` turns that data into calls and stores it. A Redis stream is the only link between them. Postgres, ClickHouse, Redis and an S3 bucket make up the rest, and `docker compose up` starts all six (0005, 0006, 0009).
+VoiceGateway is one Go binary, `voicegateway`, run in two roles (0013): `web` takes data in and serves the dashboard and API, `worker` turns that data into calls and stores it. A Redis stream is the only link between them. Postgres, ClickHouse, Redis and an S3 bucket make up the rest, and `docker compose up` starts all six (0005, 0006, 0009).
 
 ## Components
 
@@ -16,7 +16,7 @@ VoiceGateway is one Go binary, `voicegw`, run in two roles: `web` takes data in 
 | web | Checks keys, accepts events, webhooks and OTLP spans, appends them to the stream and answers fast. Serves the API, MCP and the dashboard files. | Nothing stored; reads Postgres and ClickHouse for queries |
 | worker | Reads the stream, joins events into calls, writes batches to ClickHouse, scrapes server metrics, closes stale calls, applies retention. | All writes to ClickHouse and the call index |
 | SDK (`sdk/python`) | `attach()` inside the agent: sends turns, metrics and usage. Fails open. | Nothing |
-| Dashboard (`web/`) | React app, built in its own Docker stage and served from disk by web (0011). | Nothing |
+| Dashboard (`dashboard/`) | React app, built in its own Docker stage and served from disk by web (0011). | Nothing |
 | Postgres | Projects, API keys, settings, the call index. | Configuration |
 | ClickHouse | Events, turns, spans, usage and server metrics. | Everything measured |
 | Redis | The ingest stream, the live view feed, and locks for one-at-a-time jobs (0007). | Data in flight |
@@ -55,6 +55,49 @@ VoiceGateway is one Go binary, `voicegw`, run in two roles: `web` takes data in 
 
 Exact versions are pinned in `go.mod`, `deploy/compose.yaml` and the SDK's lock file.
 
+## Repository Layout
+
+Flat, one component per package, named for what it does. Only contracts are shared (`event`, `stream`, `store`); there is no `utils/`, `common/` or `shared/`.
+
+```
+voicegateway/
+├── cmd/voicegateway/      main.go: web | worker | migrate | preflight
+├── internal/
+│   ├── app/               wiring only: web.go, worker.go
+│   ├── config/            Config
+│   ├── preflight/         Preflight
+│   ├── event/             Envelope, Kind (shared contract)
+│   ├── stream/            Producer, Consumer (the web to worker contract)
+│   ├── auth/              Gate
+│   ├── decode/            Decoder: records.go, otlp.go, livekit.go
+│   ├── route/             Router, dead letters
+│   ├── usage/             Meter
+│   ├── call/              Resolver
+│   ├── trace/             Linker
+│   ├── sink/              Sink
+│   ├── live/              Broadcaster
+│   ├── scrape/            Scraper
+│   ├── settle/            Settler, Closer, Rollup, Retention, RecCheck
+│   ├── api/               dashboard API
+│   ├── mcp/               MCP tools
+│   ├── ui/                serves the dashboard files
+│   ├── store/             storage interfaces (shared contract)
+│   │   ├── pgstore/       Postgres, sqlc
+│   │   ├── chstore/       ClickHouse
+│   │   └── storetest/     in-memory fake for unit tests
+│   └── obs/               logs, own metrics, /healthz
+├── ee/                    commercial code, same package names as internal/
+├── dashboard/src/features/   one folder per page: calls/ call/ sfu/ sip/ live/ settings/
+├── sdk/python/            attach(), with its own packaging and tests
+├── migrations/            postgres/ and clickhouse/
+├── test/                  end-to-end: full stack plus livekit-server --dev, fixtures
+├── deploy/                compose.yaml, Dockerfile
+├── docs/                  decisions/, specs/, progress.md
+└── Makefile               make dev | test | lint | build for Go, the dashboard and the SDK
+```
+
+Every package has the same shape: `doc.go` (its job, the rule it keeps, its decision), a file named after its main type, `store.go` for the interfaces it needs, its tests and `testdata/`. Anything that does I/O keeps its interface, real implementation and test fake side by side. Folders never exist only to group.
+
 ## Data Model
 
 - **Project**: owns API keys and settings. Every row below belongs to one project.
@@ -89,10 +132,10 @@ Proposed, for review:
 ## Deployment
 
 - One `deploy/compose.yaml` starts all six services. The image is published per release.
-- Upgrades run `voicegw migrate` before the new roles start. Rolling back means the previous image tag; migrations only add.
+- Upgrades run `voicegateway migrate` before the new roles start. Rolling back means the previous image tag; migrations only add.
 
 ## Observability
 
 - Structured logs (slog) from both roles, with call and request ids.
 - Prometheus metrics: stream lag, batch sizes, write errors, dead-letter count, unmatched events.
-- `voicegw preflight` checks every dependency before start.
+- `voicegateway preflight` checks every dependency before start.
