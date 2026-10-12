@@ -28,7 +28,6 @@ Phase 1: the console, UI first. Spec: docs/specs/phase01-console.md.
 - How long an unmatched event waits for its call before it is stored as unmatched (decision 0012 says "briefly").
 - Launch and non-functional targets in PRODUCT.md and ARCHITECTURE.md are proposals and need confirming.
 - Phase 2 candidate: inferred call labels (triage, disposition) from a self-hosted decision model such as Jev or Kev, opt-in and marked as inferred. Evaluate once V1 traces exist.
-- "Gauge UI": the library the user saw is not identified yet. Use it only if it is Tailwind or shadcn based.
 - The docs and landing site in site/ still use the old purple theme; when do they move to The Clean Room?
 
 ## Known Issues

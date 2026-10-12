@@ -35,7 +35,7 @@ A developer opens the VoiceGateway console, sees every page of the product, and 
 
 ## Constraints
 
-- Pre-built components only (CLAUDE.md, DESIGN.md). No hand-written component markup, CSS or SVG when a library component exists. Charts and the span timeline come from a library (shadcn charts or another shadcn-registry component); if none fits the timeline, stop and ask.
+- Pre-built components only (CLAUDE.md, DESIGN.md). No hand-written component markup, CSS or SVG when a library component exists. The span timeline is the shadcn Chart component with horizontal range bars (each span from start to end on a shared millisecond axis). Gauges come from the @gauge-ui registry. Any other visual need: search the registries first; if nothing fits, stop and ask.
 - No invented data. Every value on screen traces to a fixture, and every fixture traces to a captured event. A field nothing produces is shown as unknown.
 - Exact versions pinned in `dashboard/package.json` with save-exact and a committed lockfile.
 - Use the shadcn and magicui MCPs to find components, and Context7 for library APIs.
@@ -51,14 +51,8 @@ A developer opens the VoiceGateway console, sees every page of the product, and 
 7. Given the built pages, when axe runs on the Calls list and Call detail in light and dark, then there are 0 serious or critical violations (measured by Playwright with axe, 4 of 4 runs).
 8. Given `dashboard/src/features/`, when it is searched for an `<svg` element or a `.css` file, then there are 0 hand-written ones (measured by `rg`, 0 matches).
 9. Given the committed fixtures, when they are searched for `turnPassword`, API keys or secrets, then there are 0 matches (measured by `rg` and gitleaks, 0 findings).
-10. Given a call with 200 turns, when its detail page opens, then it is interactive in under TODO ms (measured by Playwright trace). TODO: set the number.
+10. Given a call with 200 turns, when its detail page opens, then it is interactive in under 1 second (measured by Playwright trace, 5 of 5 runs).
 
 ## Manual Check
 
 Open the console in Safari, light then dark, and read one real call from the top of the transcript to its last span. It should feel like The Clean Room: quiet, one teal accent, nothing that needs explaining.
-
-## Open Questions
-
-- Which library component draws the span timeline (a Gantt-style waterfall). If no shadcn-registry component fits, which pre-built library do we allow?
-- The "Gauge UI" library: identify it, or drop it for this phase.
-- Check 10's number.
