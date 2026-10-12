@@ -1,122 +1,98 @@
 # Architecture
 
 <!--
-How VoiceGateway is built. The tables and lists below were drafted from the code; the lines starting with TODO are yours to write. Product intent lives in PRODUCT.md; visual design lives in DESIGN.md.
+How the system is built. Product intent lives in PRODUCT.md; visual design lives in DESIGN.md.
 Each major choice links to a record in docs/decisions/.
 -->
 
 ## Overview
 
-TODO: Two or three sentences on the shape of the system, in your words. Name the two halves (what runs inside the user's agent, what runs in `voicegw serve`) and how they meet.
+VoiceGateway is one Go binary, `voicegw`, run in two roles: `web` takes data in and serves the dashboard and API, `worker` turns that data into calls and stores it. A Redis stream is the only link between them. Postgres, ClickHouse, Redis and an S3 bucket make up the rest, and `docker compose up` starts all six (0005, 0006, 0009).
 
 ## Components
 
 | Component | Responsibility | Owns |
 | --- | --- | --- |
-| `inference/session/` | `attach()`: detects LiveKit or Pipecat lazily, subscribes to metrics, captures turns, dead air, tool calls, transcripts and snapshots. `policy.py` holds the named capture policies | Agent-side capture |
-| `inference/session/capture.py` | `MetricCapture`: framework metric to `RequestRecord` (audio seconds, tokens, characters) | The record shape |
-| `inference/livekit/`, `inference/pipecat/` | Framework-specific `guard()` and the Pipecat `Observer` | Framework seams |
-| `inference/pricing/` | `calculate_cost_detail()`: prices by modality through voice-prices; `local/*` and `ollama/*` at $0; unrated matches tagged `voice-prices-unrated` | Cost per record |
-| `services/sinks.py` | The write seam: embedded SQLite, remote collector (fleet mode) or ClickHouse | Where records go |
-| `accounting/` | Versioned wire contracts (decimal-string money) and `AccountingOutbox`, a restart-safe queue to a collector's `/v1/accounting/usage` | Fleet delivery |
-| `billing/` | Rate card, rating, margin reconciliation | Customer-facing price |
-| `middleware/` | Cost tracking, rate limit, budget, turns, dead air, state snapshots, background workers (node samples, latency and agent observations) | Cross-cutting runtime behavior |
-| `core/` | `Gateway` shared-state container for server, CLI and MCP; YAML config with `${ENV_VAR}`; dependency-injector wiring; canonical provider ids | Wiring and config |
-| `models/`, `repository/`, `services/` | SQLModel tables, repositories, `storage_service.py` facade | Persistence |
-| `alembic/` (repo root) | Migrations, including the `daily_costs` and `project_daily_costs` views | Schema |
-| `server/` | FastAPI app: `/health`, `/v1/*` (`server/api/`), `/api/*` dashboard router, static SPA | HTTP surface |
-| `server/mcp/` | MCP server behind `voicegw mcp` (stdio or http) | Agent surface |
-| `livekit_diag/`, `fleet/` | LiveKit diagnostics and probes, collector fleet | Layers below inference |
-| `src/dashboard/frontend/` | React dashboard SPA, served by the server at `/` | Human UI |
-| `site/docs/`, `site/web/` | Docs site (Fumadocs) and landing page (Astro), sharing `site/theme.css` | Public web |
-| `ee/` | Enterprise Edition code under `ee/LICENSE`. Empty today | Commercial features |
+| web | Checks keys, accepts events, webhooks and OTLP spans, appends them to the stream and answers fast. Serves the API, MCP and the dashboard files. | Nothing stored; reads Postgres and ClickHouse for queries |
+| worker | Reads the stream, joins events into calls, writes batches to ClickHouse, scrapes server metrics, closes stale calls, applies retention. | All writes to ClickHouse and the call index |
+| SDK (`sdk/python`) | `attach()` inside the agent: sends turns, metrics and usage. Fails open. | Nothing |
+| Dashboard (`web/`) | React app, built in its own Docker stage and served from disk by web (0011). | Nothing |
+| Postgres | Projects, API keys, settings, the call index. | Configuration |
+| ClickHouse | Events, turns, spans, usage and server metrics. | Everything measured |
+| Redis | The ingest stream, the live view feed, and locks for one-at-a-time jobs (0007). | Data in flight |
+| S3 or MinIO | Recordings written by LiveKit Egress, opt-in, after the first release (0008). | Audio |
 
 ## Data Flow
 
-Inference path:
-
-1. The user builds an `AgentSession` (LiveKit) or `PipelineTask` (Pipecat) with their own provider plugins and calls `voicegateway.attach(session)`.
-2. `attach()` subscribes to the framework's metrics events; `MetricCapture` turns each STT, LLM or TTS metric into a `RequestRecord`.
-3. `inference/pricing/` prices the record through voice-prices by model id and modality.
-4. A sink writes it: SQLite in-process by default, the collector's ingest API in fleet mode (through `AccountingOutbox`), or ClickHouse.
-5. The dashboard (`/api/*`), the `/v1/*` API and the MCP server read what the sinks stored.
-
-Call path (layers below inference):
-
-1. LiveKit webhooks hit `/v1` (`server/api/livekit_webhook.py`) and create `calls` and `call_legs` keyed on the room, with SIP attributes, even when no inference ran.
-2. Node samples and agent observations arrive from background workers and correlate to calls by node and time window, never by foreign key.
-3. Sessions, turns and requests join to calls through the room.
+1. The SDK, LiveKit webhooks and OTLP spans reach web.
+2. web checks the key or the webhook signature, appends the event to the Redis stream and answers.
+3. worker reads the stream in a consumer group and matches each event to a call by room and time window, job id or trace id (0012).
+4. worker writes in batches to ClickHouse and acknowledges the stream entries only after the write lands. Entries that fail repeatedly go to a dead-letter stream.
+5. worker publishes call changes to Redis, and web pushes them to the live view.
+6. On a timer, worker scrapes SFU, SIP and node metrics, and closes calls whose end never arrived, marked as inferred.
+7. The dashboard and MCP query web, which reads Postgres and ClickHouse.
 
 ## Boundaries
 
-- `import voicegateway` imports neither LiveKit nor Pipecat; `attach()` and `guard()` import the framework lazily by target type. `tests/architecture` and `test_framework_neutral.py` pin this.
-- The agent side (`attach`, `guard`, sinks) never imports dependency-injector or the server.
-- `guard()` wraps one provider for fallback, rate limit and budget and writes no metrics.
-- Prices come only from voice-prices or the user's rate card. No price is hardcoded in metering code.
-- Dashboard reads live under `/api/*` behind `require_principal`. Every write and ingest route lives under `/v1/*`.
-- Every model change ships with an Alembic migration in the same PR, so a fresh install and an upgraded one end with the same schema.
-- Capture fails open: an error in metering is logged, never raised into the agent's call path.
-- A field that is not observable is not stored. Unknown renders as unknown, not zero.
-- Code under `ee/` is the only code that may be commercial; the core must work without it.
+- web never writes to ClickHouse; worker never answers HTTP traffic.
+- The Redis stream format is the only contract between web and worker.
+- The SDK never blocks or fails the call; capture errors are dropped and counted.
+- Nothing logs raw webhook bodies; they carry a TURN password.
+- A missing value is stored as unknown, never as zero.
+- Code outside `internal/` packages cannot import them; the public surface is the HTTP API, MCP and the SDK.
 
 ## Stack
 
 | Layer | Choice | Decision |
 | --- | --- | --- |
-| Language | Python 3.11 to 3.13, async throughout | |
-| Agent frameworks | LiveKit Agents, Pipecat, OpenRTC, as optional extras | docs/decisions/0002-framework-agnostic-attach.md |
-| Pricing | voice-prices (fork of pydantic/genai-prices), `>=0.11,<1` | docs/decisions/0003-pricing-through-voice-prices.md |
-| HTTP | FastAPI, one combined server | docs/decisions/0004-one-combined-server.md |
-| Persistence | SQLModel and SQLAlchemy 2 async, Alembic; SQLite default, Postgres collector, optional ClickHouse | |
-| Wiring | dependency-injector `>=4.49.1,<5` | |
-| CLI | Typer and Rich (`voicegw`) | |
-| MCP | `mcp` Python SDK (capped below 2), stdio and http | |
-| Dashboard | React 18, TypeScript 5, Vite 5, Recharts | |
-| Docs and landing | Fumadocs (Next.js static export) and Astro, on Cloudflare | |
-| Packaging | uv, hatch, PyPI `voicegateway`, Docker images | |
-| License | MIT core, `ee/` commercial | docs/decisions/0001-open-core-license.md |
+| Core | Go, one binary, constructor injection | docs/decisions/0009-go-core.md |
+| Roles | web and worker from one image | docs/decisions/0006-web-and-worker-roles.md |
+| Queue | Redis streams | docs/decisions/0007-redis-streams-for-ingest.md |
+| Storage | Postgres, ClickHouse, S3 or MinIO | docs/decisions/0005-self-hosted-platform-only.md |
+| Libraries | chi, go-redis v9, clickhouse-go v2, pgx v5 with sqlc, goose, livekit/protocol, OTel pdata, slog, errgroup, cobra | docs/decisions/0009-go-core.md |
+| Dashboard | React, served from files in the image | docs/decisions/0011-dashboard-served-from-files.md |
+| SDK | Python, `attach()` for any agent framework | docs/decisions/0002-framework-agnostic-attach.md |
+
+Exact versions are pinned in `go.mod`, `deploy/compose.yaml` and the SDK's lock file.
 
 ## Data Model
 
-- `requests`: the atomic metered unit (one STT, LLM or TTS call) with units and cost.
-- `sessions`: derived from requests, gains `room_name` and `call_id`.
-- `turns`, `transcript_turns`, `tool_calls`, `dead_air_events`, `replay_state_snapshots`: conversation detail per session.
-- `calls` and `call_legs`: one call per room, one leg per participant, created by any event (webhook, loadgen, agent).
-- `node_samples`, `latency_observations`, `agent_observations`, `agent_probe_results`, `diagnostics_runs`, `workers`: infra, probe and runtime signals, correlated by node and time.
-- `managed_projects`, `managed_providers`, `managed_models`, `managed_rate_rules`, `api_keys`, `tenants`, `config_audit_log`: configuration and access.
-- `pricing_revisions`, `prepared_pricing_bindings`: which price version rated a record.
-- `accounting_*`: usage, ownership, rejections and the outbox shipped to a collector.
-
-The full end-to-end model is in docs/specs/2026-07-29-end-to-end-profiling-scope.md.
+- **Project**: owns API keys and settings. Every row below belongs to one project.
+- **Call**: one conversation in one room, from start to end. Has a room, time window, optional job id, and an end that is either observed or inferred.
+- **Participant**: a person, agent or SIP leg in a call.
+- **Turn**: one exchange, with STT, LLM and TTS latency and usage (tokens, audio seconds, characters).
+- **Span**: an OTLP span, linked to a call and turn through its trace id.
+- **Server sample**: CPU, memory and network of an SFU, SIP or agent node at a point in time.
+- **Recording**: a link to an audio file in the bucket.
 
 ## External Services
 
-- **AI providers** (OpenAI, Deepgram, Anthropic, Groq, Cartesia, ElevenLabs, AssemblyAI and others): called by the user's agent, never by VoiceGateway on the metering path. If they are down, the agent fails; VoiceGateway records what happened.
-- **voice-prices**: a Python dependency with a bundled catalog, so pricing works offline. An unknown model is tagged unrated rather than failing.
-- **LiveKit server and SIP**: webhooks and Prometheus metrics feed the call layers. Without them, the inference layers still work.
-- **Cloudflare**: hosts the docs and landing page only.
+- **LiveKit server, SIP and Egress**: the source of webhooks, metrics and recordings. If they are down, no new data arrives; VoiceGateway keeps serving what it has.
+- **Model providers**: never called by VoiceGateway. Usage comes from the agent.
+- No other outside service is needed. Nothing leaves the user's servers.
 
 ## Non-Functional Targets
 
-TODO: The numbers V1 must hit, each with how it is measured. Example: "`attach()` adds under 1 ms per turn (measured by a benchmark in tools/benchmarks/)."
+Proposed, for review:
+
+- web answers an ingest request in under 50 ms at p99.
+- No event is lost at 1,000 concurrent calls.
+- A call appears in the live view within 2 seconds of the event.
+- The SDK adds under 1 ms per turn to the agent.
 
 ## Security and Privacy
 
-- Dashboard and API auth: `vk_` API keys with scopes (`server/api/_deps.py`), or a static key for single-user installs.
-- Secrets live in environment variables, referenced from `voicegw.yaml` as `${VAR}`. Never in the repo.
-- No audio is stored. Transcripts are stored only under a capture policy that allows them.
-- Security reports go through SECURITY.md.
+- API keys per project, stored hashed in Postgres. LiveKit webhooks are checked against their signature.
+- Secrets come from environment variables, never from files in the repo.
+- Transcripts and recordings are personal data. They stay in the user's own storage, with retention set per project.
 
 ## Deployment
 
-- **Library:** tag `v*` triggers `publish.yml`, which builds the dashboard into the wheel (`tools/scripts/build_wheel.sh`) and publishes to PyPI.
-- **Server:** `docker compose up -d` from the repo root, Docker images from `docker-publish.yml`, or Railway via `railway.json` (health check `/health`).
-- **Collector:** `collector.sh` or `docker-compose.collector.yml` (Postgres-backed).
-- **Sites:** `site.yml` builds and deploys the docs and landing page to Cloudflare.
-- Roll back by pinning the previous PyPI version or image tag; migrations are forward-only, so a downgrade needs a database restore.
+- One `deploy/compose.yaml` starts all six services. The image is published per release.
+- Upgrades run `voicegw migrate` before the new roles start. Rolling back means the previous image tag; migrations only add.
 
 ## Observability
 
-- Server logs through Python `logging`; `/health` for liveness.
-- Prometheus exposition in `middleware/prometheus_exposition.py`.
-- When metering looks wrong, start with the `requests` rows and their `voice-prices-unrated` tags, then `voicegw reconcile`.
+- Structured logs (slog) from both roles, with call and request ids.
+- Prometheus metrics: stream lag, batch sizes, write errors, dead-letter count, unmatched events.
+- `voicegw preflight` checks every dependency before start.
