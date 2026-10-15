@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { Link } from "@tanstack/react-router"
 import { ArrowCounterClockwise, ArrowSquareOut, CaretRight, CheckCircle, DotsThree, EyeSlash, Phone, PhoneCall, Robot, Shapes, Warning } from "@phosphor-icons/react"
 import { toast } from "sonner"
@@ -11,6 +11,7 @@ import { type Columns, DataTable, type Field } from "@/components/data-table"
 import { DataGridColumnHeader } from "@/components/reui/data-grid/data-grid-column-header"
 import { cn } from "@/lib/utils"
 import { type Issue, type Severity, issues } from "./issues-model"
+import { useUrlState } from "@/lib/url-state"
 
 // Issues: every finding the console computes, grouped so a pattern across calls reads as one row
 // (decision 0021). Open a row for the calls or components it was found on.
@@ -52,7 +53,13 @@ const columns: Columns<Issue> = [
     header: () => null,
     size: 32,
     cell: ({ row }) => <CaretRight size={12} className={cn("text-muted-foreground transition-transform", row.getIsExpanded() && "rotate-90")} />,
-    meta: { expandedContent: (i: Issue) => <div className="bg-muted/30 px-10 py-1"><Hits issue={i} /></div> },
+    meta: {
+      expandedContent: (i: Issue) => (
+        <div className="bg-muted/30 px-10 py-1">
+          <Hits issue={i} />
+        </div>
+      ),
+    },
   },
   {
     id: "title",
@@ -87,7 +94,11 @@ const columns: Columns<Issue> = [
     meta: { headerClassName: "[&>div]:w-full [&>div]:justify-end", cellClassName: "text-right" },
     cell: ({ row }) => {
       const n = row.original.hits.length
-      return <span className="text-[13px] tnum">{n} {row.original.source === "Calls" ? (n === 1 ? "call" : "calls") : n === 1 ? "place" : "places"}</span>
+      return (
+        <span className="text-[13px] tnum">
+          {n} {row.original.source === "Calls" ? (n === 1 ? "call" : "calls") : n === 1 ? "place" : "places"}
+        </span>
+      )
     },
   },
   {
@@ -122,7 +133,7 @@ const viewLabel: Record<View, string> = { open: "Open", resolved: "Resolved", ig
 export function IssuesPage() {
   const all = useMemo(() => issues(), [])
   const states = useIssueStates()
-  const [view, setView] = useState<View>("open")
+  const [view, setView] = useUrlState<View>("view", "open")
   const withStatus = all.map((i) => ({ i, st: statusOf(states, i.id, lastSeen(i)) }))
   const count = (v: View) => withStatus.filter((x) => x.st.status === v).length
   const shown = withStatus.filter((x) => x.st.status === view).map((x) => x.i)

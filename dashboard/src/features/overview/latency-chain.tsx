@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { Info } from "@phosphor-icons/react"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import probe from "@/mocks/network-probe.json"
 import { buildModel, fmtMs, median } from "@/features/call/call-model"
 import { waterfallRows } from "@/features/profile/ttfa-waterfall"
+import { useUrlState } from "@/lib/url-state"
 
 // Every stage a turn passes through, caller's mouth to caller's ear, in order. Each stage is the median
 // over the turns that reported it, with the LiveKit field it comes from. Stages LiveKit does not
@@ -98,7 +99,7 @@ function samples(calls: Call[]): Sample[] {
 
 export function LatencyChain({ groups: sets }: { groups: { key: string; name: string; calls: Call[]; joins: number[] }[] }) {
   const usable = sets.filter((g) => g.calls.length)
-  const [pick, setPick] = useState("all")
+  const [pick, setPick] = useUrlState("agent", "all")
   const calls = pick === "all" ? usable.flatMap((g) => g.calls) : (usable.find((g) => g.key === pick)?.calls ?? [])
   const all = useMemo(() => samples(calls), [calls])
   const joins = (pick === "all" ? sets.flatMap((g) => g.joins) : (sets.find((g) => g.key === pick)?.joins ?? [])).map((x) => x * 1000)

@@ -26,15 +26,16 @@ import { LiveWire } from "./live-wire"
 import { wireData } from "./wire-data"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { useUrlState } from "@/lib/url-state"
 
 // The whole stack at a glance: four numbers with their shape, the path a call takes with each part's
 // state, where a turn's time goes, and where the models are. Every figure comes from the same data and
 // checks as the page it links to; words are kept to labels.
 
-const fmtS = (ms: number) => `${(ms / 1000).toFixed(2)} s`
+export const fmtS = (ms: number) => `${(ms / 1000).toFixed(2)} s`
 const day = (iso: string) => new Date(iso).toLocaleDateString([], { month: "short", day: "numeric" })
 
-function useOverview() {
+export function useOverview() {
   return useMemo(() => {
     const calls = listCalls().filter((c) => !c.recording?.preview)
     const models = calls.map((c) => ({ c, m: buildModel(c) }))
@@ -166,7 +167,7 @@ function Stat({ icon: I, label, value, alert, to }: { icon: Icon; label: string;
 export function OverviewPage() {
   const o = useOverview()
   const navigate = useNavigate()
-  const [pick, setPick] = useState("all")
+  const [pick, setPick] = useUrlState("agent", "all")
   const [open, setOpen] = useState(false)
   const over = o.answers.filter((a) => a > BUDGET_MS).length
   const roleIcon: Record<string, Icon> = { stt: Microphone, llm: Brain, tts: SpeakerHigh }

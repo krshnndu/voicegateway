@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import raw from "@/mocks/egress.json"
+import { useUrlState } from "@/lib/url-state"
 
 // Recordings and streams out of the project's rooms, as ListEgress returns them. ListEgress keeps only
 // recent egress, so history needs LiveKit's egress webhooks (Phase 2). The request is kept as its shape
@@ -33,7 +34,13 @@ const d = raw as unknown as EgressData
 const docs = "https://docs.livekit.io"
 const outcome = (s: string) => s.replace("EGRESS_", "").replace("_", " ").toLowerCase()
 const statusTone = (s: string) =>
-  s === "EGRESS_COMPLETE" ? "bg-primary/10 text-primary" : s === "EGRESS_FAILED" ? "bg-destructive/10 text-destructive" : s === "EGRESS_ABORTED" || s === "EGRESS_LIMIT_REACHED" ? "bg-amber-500/10 text-amber-700 dark:text-amber-400" : "bg-muted text-muted-foreground"
+  s === "EGRESS_COMPLETE"
+    ? "bg-primary/10 text-primary"
+    : s === "EGRESS_FAILED"
+      ? "bg-destructive/10 text-destructive"
+      : s === "EGRESS_ABORTED" || s === "EGRESS_LIMIT_REACHED"
+        ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
+        : "bg-muted text-muted-foreground"
 const storageName: Record<string, string> = { s3: "S3", gcp: "Google Cloud Storage", azure: "Azure Blob", aliOSS: "Alibaba OSS" }
 const kindName: Record<string, string> = { roomComposite: "Room recording", web: "Web page", participant: "Participant", trackComposite: "Track composite", track: "Track" }
 const clock = (s: number) => new Date(s * 1000).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
@@ -56,9 +63,21 @@ const egressColumns: Columns<Egress> = [
         {row.original.id}
       </span>
     ),
-    meta: { expandedContent: (e: Egress) => <div className="bg-muted/30 p-4"><Detail e={e} /></div> },
+    meta: {
+      expandedContent: (e: Egress) => (
+        <div className="bg-muted/30 p-4">
+          <Detail e={e} />
+        </div>
+      ),
+    },
   },
-  { id: "room", size: 230, accessorFn: (e) => e.room ?? "", header: ({ column }) => <DataGridColumnHeader title="Room" column={column} />, cell: ({ row }) => <span className="font-mono text-[12px] text-muted-foreground">{row.original.room ?? "unknown"}</span> },
+  {
+    id: "room",
+    size: 230,
+    accessorFn: (e) => e.room ?? "",
+    header: ({ column }) => <DataGridColumnHeader title="Room" column={column} />,
+    cell: ({ row }) => <span className="font-mono text-[12px] text-muted-foreground">{row.original.room ?? "unknown"}</span>,
+  },
   {
     id: "type",
     accessorFn: (e) => e.request?.kind ?? "",
@@ -72,9 +91,25 @@ const egressColumns: Columns<Egress> = [
       </span>
     ),
   },
-  { id: "status", accessorFn: (e) => e.status, header: ({ column }) => <DataGridColumnHeader title="Status" column={column} />, cell: ({ row }) => <span className={cn("rounded-full px-2 py-0.5 text-[12px]", statusTone(row.original.status))}>{outcome(row.original.status)}</span> },
-  { id: "started", accessorFn: (e) => e.startedAt ?? -1, header: ({ column }) => <DataGridColumnHeader title="Started" column={column} />, cell: ({ row }) => <span className="text-[13px] tnum">{row.original.startedAt ? clock(row.original.startedAt) : "unknown"}</span> },
-  { id: "length", accessorFn: (e) => length(e) ?? -1, header: ({ column }) => <DataGridColumnHeader title="Length" column={column} />, meta: right, cell: ({ row }) => <span className="text-[13px] tnum">{length(row.original) !== null ? secs(length(row.original)!) : "unknown"}</span> },
+  {
+    id: "status",
+    accessorFn: (e) => e.status,
+    header: ({ column }) => <DataGridColumnHeader title="Status" column={column} />,
+    cell: ({ row }) => <span className={cn("rounded-full px-2 py-0.5 text-[12px]", statusTone(row.original.status))}>{outcome(row.original.status)}</span>,
+  },
+  {
+    id: "started",
+    accessorFn: (e) => e.startedAt ?? -1,
+    header: ({ column }) => <DataGridColumnHeader title="Started" column={column} />,
+    cell: ({ row }) => <span className="text-[13px] tnum">{row.original.startedAt ? clock(row.original.startedAt) : "unknown"}</span>,
+  },
+  {
+    id: "length",
+    accessorFn: (e) => length(e) ?? -1,
+    header: ({ column }) => <DataGridColumnHeader title="Length" column={column} />,
+    meta: right,
+    cell: ({ row }) => <span className="text-[13px] tnum">{length(row.original) !== null ? secs(length(row.original)!) : "unknown"}</span>,
+  },
   {
     id: "file",
     accessorFn: (e) => e.file?.sizeBytes ?? -1,
@@ -84,7 +119,14 @@ const egressColumns: Columns<Egress> = [
   },
 ]
 const egressFields: Field<Egress>[] = [
-  { id: "status", label: "Status", type: "select", icon: <CircleHalf />, options: ["EGRESS_COMPLETE", "EGRESS_FAILED", "EGRESS_ABORTED", "EGRESS_ACTIVE", "EGRESS_STARTING", "EGRESS_ENDING", "EGRESS_LIMIT_REACHED"].map((v) => ({ value: v, label: outcome(v) })), get: (e) => e.status },
+  {
+    id: "status",
+    label: "Status",
+    type: "select",
+    icon: <CircleHalf />,
+    options: ["EGRESS_COMPLETE", "EGRESS_FAILED", "EGRESS_ABORTED", "EGRESS_ACTIVE", "EGRESS_STARTING", "EGRESS_ENDING", "EGRESS_LIMIT_REACHED"].map((v) => ({ value: v, label: outcome(v) })),
+    get: (e) => e.status,
+  },
   { id: "type", label: "Type", type: "select", icon: <Stack />, options: Object.entries(kindName).map(([value, label]) => ({ value, label })), get: (e) => e.request?.kind ?? null },
   { id: "room", label: "Room", type: "text", icon: <Hash />, get: (e) => e.room },
   { id: "length", label: "Length (s)", type: "number", icon: <Clock />, get: (e) => length(e) },
@@ -156,9 +198,7 @@ function Detail({ e }: { e: Egress }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2">
       <div className="space-y-3 text-[13px]">
-        {e.error && (
-          <p className="rounded-lg bg-destructive/10 px-3 py-2 font-mono text-[12px] break-words text-destructive">{e.error}</p>
-        )}
+        {e.error && <p className="rounded-lg bg-destructive/10 px-3 py-2 font-mono text-[12px] break-words text-destructive">{e.error}</p>}
         {e.details && !e.error && <p className="text-muted-foreground">{e.details}</p>}
         <dl className="grid grid-cols-[110px_minmax(0,1fr)] gap-x-3 gap-y-1.5">
           <dt className="text-muted-foreground">Request</dt>
@@ -170,7 +210,9 @@ function Detail({ e }: { e: Egress }) {
           {e.file?.bucketHost && (
             <>
               <dt className="text-muted-foreground">Bucket</dt>
-              <dd className="font-mono text-[12px] break-all">{e.file.bucketHost} <span className="font-sans text-muted-foreground">(test bucket, deleted)</span></dd>
+              <dd className="font-mono text-[12px] break-all">
+                {e.file.bucketHost} <span className="font-sans text-muted-foreground">(test bucket, deleted)</span>
+              </dd>
             </>
           )}
         </dl>
@@ -202,6 +244,7 @@ function Detail({ e }: { e: Egress }) {
 }
 
 export function EgressPage() {
+  const [tab, setTab] = useUrlState("tab", "jobs")
   const list = d.egress
   const list2 = checks(list, d.rejected)
   const by = (s: string) => list.filter((e) => e.status === s).length
@@ -244,7 +287,7 @@ export function EgressPage() {
         </div>
       </header>
 
-      <Tabs defaultValue="jobs" className="gap-5">
+      <Tabs value={tab} onValueChange={setTab} className="gap-5">
         <TabsList>
           <TabsTrigger value="jobs">
             Jobs <span className="ml-1 text-[11px] text-muted-foreground tnum">{list.length}</span>

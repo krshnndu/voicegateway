@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import raw from "@/mocks/media-server.json"
+import { useEmbedded } from "@/lib/url-state"
 
 // One room, opened from the Media server timeline: how it came together, what the agent was doing,
 // who was in it with which tracks, and the room's own settings. Everything comes from RoomService and
@@ -111,6 +112,7 @@ export function RoomDrawer({ room, open, onOpenChange }: { room: Room | null; op
 
 const originIcon: Record<Origin["kind"], Icon> = { "phone-in": Phone, "phone-out": Phone, dispatch: Robot, unknown: Question }
 function OriginLine({ room }: { room: Room }) {
+  const embedded = useEmbedded()
   const o = roomOrigin(room)
   const I = originIcon[o.kind]
   return (
@@ -122,11 +124,14 @@ function OriginLine({ room }: { room: Room }) {
         </TooltipTrigger>
         <TooltipContent className="max-w-72 text-xs">{o.note}</TooltipContent>
       </Tooltip>
-      {o.ruleId && (
-        <Link to="/sip" className="text-primary hover:underline">
-          rule {o.ruleId}
-        </Link>
-      )}
+      {o.ruleId &&
+        (embedded ? (
+          <span>rule {o.ruleId}</span>
+        ) : (
+          <Link to="/sip" className="text-primary hover:underline">
+            rule {o.ruleId}
+          </Link>
+        ))}
     </p>
   )
 }
@@ -327,6 +332,7 @@ export function RoomBody({ room }: { room: Room }) {
 
 // The agent's own stereo recording, uploaded at session end (decisions 0014, 0015), and LiveKit egress.
 function Recording({ room, requested }: { room: Room; requested: boolean }) {
+  const embedded = useEmbedded()
   const rec = room.recording
   const offset = rec ? new Date(rec.startedAt).getTime() - room.createdMs : null
   return (
@@ -337,6 +343,8 @@ function Recording({ room, requested }: { room: Room; requested: boolean }) {
             <span className="text-muted-foreground">Agent recording</span>
             {rec && !rec.callRoom ? (
               <span className="text-muted-foreground">Not in Calls</span>
+            ) : rec?.callRoom && embedded ? (
+              <span>In Calls</span>
             ) : rec?.callRoom ? (
               <Link to="/calls/$room" params={{ room: rec.callRoom }} className="flex items-center gap-1 text-primary hover:underline">
                 Open call <ArrowRight size={12} />

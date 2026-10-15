@@ -8,6 +8,7 @@ import { type Hop, type Link, PathDiagram, PathLegend, hopIcons } from "../sip/c
 import { type Room, RoomDrawer, data, regionCity } from "../media-server/room-drawer"
 import { TEST_AGENTS } from "../agents/agents-model"
 import { type CallModel, pipelineLabel } from "./call-model"
+import { useEmbedded } from "@/lib/url-state"
 
 // The call from the line it came in on to the models that answered it, built from what the
 // infrastructure pages already read: the SIP trunk, the room, the agent's dispatch and job, and the
@@ -20,6 +21,7 @@ const unknown: Link = { label: "not reported", secure: null, note: "We did not w
 
 export function CallPathStrip({ call, model, onModels }: { call: Call; model: CallModel; onModels: (() => void) | null }) {
   const navigate = useNavigate()
+  const embedded = useEmbedded()
   const [roomOpen, setRoomOpen] = useState(false)
   const k = data.rooms.findIndex((r) => r.sid === call.roomSid)
   const room: Room | null = k >= 0 ? { ...data.rooms[k], n: k + 1 } : null
@@ -73,8 +75,7 @@ export function CallPathStrip({ call, model, onModels }: { call: Call; model: Ca
           sub: sip.sip?.trunkId ?? "trunk unknown",
           tags: [answered ? `answered in ${secs(answered.t * 1000 - sip.sip!.inviteMs!)}` : "answer time unknown"],
           issues: enc === "RTP" ? [{ title: "Phone leg not encrypted (plain RTP)", severity: "medium" }] : [],
-          onClick: () => navigate({ to: "/sip" }),
-          hint: "Open the SIP page",
+          ...(embedded ? {} : { onClick: () => navigate({ to: "/sip" }), hint: "Open the SIP page" }),
         }
       : { icon: Globe, title: room ? "Web or app" : "Caller", sub: room ? "WebRTC client" : "not watched" }
     const toRoom: Link = sip

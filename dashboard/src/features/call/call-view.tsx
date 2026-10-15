@@ -11,6 +11,7 @@ import { FindingsList, TurnDetail } from "./call-findings"
 import { EventLog } from "./event-log"
 import { TraceChart } from "./trace-chart"
 import { useIsPhone } from "@/hooks/use-mobile"
+import { useUrlState } from "@/lib/url-state"
 
 type Speaker = "caller" | "agent"
 // What the person is looking at: a turn, and optionally which side of it.
@@ -49,8 +50,12 @@ function Verdict({ call, model }: { call: Call; model: CallModel }) {
 export function CallView({ call }: { call: Call }) {
   const phone = useIsPhone()
   const model = useMemo(() => buildModel(call), [call])
-  const [focus, setFocus] = useState<Focus>(null)
-  const [pane, setPane] = useState<"insight" | "path" | "events" | "trace">("insight")
+  // The selected turn is in the URL as ?turn=3 or ?turn=3-agent (turns count from 1 there).
+  const [turnParam, setTurnParam] = useUrlState<string | number | null>("turn", null)
+  const m = /^(\d+)(?:-(caller|agent))?$/.exec(String(turnParam ?? ""))
+  const focus: Focus = m ? { turn: Number(m[1]) - 1, speaker: (m[2] as Speaker | undefined) ?? null } : null
+  const setFocus = (f: Focus) => setTurnParam(f ? (f.speaker ? `${f.turn + 1}-${f.speaker}` : f.turn + 1) : null)
+  const [pane, setPane] = useUrlState<"insight" | "path" | "events" | "trace">("pane", "insight")
   // Zoom follows the timeline only; picking a message or a finding just moves the playhead there.
   const [zoom, setZoom] = useState<number | null>(null)
   const zoomTo = (i: number | null) => {

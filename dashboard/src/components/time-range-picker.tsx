@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { cn } from "@/lib/utils"
+import { useUrlState } from "@/lib/url-state"
 
 // One time range control for every page that lists things over time: preset buttons plus a custom
 // range picker. Times are unix seconds.
@@ -26,6 +27,14 @@ const presets = [
 export const presetRange = (id: string, now: number): TimeRange => {
   const p = presets.find((x) => x.id === id) ?? presets[0]
   return { from: now - p.s, to: now, preset: p.id }
+}
+
+// The range in the URL: a preset id (?range=24h) or unix seconds (?range=1728000000-1728003600).
+export function useUrlRange(initial: string, now: number): [TimeRange, (r: TimeRange) => void] {
+  const [raw, setRaw] = useUrlState<string>("range", initial)
+  const m = /^(\d+)-(\d+)$/.exec(String(raw))
+  const value = m ? { from: Number(m[1]), to: Number(m[2]) } : presetRange(presets.some((p) => p.id === raw) ? String(raw) : initial, now)
+  return [value, (r) => setRaw(r.preset ?? `${Math.round(r.from)}-${Math.round(r.to)}`)]
 }
 
 const pad = (n: number) => String(n).padStart(2, "0")

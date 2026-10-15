@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
-import { useNavigate, useRouterState } from "@tanstack/react-router"
+import { useMemo, useState } from "react"
 import { CaretRight, CircleHalf, Cloud, HardDrives, Info, Robot, ShieldWarning, Timer, WarningCircle } from "@phosphor-icons/react"
 import type { Icon } from "@phosphor-icons/react"
 import { BarList } from "@/components/tremor/BarList"
@@ -14,6 +13,7 @@ import { type Room, RoomDrawer, regionCity } from "../media-server/room-drawer"
 import { AgentDrawer } from "./agent-drawer"
 import { CapacityButton, CapacityDialog } from "./capacity"
 import { type Agent, type Check, agents, checks, cores, gib, joinDelays, median, readAt, source } from "./agents-model"
+import { useUrlPick, useUrlState } from "@/lib/url-state"
 
 // Agent workers as the project's three keys see them (decision 0016): every agent that is deployed to
 // LiveKit Cloud or that took a job in a room we watched, its state and resources where LiveKit reports
@@ -174,16 +174,12 @@ const agentFields: Field<Agent>[] = [
 ]
 
 export function AgentsPage() {
+  const [tab, setTab] = useUrlState("tab", "fleet")
   const list = useMemo(() => agents(), [])
   const found = checks(list)
   const [openRoom, setOpenRoom] = useState<Room | null>(null)
-  // The command palette opens an agent with /agents?agent=<key>.
-  const [openAgent, setOpenAgent] = useState<Agent | null>(null)
-  const navigate = useNavigate()
-  const wanted = useRouterState({ select: (st) => new URLSearchParams(st.location.searchStr).get("agent") })
-  useEffect(() => {
-    if (wanted) setOpenAgent(list.find((a) => a.key === wanted) ?? null)
-  }, [wanted, list])
+  // The open agent is in the URL (?agent=<key>), which is also how the command palette opens one.
+  const [openAgent, setOpenAgent] = useUrlPick<Agent>("agent", list, (a) => a.key)
   const [testing, setTesting] = useState<Agent | null>(null)
   const columns = useMemo(() => agentColumns(setTesting), [])
   const jobs = list.flatMap((a) => a.jobs)
@@ -236,7 +232,7 @@ export function AgentsPage() {
         </div>
       </header>
 
-      <Tabs defaultValue="fleet" className="gap-5">
+      <Tabs value={tab} onValueChange={setTab} className="gap-5">
         <TabsList>
           <TabsTrigger value="fleet">Fleet</TabsTrigger>
           <TabsTrigger value="join">Join time</TabsTrigger>
@@ -246,14 +242,7 @@ export function AgentsPage() {
         </TabsList>
 
         <TabsContent value="fleet">
-          <DataTable
-            data={list}
-            columns={columns}
-            fields={agentFields}
-            getRowId={(a) => a.key}
-            onRowClick={setOpenAgent}
-            empty="No agent matches these filters."
-          />
+          <DataTable data={list} columns={columns} fields={agentFields} getRowId={(a) => a.key} onRowClick={setOpenAgent} empty="No agent matches these filters." />
           <p className="mt-2 text-[12px] text-muted-foreground">Open an agent for calls at once, resources, join times, versions and its jobs.</p>
         </TabsContent>
 
@@ -293,7 +282,7 @@ export function AgentsPage() {
         </TabsContent>
       </Tabs>
 
-      <AgentDrawer agent={openAgent} onOpenChange={(o) => !o && (setOpenAgent(null), wanted && navigate({ to: "/agents" }))} onTest={(a) => (setOpenAgent(null), setTesting(a))} />
+      <AgentDrawer agent={openAgent} onOpenChange={(o) => !o && setOpenAgent(null)} onTest={(a) => (setOpenAgent(null), setTesting(a))} />
       <CapacityDialog agent={testing} onOpenChange={(o) => !o && setTesting(null)} />
       <RoomDrawer room={openRoom} open={openRoom !== null} onOpenChange={(o) => !o && setOpenRoom(null)} />
     </div>

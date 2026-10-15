@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Link } from "@tanstack/react-router"
+import { Link, useRouter, useRouterState } from "@tanstack/react-router"
+import { currentScope } from "@/lib/url-state"
 import { CaretUpDown, Check, Gear, Info, Lock, Plus, TreeStructure } from "@phosphor-icons/react"
 import { NewProjectDialog } from "@/components/new-project-dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -67,7 +68,11 @@ export function OrgSwitcher({ onSettings }: { onSettings: () => void }) {
 
 export function ProjectSwitcher({ onManage }: { onManage: () => void }) {
   const org = orgs[0]
-  const [project, setProject] = useState(org.projects[0])
+  const router = useRouter()
+  const path = useRouterState({ select: (s) => s.location.pathname })
+  const current = org.projects.find((p) => p.id === currentScope().project) ?? org.projects[0]
+  // Switching project keeps the page and moves the URL to the other project's scope.
+  const open = (id: string) => id !== current.id && router.history.push(`/org/${org.id}/project/${id}${path}`)
   const [adding, setAdding] = useState(false)
   const host = media.server.url.replace(/^wss?:\/\//, "")
   return (
@@ -76,19 +81,19 @@ export function ProjectSwitcher({ onManage }: { onManage: () => void }) {
       <DropdownMenu>
         <DropdownMenuTrigger className={trigger}>
           <TreeStructure size={15} className="text-muted-foreground" />
-          <span className="truncate">{project}</span>
+          <span className="truncate">{current.name}</span>
           <CaretUpDown size={13} className="text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="min-w-72 rounded-xl" onCloseAutoFocus={keepFocus}>
           <DropdownMenuLabel className="text-xs text-muted-foreground">{`Projects in ${org.name}`}</DropdownMenuLabel>
           {org.projects.map((p) => (
-            <DropdownMenuItem key={p} className="gap-2" onSelect={() => setProject(p)}>
+            <DropdownMenuItem key={p.id} className="gap-2" onSelect={() => open(p.id)}>
               <TreeStructure className="size-4 text-muted-foreground" />
               <span className="min-w-0">
-                <span className="block">{p}</span>
+                <span className="block">{p.name}</span>
                 <span className="block truncate font-mono text-[11px] text-muted-foreground">{host}</span>
               </span>
-              {p === project && <Check className="ml-auto size-4" />}
+              {p.id === current.id && <Check className="ml-auto size-4" />}
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />

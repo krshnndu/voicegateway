@@ -37,8 +37,9 @@ import { UserMenu } from "@/components/user-menu"
 import { listCalls } from "@/lib/api"
 import { useThresholds } from "@/lib/thresholds"
 import { SettingsDialog, type SettingsPage } from "@/features/settings/settings-dialog"
+import { useUrlState } from "@/lib/url-state"
 import { OrgSwitcher, ProjectSwitcher } from "@/components/org-switcher"
-import mark from "@/assets/brand/mark.svg"
+import { BrandWordmark } from "@/components/brand-wordmark"
 import { motion } from "motion/react"
 import { CommandPalette, ShortcutsDialog, mod, useCommandHotkeys } from "@/components/command-palette"
 import { Kbd, KbdGroup } from "@/components/ui/kbd"
@@ -73,23 +74,20 @@ const groups: { label: string | null; items: Item[] }[] = [
 export function AppShell() {
   const path = useRouterState({ select: (s) => s.location.pathname })
   const navigate = useNavigate()
-  // Settings is a modal over the current page: the sidebar item, Cmd or Ctrl + comma, or /settings.
-  const [settings, setSettings] = useState(false)
-  const [settingsPage, setSettingsPage] = useState<SettingsPage | undefined>(undefined)
-  const openSettings = (page?: SettingsPage) => {
-    setSettingsPage(page)
-    setSettings(true)
-  }
-  const settingsOpen = settings || path === "/settings"
+  // Settings is a modal over the current page, kept in the URL (?settings=access) so a link opens it:
+  // the sidebar item, Cmd or Ctrl + comma, or /settings.
+  const [settingsParam, setSettingsParam] = useUrlState<string | null>("settings", null)
+  const openSettings = (page?: SettingsPage) => setSettingsParam(page ?? "integrations")
+  const settingsOpen = settingsParam !== null || path === "/settings"
   const closeSettings = (o: boolean) => {
-    if (o) return setSettings(true)
-    setSettings(false)
+    if (o) return
     if (path === "/settings") navigate({ to: "/overview" })
+    else navigate({ to: ".", replace: true, search: (prev: Record<string, unknown>) => ({ ...prev, settings: undefined, access: undefined, widget: undefined }) } as never)
   }
   const [palette, setPalette] = useState(false)
   const [shortcuts, setShortcuts] = useState(false)
   const pages = useMemo(() => [...groups.flatMap((g) => g.items), { to: "/project", label: "Project", icon: TreeStructure, key: "j" }], [])
-  useCommandHotkeys({ pages, onPalette: () => setPalette((o) => !o), onSettings: () => setSettings(true), onShortcuts: () => setShortcuts(true) })
+  useCommandHotkeys({ pages, onPalette: () => setPalette((o) => !o), onSettings: () => openSettings(), onShortcuts: () => setShortcuts(true) })
   // A threshold change re-renders the page so its checks use the new numbers.
   const thresholds = useThresholds()
   // The current page carries a pill that slides between items as you move.
@@ -122,9 +120,8 @@ export function AppShell() {
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader className="px-3 pt-3.5 pb-2">
-          <div className="flex h-8 items-center gap-2.5">
-            <img src={mark} alt="" className="size-7 shrink-0 rounded-[8px] group-data-[collapsible=icon]:hidden" />
-            <span className="truncate text-[14px] font-semibold tracking-[-0.01em] group-data-[collapsible=icon]:hidden">VoiceGateway</span>
+          <div className="flex h-8 min-w-0 items-center gap-2.5">
+            <BrandWordmark />
             <SidebarTrigger className="ml-auto text-muted-foreground group-data-[collapsible=icon]:mx-auto" />
           </div>
         </SidebarHeader>
@@ -147,7 +144,7 @@ export function AppShell() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton isActive={settingsOpen} tooltip={`Settings (${mod} ,)`} onClick={() => setSettings(true)}>
+              <SidebarMenuButton isActive={settingsOpen} tooltip={`Settings (${mod} ,)`} onClick={() => openSettings()}>
                 <Settings />
                 <span>Settings</span>
               </SidebarMenuButton>
@@ -183,8 +180,8 @@ export function AppShell() {
           <Outlet key={`${thresholds.answerMs}-${thresholds.joinMs}-${thresholds.ttsStartMs}`} />
         </main>
       </SidebarInset>
-      <SettingsDialog open={settingsOpen} onOpenChange={closeSettings} page={settingsPage} />
-      <CommandPalette open={palette} onOpenChange={setPalette} pages={pages} onSettings={() => setSettings(true)} onShortcuts={() => setShortcuts(true)} />
+      <SettingsDialog open={settingsOpen} onOpenChange={closeSettings} page={settingsParam} onPageChange={openSettings} />
+      <CommandPalette open={palette} onOpenChange={setPalette} pages={pages} onSettings={() => openSettings()} onShortcuts={() => setShortcuts(true)} />
       <ShortcutsDialog open={shortcuts} onOpenChange={setShortcuts} pages={pages} />
       <Toaster position="bottom-right" duration={8000} />
     </SidebarProvider>

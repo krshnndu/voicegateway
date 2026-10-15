@@ -1,5 +1,5 @@
-import { useEffect, useState, useSyncExternalStore } from "react"
-import { EnvelopeSimple as Envelope, WebhooksLogo, Buildings, Database, Key as KeyIcon, Clock, Copy, EnvelopeSimple, GearSix, Lock, UsersThree, X, Plug, Plus, TreeStructure, User } from "@phosphor-icons/react"
+import { useState, useSyncExternalStore } from "react"
+import { EnvelopeSimple as Envelope, WebhooksLogo, Buildings, Database, Key as KeyIcon, Clock, Copy, EnvelopeSimple, GearSix, FrameCorners, Lock, UsersThree, X, Plug, Plus, TreeStructure, User } from "@phosphor-icons/react"
 import type { Icon } from "@phosphor-icons/react"
 import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
@@ -18,6 +18,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { useTheme } from "@/components/theme"
 import { NewProjectDialog } from "@/components/new-project-dialog"
 import { orgs } from "@/components/workspace-switcher"
+import { scopePrefix, useUrlState } from "@/lib/url-state"
+import { type WidgetId, widgets } from "@/features/embed/widgets"
 import { DEFAULTS, type Thresholds as T, setThresholds, useThresholds } from "@/lib/thresholds"
 import { listCalls } from "@/lib/api"
 import { data as media } from "@/features/media-server/room-drawer"
@@ -30,9 +32,9 @@ import { data as media } from "@/features/media-server/room-drawer"
 // server will own is read from the captured project or says "Not set".
 
 const org = orgs[0]
-const project = org.projects[0]
+const project = org.projects[0].name
 
-type Key = "account" | "organisation" | "access" | "integrations" | "data" | "thresholds"
+type Key = "account" | "organisation" | "access" | "integrations" | "embeds" | "data" | "thresholds"
 type Page = { key: Key; label: string; icon: Icon; scope: "project" | "organisation" | "you" }
 const groups: { label: string; scope: Page["scope"]; pages: Page[] }[] = [
   {
@@ -40,6 +42,7 @@ const groups: { label: string; scope: Page["scope"]; pages: Page[] }[] = [
     scope: "project",
     pages: [
       { key: "integrations", label: "Integrations", icon: Plug, scope: "project" },
+      { key: "embeds", label: "Embeds", icon: FrameCorners, scope: "project" },
       { key: "data", label: "Data", icon: Database, scope: "project" },
       { key: "thresholds", label: "Thresholds", icon: Clock, scope: "project" },
     ],
@@ -155,7 +158,7 @@ function Organisation() {
     <>
       <Header title={org.name} description="The organisation that owns your projects. The open-source edition is one organisation with any number of projects and no usage limits." />
       <Group label="Projects">
-        {org.projects.map((p, k) => (
+        {org.projects.map(({ name: p }, k) => (
           <Row key={p} icon={TreeStructure} title={p} description="Current project" value={<span className="font-mono text-[13px]">{media.server.url}</span>} last={k === org.projects.length - 1} />
         ))}
       </Group>
@@ -387,7 +390,7 @@ function ApiKeys() {
     <>
       <Header title="API keys" description="For agents on other frameworks, for the SDK and for MCP. Each key belongs to one project." />
       <Group footer="The server creates a key, shows it once and stores it hashed. Keys arrive with the Phase 2 server.">
-        {org.projects.map((p, k) => (
+        {org.projects.map(({ name: p }, k) => (
           <Row
             key={p}
             icon={KeyIcon}
@@ -459,8 +462,9 @@ const accessTabs = [
   { key: "audit", label: "Audit log", body: AuditLog },
 ]
 function Access() {
+  const [tab, setTab] = useUrlState("access", "people")
   return (
-    <Tabs defaultValue="people" className="gap-0">
+    <Tabs value={tab} onValueChange={setTab} className="gap-0">
       <TabsList variant="line" className="-mx-4 -mt-6 mb-6 h-12 w-[calc(100%+2rem)] justify-start overflow-x-auto rounded-none border-b px-2 sm:-mx-8 sm:w-[calc(100%+4rem)] sm:px-6">
         {accessTabs.map((t) => (
           <TabsTrigger key={t.key} value={t.key} className="flex-none px-2">
@@ -545,15 +549,76 @@ function Thresholds() {
   )
 }
 
-const body: Record<Key, () => React.ReactNode> = { account: Account, organisation: Organisation, access: Access, integrations: Integrations, data: Data, thresholds: Thresholds }
+// Widgets a platform puts in its own product (decision 0023). The preview is the real widget in a frame.
+function Embeds() {
+  const [pick, setPick] = useUrlState<WidgetId>("widget", "answer-time")
+  const [theme, setTheme] = useState<"light" | "dark">("light")
+  const w = widgets.find((x) => x.id === pick) ?? widgets[0]
+  const room = listCalls().find((c) => c.turns?.length)?.room
+  const src = `${window.location.origin}${scopePrefix()}/embed/${w.id}`
+  const preview = `${src}?theme=${theme}${w.id === "call" && room ? `&room=${encodeURIComponent(room)}` : ""}`
+  const snippet = `<iframe\n  src="${src}?token=EMBED_TOKEN&theme=${theme}${w.id === "call" ? "&room=ROOM_NAME" : ""}"\n  width="100%"\n  height="${w.height}"\n  style="border: 0"\n  title="${w.title}, VoiceGateway"\n></iframe>`
+  return (
+    <>
+      <Header title="Embeds" description="Put this project's views in your own product. Each widget is a frame behind a short-lived, read-only token, so your API key never reaches the page." />
+      <section className="space-y-3 pt-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Select value={w.id} onValueChange={(v) => setPick(v as WidgetId)}>
+            <SelectTrigger size="sm" className="w-56" aria-label="Widget">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {widgets.map((x) => (
+                <SelectItem key={x.id} value={x.id}>
+                  {x.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <ToggleGroup type="single" variant="outline" size="sm" value={theme} onValueChange={(v) => v && setTheme(v as "light" | "dark")} aria-label="Widget theme">
+            <ToggleGroupItem value="light" className="px-3 data-[state=on]:bg-accent">
+              Light
+            </ToggleGroupItem>
+            <ToggleGroupItem value="dark" className="px-3 data-[state=on]:bg-accent">
+              Dark
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+        <p className="text-[13px] text-muted-foreground">{w.description}</p>
+        <iframe key={preview} src={preview} title={`${w.title} preview`} className="block w-full rounded-xl border" style={{ height: Math.min(w.height, 420) }} />
+      </section>
+      <section className="pt-6">
+        <h3 className="pb-1 text-[14px] font-semibold">Snippet</h3>
+        <p className="pb-3 text-[13px] text-muted-foreground">Your backend asks VoiceGateway for a token and puts it in place of EMBED_TOKEN.</p>
+        <Command text={snippet} />
+      </section>
+      <Group label="Access" footer="Tokens and allowed origins are kept on the server, from Phase 2. Until then widgets show captured data and say they are a preview.">
+        <Row
+          title="Embed tokens"
+          description="Read-only, one project, and they expire."
+          value={
+            <Button variant="outline" size="sm" disabled>
+              <Plus /> Create token
+            </Button>
+          }
+        />
+        <Row title="Allowed origins" description="Only these sites can show the widgets." value={<NotSet />} last />
+      </Group>
+      <Group label="Enterprise">
+        <Row icon={Lock} muted title="Per-customer tokens" description="A token that shows only one of your customers' calls." />
+        <Row icon={Lock} muted title="Remove VoiceGateway branding" description="Widgets without Powered by VoiceGateway." value={<span className="text-[12px] text-muted-foreground">Open source: always shown.</span>} last />
+      </Group>
+    </>
+  )
+}
+
+const body: Record<Key, () => React.ReactNode> = { account: Account, organisation: Organisation, access: Access, integrations: Integrations, embeds: Embeds, data: Data, thresholds: Thresholds }
 
 export type SettingsPage = Key
-export function SettingsDialog({ open, onOpenChange, page }: { open: boolean; onOpenChange: (o: boolean) => void; page?: Key }) {
-  const [active, setActive] = useState<Key>("integrations")
-  // Opened for a given page (for example Manage projects in the top bar), show that page.
-  useEffect(() => {
-    if (open && page) setActive(page)
-  }, [open, page])
+export function SettingsDialog({ open, onOpenChange, page, onPageChange }: { open: boolean; onOpenChange: (o: boolean) => void; page: string | null; onPageChange: (p: Key) => void }) {
+  // The page lives in the URL (?settings=thresholds); an unknown value shows the first page.
+  const active: Key = pages.some((p) => p.key === page) ? (page as Key) : "integrations"
+  const setActive = onPageChange
   const current = pages.find((p) => p.key === active)!
   const [picked, setPicked] = useState(project)
   const Body = body[active]
@@ -613,7 +678,7 @@ export function SettingsDialog({ open, onOpenChange, page }: { open: boolean; on
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {org.projects.map((p) => (
+                        {org.projects.map(({ name: p }) => (
                           <SelectItem key={p} value={p}>
                             {p}
                           </SelectItem>
@@ -654,7 +719,7 @@ export function SettingsDialog({ open, onOpenChange, page }: { open: boolean; on
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {org.projects.map((p) => (
+                    {org.projects.map(({ name: p }) => (
                       <SelectItem key={p} value={p}>
                         {p}
                       </SelectItem>

@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import raw from "@/mocks/ingress.json"
+import { useUrlState } from "@/lib/url-state"
 
 // Media pushed or pulled into the project's rooms, as ListIngress returns it. An endpoint stays listed
 // until deleted, but its state covers only the current or last session; earlier sessions need LiveKit's
@@ -43,12 +44,20 @@ const docs = "https://docs.livekit.io"
 const typeName: Record<string, string> = { RTMP_INPUT: "RTMP", WHIP_INPUT: "WHIP", URL_INPUT: "URL pull" }
 const statusName = (s: string) => s.replace("ENDPOINT_", "").toLowerCase()
 const statusTone = (s: string) =>
-  s === "ENDPOINT_PUBLISHING" ? "bg-primary/10 text-primary" : s === "ENDPOINT_ERROR" ? "bg-destructive/10 text-destructive" : s === "ENDPOINT_BUFFERING" ? "bg-amber-500/10 text-amber-700 dark:text-amber-400" : "bg-muted text-muted-foreground"
+  s === "ENDPOINT_PUBLISHING"
+    ? "bg-primary/10 text-primary"
+    : s === "ENDPOINT_ERROR"
+      ? "bg-destructive/10 text-destructive"
+      : s === "ENDPOINT_BUFFERING"
+        ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
+        : "bg-muted text-muted-foreground"
 const clock = (s: number) => new Date(s * 1000).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
 const secs = (s: number) => (s >= 60 ? `${Math.floor(s / 60)}m ${String(Math.round(s % 60)).padStart(2, "0")}s` : `${s.toFixed(1)} s`)
 const codec = (m?: string | null) => (m ? m.split("/")[1].toUpperCase() : null)
 const media = (m: Media | null) =>
-  m?.mimeType ? [codec(m.mimeType), m.channels && `${m.channels === 2 ? "stereo" : m.channels === 1 ? "mono" : `${m.channels} ch`}`, m.sampleRate && `${m.sampleRate / 1000} kHz`, m.width && `${m.width}x${m.height}`].filter(Boolean).join(", ") : null
+  m?.mimeType
+    ? [codec(m.mimeType), m.channels && `${m.channels === 2 ? "stereo" : m.channels === 1 ? "mono" : `${m.channels} ch`}`, m.sampleRate && `${m.sampleRate / 1000} kHz`, m.width && `${m.width}x${m.height}`].filter(Boolean).join(", ")
+    : null
 const session = (e: Ingress) => (e.startedAt && e.endedAt ? e.endedAt - e.startedAt : null)
 
 const right = { headerClassName: "[&>div]:w-full [&>div]:justify-end", cellClassName: "text-right" }
@@ -66,13 +75,35 @@ const ingressColumns: Columns<Ingress> = [
         </span>
       </span>
     ),
-    meta: { expandedContent: (e: Ingress) => <div className="bg-muted/30 p-4"><Detail e={e} /></div> },
+    meta: {
+      expandedContent: (e: Ingress) => (
+        <div className="bg-muted/30 p-4">
+          <Detail e={e} />
+        </div>
+      ),
+    },
   },
   { id: "type", accessorFn: (e) => typeName[e.inputType] ?? e.inputType, header: ({ column }) => <DataGridColumnHeader title="Type" column={column} />, cell: ({ getValue }) => <span className="text-[13px]">{String(getValue())}</span> },
   { id: "room", accessorFn: (e) => e.room, header: ({ column }) => <DataGridColumnHeader title="Room" column={column} />, cell: ({ row }) => <span className="font-mono text-[12px] text-muted-foreground">{row.original.room}</span> },
-  { id: "status", accessorFn: (e) => e.status, header: ({ column }) => <DataGridColumnHeader title="Status" column={column} />, cell: ({ row }) => <span className={cn("rounded-full px-2 py-0.5 text-[12px]", statusTone(row.original.status))}>{statusName(row.original.status)}</span> },
-  { id: "started", accessorFn: (e) => e.startedAt ?? -1, header: ({ column }) => <DataGridColumnHeader title="Last session" column={column} />, cell: ({ row }) => <span className="text-[13px] tnum">{row.original.startedAt ? clock(row.original.startedAt) : "none"}</span> },
-  { id: "length", accessorFn: (e) => session(e) ?? -1, header: ({ column }) => <DataGridColumnHeader title="Length" column={column} />, meta: right, cell: ({ row }) => <span className="text-[13px] tnum">{session(row.original) !== null ? secs(session(row.original)!) : "unknown"}</span> },
+  {
+    id: "status",
+    accessorFn: (e) => e.status,
+    header: ({ column }) => <DataGridColumnHeader title="Status" column={column} />,
+    cell: ({ row }) => <span className={cn("rounded-full px-2 py-0.5 text-[12px]", statusTone(row.original.status))}>{statusName(row.original.status)}</span>,
+  },
+  {
+    id: "started",
+    accessorFn: (e) => e.startedAt ?? -1,
+    header: ({ column }) => <DataGridColumnHeader title="Last session" column={column} />,
+    cell: ({ row }) => <span className="text-[13px] tnum">{row.original.startedAt ? clock(row.original.startedAt) : "none"}</span>,
+  },
+  {
+    id: "length",
+    accessorFn: (e) => session(e) ?? -1,
+    header: ({ column }) => <DataGridColumnHeader title="Length" column={column} />,
+    meta: right,
+    cell: ({ row }) => <span className="text-[13px] tnum">{session(row.original) !== null ? secs(session(row.original)!) : "unknown"}</span>,
+  },
   {
     id: "media",
     header: "Media in",
@@ -86,7 +117,14 @@ const ingressColumns: Columns<Ingress> = [
   },
 ]
 const ingressFields: Field<Ingress>[] = [
-  { id: "status", label: "Status", type: "select", icon: <CircleHalf />, options: ["ENDPOINT_INACTIVE", "ENDPOINT_BUFFERING", "ENDPOINT_PUBLISHING", "ENDPOINT_ERROR", "ENDPOINT_COMPLETE"].map((v) => ({ value: v, label: statusName(v) })), get: (e) => e.status },
+  {
+    id: "status",
+    label: "Status",
+    type: "select",
+    icon: <CircleHalf />,
+    options: ["ENDPOINT_INACTIVE", "ENDPOINT_BUFFERING", "ENDPOINT_PUBLISHING", "ENDPOINT_ERROR", "ENDPOINT_COMPLETE"].map((v) => ({ value: v, label: statusName(v) })),
+    get: (e) => e.status,
+  },
   { id: "type", label: "Type", type: "select", icon: <Stack />, options: Object.entries(typeName).map(([value, label]) => ({ value, label })), get: (e) => e.inputType },
   { id: "room", label: "Room", type: "text", icon: <Hash />, get: (e) => e.room },
   { id: "length", label: "Session length (s)", type: "number", icon: <Clock />, get: (e) => session(e) },
@@ -155,7 +193,10 @@ function Detail({ e }: { e: Ingress }) {
             <span className="font-mono text-[12px]">{e.participant}</span> in <span className="font-mono text-[12px]">{e.room}</span>
           </dd>
           <dt className="text-muted-foreground">Media in</dt>
-          <dd>{media(e.audioIn) ?? "none received"}{e.audioIn?.averageBitrate ? `, ${Math.round(e.audioIn.averageBitrate / 1000)} kbps average` : ""}</dd>
+          <dd>
+            {media(e.audioIn) ?? "none received"}
+            {e.audioIn?.averageBitrate ? `, ${Math.round(e.audioIn.averageBitrate / 1000)} kbps average` : ""}
+          </dd>
           <dt className="text-muted-foreground">Into the room</dt>
           <dd>{out.length ? `${out.join(", ")}${e.transcoding ? ", transcoded" : ""}` : "nothing published"}</dd>
           <dt className="text-muted-foreground">Endpoint</dt>
@@ -179,6 +220,7 @@ function Detail({ e }: { e: Ingress }) {
 }
 
 export function IngressPage() {
+  const [tab, setTab] = useUrlState("tab", "endpoints")
   const list = d.ingress
   const list2 = checks(list)
   const by = (s: string) => list.filter((e) => e.status === s).length
@@ -228,7 +270,7 @@ export function IngressPage() {
         </div>
       </header>
 
-      <Tabs defaultValue="endpoints" className="gap-5">
+      <Tabs value={tab} onValueChange={setTab} className="gap-5">
         <TabsList>
           <TabsTrigger value="endpoints">
             Endpoints <span className="ml-1 text-[11px] text-muted-foreground tnum">{list.length}</span>

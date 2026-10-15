@@ -9,6 +9,7 @@ import type { Call } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import { type CallModel, type Iv, callLength, fmtMs, fmtSec } from "./call-model"
 import { BUDGET_MS } from "./call-steps"
+import { useEmbedded } from "@/lib/url-state"
 
 // The call as one stereo track: caller above the line, agent below, on one clock. The silence between the
 // caller finishing and the agent answering is drawn and labelled, because that gap is what callers feel.
@@ -46,6 +47,7 @@ function Wave({ data, duration, w, color, flip }: { data: number[]; duration: nu
 // selected highlights a turn; zoom narrows the track to one, which only the timeline itself asks for.
 export function CallTimeline({ call, model, selected, zoom, onSelect }: { call: Call; model: CallModel; selected: number | null; zoom: number | null; onSelect: (i: number | null) => void }) {
   const rec = call.recording
+  const embedded = useEmbedded()
   const player = useAudioPlayer()
   const now = useAudioPlayerTime()
   const whole: Iv = { start: 0, end: Math.max(callLength(call, model), model.duration, 0.5) }
@@ -102,6 +104,8 @@ export function CallTimeline({ call, model, selected, zoom, onSelect }: { call: 
             <span className="text-sm tnum"><AudioPlayerTime className="font-medium" /> <span className="text-muted-foreground">/ {clock(callLength(call, model))}</span></span>
             <AudioPlayerSpeed variant="ghost" size="icon-sm" />
           </>
+        ) : embedded ? (
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground"><Microphone /> Recordings off</span>
         ) : (
           <Button asChild variant="ghost" size="sm" className="-ml-2 text-xs text-muted-foreground">
             <Link to="/settings"><Microphone /> Recordings off</Link>

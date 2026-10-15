@@ -15,6 +15,7 @@ import { Kbd } from "@/components/ui/kbd"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PathDiagram, PathLegend } from "./call-path"
 import { type Check, type Outbound, type Route, type SipData, checks, enc, inPaths, inboundPath, outboundPath, providerOf, routes, transport } from "./sip-model"
+import { useUrlPick, useUrlState } from "@/lib/url-state"
 
 // +1 numbers read as (705) 710-0749; anything else stays in E.164.
 const pretty = (n: string) => (/^\+1\d{10}$/.test(n) ? `+1 (${n.slice(2, 5)}) ${n.slice(5, 8)}-${n.slice(8)}` : n)
@@ -111,10 +112,11 @@ const clock = (ms: number) => new Date(ms).toLocaleString([], { month: "short", 
 const secs = (s: number) => (s >= 60 ? `${Math.floor(s / 60)}m ${String(Math.round(s % 60)).padStart(2, "0")}s` : `${s.toFixed(1)} s`)
 
 export function SipPage() {
+  const [tab, setTab] = useUrlState("tab", "paths")
   const test = new URLSearchParams(window.location.search).get("data") === "test"
   const sip = (test ? synthetic : real) as SipData
-  const [openRoom, setOpenRoom] = useState<Room | null>(null)
   const calls = test ? [] : data.rooms.map((r, k) => ({ ...r, n: k + 1 })).filter((r) => r.participants.some((p) => p.kind === "sip"))
+  const [openRoom, setOpenRoom] = useUrlPick<Room>("room", calls, (r) => r.sid)
   const hints = calls.flatMap((r) => r.participants.filter((p) => p.sip).map((p) => ({ trunkId: p.sip!.trunkId, twilio: Boolean((p.sip as { twilio?: boolean }).twilio) })))
   const rows = routes(sip, hints)
   const list = checks(sip, rows)
@@ -214,7 +216,11 @@ export function SipPage() {
             <p className="mt-1.5 text-[11px] text-muted-foreground">{`${legs.filter((l) => !l.secure).length} plain, ${legs.filter((l) => l.secure).length} encrypted`}</p>
           </StatCard>
           <StatCard icon={Timer} value={answer === null ? "Unknown" : `${answer.toFixed(1)} s`} label="Ring to answered">
-            <p className="text-[11px] text-muted-foreground">{answer === null ? "No phone call watched yet" : `median of ${answers.length} watched ${answers.length === 1 ? "call" : "calls"}${calls.every((r) => r.participants.some((p) => p.sip?.trunkId && data.sipTrunks[p.sip.trunkId])) ? ", our test trunk only" : ""}`}</p>
+            <p className="text-[11px] text-muted-foreground">
+              {answer === null
+                ? "No phone call watched yet"
+                : `median of ${answers.length} watched ${answers.length === 1 ? "call" : "calls"}${calls.every((r) => r.participants.some((p) => p.sip?.trunkId && data.sipTrunks[p.sip.trunkId])) ? ", our test trunk only" : ""}`}
+            </p>
           </StatCard>
           <StatCard icon={ShieldWarning} value={list.length} label="Checks to fix" alert={list.some((c) => c.severity === "high")}>
             <CategoryBar values={[sev("high"), sev("medium"), sev("low")]} colors={["alert", "amber", "quiet"]} showLabels={false} />
@@ -223,167 +229,183 @@ export function SipPage() {
         </div>
       </header>
 
-      <Tabs defaultValue="paths" className="gap-5">
+      <Tabs value={tab} onValueChange={setTab} className="gap-5">
         <TabsList>
           <TabsTrigger value="paths">Call paths</TabsTrigger>
           <TabsTrigger value="checks">
             Checks <span className="ml-1 rounded-full bg-destructive/10 px-1.5 text-[11px] text-destructive tnum">{list.length}</span>
           </TabsTrigger>
-          <TabsTrigger value="calls">Calls watched <span className="ml-1 text-[11px] text-muted-foreground tnum">{calls.length}</span></TabsTrigger>
+          <TabsTrigger value="calls">
+            Calls watched <span className="ml-1 text-[11px] text-muted-foreground tnum">{calls.length}</span>
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="paths">
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-end gap-3">
-          <div className="flex items-center gap-4">
-            <PathLegend />
-            <InputGroup className="h-8 w-64">
-              <InputGroupAddon>
-                <MagnifyingGlass />
-              </InputGroupAddon>
-              <InputGroupInput
-                ref={findRef}
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                onKeyDown={(e) => e.key === "Escape" && setQ("")}
-                inputMode="tel"
-                placeholder="Find a number"
-                aria-label="Find a number by any of its digits"
-              />
-              <InputGroupAddon align="inline-end">
-                {q ? (
-                  <>
-                    <InputGroupText className="text-[12px] tnum" aria-live="polite">
-                      {digits ? `${inShown.length + outShown.length} ${inShown.length + outShown.length === 1 ? "path" : "paths"}` : "digits only"}
-                    </InputGroupText>
-                    <InputGroupButton size="icon-xs" onClick={() => (setQ(""), findRef.current?.focus())} aria-label="Clear search">
-                      <X />
-                    </InputGroupButton>
-                  </>
-                ) : (
-                  <Kbd>/</Kbd>
-                )}
-              </InputGroupAddon>
-            </InputGroup>
-          </div>
-        </div>
-        {inShown.map((p) => {
-          const nums = p.routes.filter((r) => !r.wildcard)
-          const n = issuesOf([p.trunk?.id, ...nums.map((r) => r.number), ...p.rules.map((x) => x.id)]).length
-          return (
-            <div key={p.key} className="rounded-2xl bg-muted/40 p-5">
-              <div className="flex flex-wrap items-center gap-2">
-                <PhoneIncoming size={16} className="text-muted-foreground" />
-                <span className="text-[13px] font-medium">Inbound</span>
-                {p.wildcard && <Chip>any number</Chip>}
-                <NumberList items={nums.map((r) => ({ key: r.key, label: shown(r), hint: `${r.provider.name}. ${r.provider.how}`, bad: r.duplicate ? "2 trunks" : undefined, match: Boolean(q) && hit(shown(r)) }))} />
-                <span className="ml-auto text-[12px] tnum">{n ? <span className="text-destructive">{n} {n === 1 ? "issue" : "issues"}</span> : <span className="text-muted-foreground">no issues</span>}</span>
+          <section className="space-y-4">
+            <div className="flex flex-wrap items-center justify-end gap-3">
+              <div className="flex items-center gap-4">
+                <PathLegend />
+                <InputGroup className="h-8 w-64">
+                  <InputGroupAddon>
+                    <MagnifyingGlass />
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    ref={findRef}
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    onKeyDown={(e) => e.key === "Escape" && setQ("")}
+                    inputMode="tel"
+                    placeholder="Find a number"
+                    aria-label="Find a number by any of its digits"
+                  />
+                  <InputGroupAddon align="inline-end">
+                    {q ? (
+                      <>
+                        <InputGroupText className="text-[12px] tnum" aria-live="polite">
+                          {digits ? `${inShown.length + outShown.length} ${inShown.length + outShown.length === 1 ? "path" : "paths"}` : "digits only"}
+                        </InputGroupText>
+                        <InputGroupButton size="icon-xs" onClick={() => (setQ(""), findRef.current?.focus())} aria-label="Clear search">
+                          <X />
+                        </InputGroupButton>
+                      </>
+                    ) : (
+                      <Kbd>/</Kbd>
+                    )}
+                  </InputGroupAddon>
+                </InputGroup>
               </div>
-              <PathDiagram path={inboundPath(p, list)} />
             </div>
-          )
-        })}
-        {outShown.map((t) => {
-          const n = issuesOf([t.id]).length
-          return (
-            <div key={t.id} className="rounded-2xl bg-muted/40 p-5">
-              <div className="flex flex-wrap items-center gap-2">
-                <PhoneOutgoing size={16} className="text-muted-foreground" />
-                <span className="text-[13px] font-medium">Outbound</span>
-                <NumberList prefix="from " items={t.numbers.map((m) => ({ key: m, label: full(t.id, m, "out"), match: Boolean(q) && hit(full(t.id, m, "out")) }))} />
-                <span className="ml-auto text-[12px] tnum">{n ? <span className="text-destructive">{n} {n === 1 ? "issue" : "issues"}</span> : <span className="text-muted-foreground">no issues</span>}</span>
-              </div>
-              <PathDiagram path={outboundPath(t, list)} />
-            </div>
-          )
-        })}
-        {q && !inShown.length && !outShown.length && <p className="rounded-2xl border border-dashed px-4 py-6 text-center text-[13px] text-muted-foreground">No path carries a number matching "{q}".</p>}
-      </section>
+            {inShown.map((p) => {
+              const nums = p.routes.filter((r) => !r.wildcard)
+              const n = issuesOf([p.trunk?.id, ...nums.map((r) => r.number), ...p.rules.map((x) => x.id)]).length
+              return (
+                <div key={p.key} className="rounded-2xl bg-muted/40 p-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <PhoneIncoming size={16} className="text-muted-foreground" />
+                    <span className="text-[13px] font-medium">Inbound</span>
+                    {p.wildcard && <Chip>any number</Chip>}
+                    <NumberList items={nums.map((r) => ({ key: r.key, label: shown(r), hint: `${r.provider.name}. ${r.provider.how}`, bad: r.duplicate ? "2 trunks" : undefined, match: Boolean(q) && hit(shown(r)) }))} />
+                    <span className="ml-auto text-[12px] tnum">
+                      {n ? (
+                        <span className="text-destructive">
+                          {n} {n === 1 ? "issue" : "issues"}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">no issues</span>
+                      )}
+                    </span>
+                  </div>
+                  <PathDiagram path={inboundPath(p, list)} />
+                </div>
+              )
+            })}
+            {outShown.map((t) => {
+              const n = issuesOf([t.id]).length
+              return (
+                <div key={t.id} className="rounded-2xl bg-muted/40 p-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <PhoneOutgoing size={16} className="text-muted-foreground" />
+                    <span className="text-[13px] font-medium">Outbound</span>
+                    <NumberList prefix="from " items={t.numbers.map((m) => ({ key: m, label: full(t.id, m, "out"), match: Boolean(q) && hit(full(t.id, m, "out")) }))} />
+                    <span className="ml-auto text-[12px] tnum">
+                      {n ? (
+                        <span className="text-destructive">
+                          {n} {n === 1 ? "issue" : "issues"}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">no issues</span>
+                      )}
+                    </span>
+                  </div>
+                  <PathDiagram path={outboundPath(t, list)} />
+                </div>
+              )
+            })}
+            {q && !inShown.length && !outShown.length && <p className="rounded-2xl border border-dashed px-4 py-6 text-center text-[13px] text-muted-foreground">No path carries a number matching "{q}".</p>}
+          </section>
         </TabsContent>
         <TabsContent value="checks">
-      <section className="space-y-3">
-        <ul className="divide-y rounded-xl border">
-          {list.map((c, k) => (
-            <li key={k}>
-              <Collapsible>
-                <CollapsibleTrigger className="group flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-muted/50">
-                  <span className={cn("size-2 shrink-0 rounded-full", tone[c.severity])} />
-                  <span className="flex-1 text-[14px]">{c.title}</span>
-                  <span className="font-mono text-[11px] text-muted-foreground">{c.where}</span>
-                  <CaretRight size={14} className="text-muted-foreground transition-transform group-data-[state=open]:rotate-90" />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-1.5 px-4 pb-3 pl-9 text-[13px]">
-                  <p className="text-muted-foreground">{c.why}</p>
-                  <p>
-                    <span className="font-medium">Fix: </span>
-                    {c.fix}{" "}
-                    <a href={c.doc} target="_blank" rel="noreferrer" className="text-primary hover:underline">
-                      Docs
-                    </a>
-                  </p>
-                </CollapsibleContent>
-              </Collapsible>
-            </li>
-          ))}
-        </ul>
-      </section>
+          <section className="space-y-3">
+            <ul className="divide-y rounded-xl border">
+              {list.map((c, k) => (
+                <li key={k}>
+                  <Collapsible>
+                    <CollapsibleTrigger className="group flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-muted/50">
+                      <span className={cn("size-2 shrink-0 rounded-full", tone[c.severity])} />
+                      <span className="flex-1 text-[14px]">{c.title}</span>
+                      <span className="font-mono text-[11px] text-muted-foreground">{c.where}</span>
+                      <CaretRight size={14} className="text-muted-foreground transition-transform group-data-[state=open]:rotate-90" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-1.5 px-4 pb-3 pl-9 text-[13px]">
+                      <p className="text-muted-foreground">{c.why}</p>
+                      <p>
+                        <span className="font-medium">Fix: </span>
+                        {c.fix}{" "}
+                        <a href={c.doc} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+                          Docs
+                        </a>
+                      </p>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </li>
+              ))}
+            </ul>
+          </section>
         </TabsContent>
         <TabsContent value="calls">
-      <section className="space-y-3">
-        <div className="flex flex-wrap items-baseline justify-end gap-3">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="cursor-help text-[12px] text-muted-foreground">Outcomes and SIP codes: Phase 2</span>
-            </TooltipTrigger>
-            <TooltipContent className="max-w-72 text-xs">Why a call ended and its SIP response code come from LiveKit's webhooks (disconnect_reason) once the VoiceGateway server runs. The Cloud telephony call log has no API.</TooltipContent>
-          </Tooltip>
-        </div>
-        <ul className="divide-y rounded-xl border">
-          {calls.map((r) => {
-            const p = r.participants.find((x) => x.kind === "sip")!
-            const agent = r.participants.find((x) => x.kind === "agent")
-            const t0 = p.sip?.inviteMs ?? r.createdMs
-            const answered = p.sip?.statuses.find((s) => s.status === "active")
-            const trunk = p.sip?.trunkId ? data.sipTrunks[p.sip.trunkId] : undefined
-            const marks = [
-              { at: r.createdMs, label: "room" },
-              ...(agent ? [{ at: agent.joinedAtMs, label: "agent" }] : []),
-              ...(answered ? [{ at: answered.t * 1000, label: "answered" }] : []),
-            ]
-            const end = Math.max(...marks.map((m) => m.at)) - t0 || 1
-            return (
-              <li key={r.sid}>
-                <button type="button" onClick={() => setOpenRoom(r)} className="grid w-full grid-cols-[72px_minmax(0,1fr)_minmax(0,2fr)_80px] items-center gap-4 px-4 py-3 text-left hover:bg-muted/50">
-                  <span className="text-[13px] tnum">Room {r.n}</span>
-                  <span className="text-[13px]">
-                    <span className="flex items-center gap-1.5">
-                      {p.sip?.ruleId ? <PhoneIncoming size={14} /> : <PhoneOutgoing size={14} />}
-                      {clock(t0)}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">via {trunk ? `${trunk.name} (deleted)` : (p.sip?.trunkId ?? "unknown trunk")}</span>
-                  </span>
-                  <span className="relative h-6">
-                    <span className="absolute inset-x-0 top-1/2 h-px bg-border" />
-                    {marks.map((m) => (
-                      <Tooltip key={m.label}>
-                        <TooltipTrigger asChild>
-                          <span className="absolute top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center" style={{ left: `${((m.at - t0) / end) * 100}%` }}>
-                            <span className="size-2.5 rounded-full bg-primary" />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent>{`${m.label} at +${((m.at - t0) / 1000).toFixed(2)} s after the INVITE`}</TooltipContent>
-                      </Tooltip>
-                    ))}
-                    <span className="absolute top-1/2 left-0 size-2.5 -translate-y-1/2 rounded-full bg-foreground" />
-                    <span className="absolute -bottom-2 right-0 text-[11px] text-muted-foreground tnum">{answered ? `answered in ${((answered.t * 1000 - t0) / 1000).toFixed(1)} s` : "not answered while watched"}</span>
-                  </span>
-                  <span className="text-right text-[13px] tnum">{secs(p.lastSeen - t0 / 1000)}</span>
-                </button>
-              </li>
-            )
-          })}
-          {calls.length === 0 && <li className="px-4 py-6 text-center text-[13px] text-muted-foreground">No phone calls while we watched.</li>}
-        </ul>
-      </section>
+          <section className="space-y-3">
+            <div className="flex flex-wrap items-baseline justify-end gap-3">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="cursor-help text-[12px] text-muted-foreground">Outcomes and SIP codes: Phase 2</span>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-72 text-xs">
+                  Why a call ended and its SIP response code come from LiveKit's webhooks (disconnect_reason) once the VoiceGateway server runs. The Cloud telephony call log has no API.
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <ul className="divide-y rounded-xl border">
+              {calls.map((r) => {
+                const p = r.participants.find((x) => x.kind === "sip")!
+                const agent = r.participants.find((x) => x.kind === "agent")
+                const t0 = p.sip?.inviteMs ?? r.createdMs
+                const answered = p.sip?.statuses.find((s) => s.status === "active")
+                const trunk = p.sip?.trunkId ? data.sipTrunks[p.sip.trunkId] : undefined
+                const marks = [{ at: r.createdMs, label: "room" }, ...(agent ? [{ at: agent.joinedAtMs, label: "agent" }] : []), ...(answered ? [{ at: answered.t * 1000, label: "answered" }] : [])]
+                const end = Math.max(...marks.map((m) => m.at)) - t0 || 1
+                return (
+                  <li key={r.sid}>
+                    <button type="button" onClick={() => setOpenRoom(r)} className="grid w-full grid-cols-[72px_minmax(0,1fr)_minmax(0,2fr)_80px] items-center gap-4 px-4 py-3 text-left hover:bg-muted/50">
+                      <span className="text-[13px] tnum">Room {r.n}</span>
+                      <span className="text-[13px]">
+                        <span className="flex items-center gap-1.5">
+                          {p.sip?.ruleId ? <PhoneIncoming size={14} /> : <PhoneOutgoing size={14} />}
+                          {clock(t0)}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground">via {trunk ? `${trunk.name} (deleted)` : (p.sip?.trunkId ?? "unknown trunk")}</span>
+                      </span>
+                      <span className="relative h-6">
+                        <span className="absolute inset-x-0 top-1/2 h-px bg-border" />
+                        {marks.map((m) => (
+                          <Tooltip key={m.label}>
+                            <TooltipTrigger asChild>
+                              <span className="absolute top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center" style={{ left: `${((m.at - t0) / end) * 100}%` }}>
+                                <span className="size-2.5 rounded-full bg-primary" />
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>{`${m.label} at +${((m.at - t0) / 1000).toFixed(2)} s after the INVITE`}</TooltipContent>
+                          </Tooltip>
+                        ))}
+                        <span className="absolute top-1/2 left-0 size-2.5 -translate-y-1/2 rounded-full bg-foreground" />
+                        <span className="absolute -bottom-2 right-0 text-[11px] text-muted-foreground tnum">{answered ? `answered in ${((answered.t * 1000 - t0) / 1000).toFixed(1)} s` : "not answered while watched"}</span>
+                      </span>
+                      <span className="text-right text-[13px] tnum">{secs(p.lastSeen - t0 / 1000)}</span>
+                    </button>
+                  </li>
+                )
+              })}
+              {calls.length === 0 && <li className="px-4 py-6 text-center text-[13px] text-muted-foreground">No phone calls while we watched.</li>}
+            </ul>
+          </section>
         </TabsContent>
       </Tabs>
 

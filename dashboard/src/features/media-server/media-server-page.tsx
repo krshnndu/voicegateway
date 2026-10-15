@@ -1,6 +1,6 @@
-import { useState } from "react"
 import { Headset, Info, Phone, Robot } from "@phosphor-icons/react"
-import { type TimeRange, TimeRangePicker, presetRange } from "@/components/time-range-picker"
+import { TimeRangePicker, useUrlRange } from "@/components/time-range-picker"
+import { useUrlPick } from "@/lib/url-state"
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
 import { type GlobeArc, type GlobePoint, NetworkGlobe } from "@/components/network-globe"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
@@ -43,8 +43,8 @@ const now = data.windows[data.windows.length - 1].end
 const GAP = 4 // percent of the axis between two watched stretches
 
 export function MediaServerPage() {
-  const [range, setRange] = useState<TimeRange>(() => presetRange("6h", now))
-  const [openRoom, setOpenRoom] = useState<Room | null>(null)
+  const [range, setRange] = useUrlRange("6h", now)
+  const [openRoom, setOpenRoom] = useUrlPick<Room>("room", allRooms, (r) => r.sid)
 
   // The axis: each watched stretch inside the range, sized by its length, with a small break between.
   const segs = data.windows.map((w) => ({ start: Math.max(w.start, range.from), end: Math.min(w.end, range.to) })).filter((s) => s.end > s.start)

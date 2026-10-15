@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useNavigate, useParams } from "@tanstack/react-router"
 import { Archive, ArrowCounterClockwise, CaretRight, ChatsCircle, Clock, Desktop, Flask, Globe, Hash, Phone, PhoneCall, Tag, Timer, Waveform, WarningCircle } from "@phosphor-icons/react"
 import type { Icon } from "@phosphor-icons/react"
-import { type TimeRange, TimeRangePicker, presetRange } from "@/components/time-range-picker"
+import { TimeRangePicker, useUrlRange } from "@/components/time-range-picker"
 import { type Columns, DataTable, type Field, matches } from "@/components/data-table"
 import { DataGridColumnHeader } from "@/components/reui/data-grid/data-grid-column-header"
 import { createFilterQuery } from "@/components/reui/filters/filters-query"
@@ -21,6 +21,7 @@ import { CallView } from "@/features/call/call-view"
 import { buildModel, fmtMs, pipelineLabel } from "@/features/call/call-model"
 import { BUDGET_MS, findingsFor } from "@/features/call/call-steps"
 import { data as rooms } from "@/features/media-server/room-drawer"
+import { useUrlState } from "@/lib/url-state"
 
 const median = (xs: number[]) => {
   if (!xs.length) return null
@@ -55,7 +56,12 @@ function usePreviewCall(): Call | null {
 // How each call reached the agent. Rooms we watched say it from their participants; console and
 // local test sessions say it from where they were captured.
 type Channel = "phone" | "web" | "console" | "local"
-const channelInfo: Record<Channel, { icon: Icon; label: string }> = { phone: { icon: Phone, label: "Phone" }, web: { icon: Globe, label: "Web or app" }, console: { icon: Desktop, label: "Agent console" }, local: { icon: Flask, label: "Local test" } }
+const channelInfo: Record<Channel, { icon: Icon; label: string }> = {
+  phone: { icon: Phone, label: "Phone" },
+  web: { icon: Globe, label: "Web or app" },
+  console: { icon: Desktop, label: "Agent console" },
+  local: { icon: Flask, label: "Local test" },
+}
 function channelOf(c: Call): Channel {
   if (c.recording?.preview) return "local"
   const r = rooms.rooms.find((x) => x.sid === c.roomSid)
@@ -66,8 +72,8 @@ function channelOf(c: Call): Channel {
   return c.room.startsWith("spike") ? "local" : "web"
 }
 
-type Row = { call: Call; channel: Channel; answers: number[]; p50: number | null; issues: { high: number; medium: number; titles: string[] }; started: number; label: string }
-function rowOf(c: Call): Row {
+export type Row = { call: Call; channel: Channel; answers: number[]; p50: number | null; issues: { high: number; medium: number; titles: string[] }; started: number; label: string }
+export function rowOf(c: Call): Row {
   const model = buildModel(c)
   const answers = model.turns.map((t) => t.responseMs).filter((v): v is number => v !== null)
   const f = findingsFor(c, model)
@@ -122,7 +128,7 @@ const fmt = fmtMs
 const length = (s: number) => (s >= 60 ? `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s` : `${s} s`)
 const right = { headerClassName: "[&>div]:w-full [&>div]:justify-end", cellClassName: "text-right" }
 
-function columns(tagsOf: (room: string) => string[]): Columns<Row> {
+export function columns(tagsOf: (room: string) => string[]): Columns<Row> {
   return [
     {
       id: "room",
@@ -260,17 +266,24 @@ export function CallsPage() {
   // The open call lives in the URL, /calls/<room>, so a call has a link to share.
   const { room } = useParams({ strict: false }) as { room?: string }
   const navigate = useNavigate()
-  const [query, setQuery] = useState<FilterQuery>(() => createFilterQuery([]))
+  const [query, setQuery] = useUrlState<FilterQuery>(
+    "q",
+    useMemo(() => createFilterQuery([]), []),
+  )
   const tags = useCallTags()
   const all = useMemo(() => (preview ? [preview, ...listCalls()] : listCalls()).map(rowOf).sort((a, b) => b.started - a.started), [preview])
   const open = room ? (all.find((r) => r.call.room === room)?.call ?? null) : null
-  const setOpen = (c: Call | null) => (c ? navigate({ to: "/calls/$room", params: { room: c.room } }) : navigate({ to: "/calls" }))
+  // Opening or closing a call keeps the list's filters and range; closing drops the drawer's own state.
+  const setOpen = (c: Call | null) =>
+    c
+      ? navigate({ to: "/calls/$room", params: { room: c.room }, search: (p: Record<string, unknown>) => p } as never)
+      : navigate({ to: "/calls", search: ({ turn: _t, pane: _p, events: _e, ...rest }: Record<string, unknown>) => rest } as never)
   const now = Math.max(...all.map((r) => Date.parse(r.call.endedAt) / 1000))
-  const [range, setRange] = useState<TimeRange>(() => presetRange("7d", now))
+  const [range, setRange] = useUrlRange("7d", now)
   const fields = useMemo(() => callFields(tags.all, tags.of), [tags])
   // The stat cards and the table read the same rows, so a filter changes both.
   const archived = useArchived()
-  const [view, setView] = useState<"active" | "archived">("active")
+  const [view, setView] = useUrlState<"active" | "archived">("view", "active")
   const isArchived = (r: { call: Call }) => archived.includes(r.call.roomSid)
   const archivedCount = all.filter(isArchived).length
   // The stat cards and the table read the same rows, so a filter or the archive tab changes both.
@@ -351,11 +364,31 @@ export function CallsPage() {
           empty={view === "archived" ? "No archived calls." : "No calls match these filters."}
           bulk={(sel, clear) =>
             view === "active" ? (
-              <Button size="sm" variant="outline" onClick={() => archive(sel.map((r) => r.call), true, clear)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  archive(
+                    sel.map((r) => r.call),
+                    true,
+                    clear,
+                  )
+                }
+              >
                 <Archive /> Archive
               </Button>
             ) : (
-              <Button size="sm" variant="outline" onClick={() => archive(sel.map((r) => r.call), false, clear)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  archive(
+                    sel.map((r) => r.call),
+                    false,
+                    clear,
+                  )
+                }
+              >
                 <ArrowCounterClockwise /> Move back to calls
               </Button>
             )
@@ -369,7 +402,11 @@ export function CallsPage() {
             <>
               <SheetHeader className="border-b px-5 py-4 pr-14">
                 <SheetTitle className="text-lg">{open.room}</SheetTitle>
-                <SheetDescription asChild><div><CallMeta call={open} /></div></SheetDescription>
+                <SheetDescription asChild>
+                  <div>
+                    <CallMeta call={open} />
+                  </div>
+                </SheetDescription>
                 <div className="flex items-center gap-2 pt-1.5">
                   <CallTags room={open.room} />
                   <Button size="sm" variant="ghost" className="ml-auto text-muted-foreground" onClick={() => archive([open], !archived.includes(open.roomSid))}>

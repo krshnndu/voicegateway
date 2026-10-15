@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { listCalls } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import { type Room, RoomDrawer, data, roomOrigin } from "../media-server/room-drawer"
+import { useUrlPick, useUrlState } from "@/lib/url-state"
 
 // Live, in the shape of Logfire's live view: the real clock runs, the window slides with Now on
 // the right, and every room is a bar that grows while the room is open and stops when it closes.
@@ -65,8 +66,8 @@ export function LivePage() {
   const navigate = useNavigate()
   const [running, setRunning] = useState(true)
   const [wi, setWi] = useState(0)
-  const [q, setQ] = useState("")
-  const [openRoom, setOpenRoom] = useState<Room | null>(null)
+  const [q, setQ] = useUrlState("search", "")
+  const [openRoom, setOpenRoom] = useUrlPick<Room>("room", captured, (r) => r.sid)
   // Anchor the replay so the page opens with one room just finished and one live.
   const [anchor] = useState(() => Date.now() / 1000 - (slots[Math.min(1, slots.length - 1)].start + 20))
   // A dragged range on the time strip pauses the stream and shows just that range.

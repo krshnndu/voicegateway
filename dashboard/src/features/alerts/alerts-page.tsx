@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { Link } from "@tanstack/react-router"
 import { ArrowSquareOut, Bell, BellRinging, EnvelopeSimple, Plugs, ShieldWarning, WebhooksLogo } from "@phosphor-icons/react"
 import type { Icon } from "@phosphor-icons/react"
@@ -11,6 +11,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { CHANNELS, type Channel, type Event, type Rule, channelName, ruleSetup, rules, setRule, useRuleSetup } from "./alerts-model"
+import { useUrlState } from "@/lib/url-state"
 
 // Alerts: the console's checks, routed to where the team already works (decision 0020). Counts are
 // what each rule would have fired on in the captured data; nothing is sent until the Phase 2 worker
@@ -96,7 +97,11 @@ function RuleCard({ r, days }: { r: Rule; days: number[] }) {
           {CHANNELS.map((c) => (
             <Tooltip key={c}>
               <TooltipTrigger asChild>
-                <ToggleGroupItem value={c} aria-label={channelName[c]} className="size-7 rounded-md p-0 opacity-45 grayscale aria-pressed:bg-accent aria-pressed:opacity-100 aria-pressed:grayscale-0 aria-pressed:ring-1 aria-pressed:ring-border">
+                <ToggleGroupItem
+                  value={c}
+                  aria-label={channelName[c]}
+                  className="size-7 rounded-md p-0 opacity-45 grayscale aria-pressed:bg-accent aria-pressed:opacity-100 aria-pressed:grayscale-0 aria-pressed:ring-1 aria-pressed:ring-border"
+                >
                   <ChannelMark c={c} />
                 </ToggleGroupItem>
               </TooltipTrigger>
@@ -153,7 +158,7 @@ function Timeline({ events }: { events: Fired[] }) {
 export function AlertsPage() {
   const list = useMemo(() => rules(), [])
   const setup = useRuleSetup()
-  const [tab, setTab] = useState("rules")
+  const [tab, setTab] = useUrlState("tab", "rules")
   const on = list.filter((r) => ruleSetup(setup, r.id).on)
   const events: Fired[] = on.flatMap((r) => r.events.map((e) => ({ ...e, rule: r }))).sort((a, b) => b.at - a.at)
   const routed = on.filter((r) => ruleSetup(setup, r.id).to.length > 0).length

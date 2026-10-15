@@ -9,6 +9,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Filters } from "@/components/reui/filters/filters"
 import { createFilterQuery, flattenFilterConditions, type FilterCondition } from "@/components/reui/filters/filters-query"
 import type { FilterField, FilterQuery } from "@/components/reui/filters/filters-types"
+import { useUrlState } from "@/lib/url-state"
+
+const emptyQuery = createFilterQuery([])
 
 // Every list in the console is this one table: TanStack Table through ReUI's data grid (sorting,
 // paging, expandable rows) under ReUI's filter chips. Pages describe columns and filter fields; the
@@ -111,10 +114,13 @@ export function DataTable<T extends RowData & object>({
   // Row selection: a checkbox column, and these actions on a bar while any row is selected.
   bulk?: (selected: T[], clear: () => void) => React.ReactNode
 }) {
-  const [own, setOwn] = useState<FilterQuery>(() => createFilterQuery([]))
+  // Filters and sort live in the URL (?q=, ?sort=), so a shared link opens the same rows. Each page has
+  // one table, so the keys never collide.
+  const [own, setOwn] = useUrlState<FilterQuery>("q", emptyQuery)
   const query = controlled ?? own
   const setQuery = onQueryChange ?? setOwn
-  const [sorting, setSorting] = useState<SortingState>(sort)
+  const [sorting, setSortingUrl] = useUrlState<SortingState>("sort", sort)
+  const setSorting = (u: SortingState | ((old: SortingState) => SortingState)) => setSortingUrl(typeof u === "function" ? u(sorting) : u)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize })
   const rows = useMemo(() => data.filter((r) => matches(r, query, fields)), [data, query, fields])
   const [picked, setPicked] = useState<Set<string>>(new Set())
@@ -130,13 +136,7 @@ export function DataTable<T extends RowData & object>({
               id: "select",
               size: 36,
               enableSorting: false,
-              header: () => (
-                <Checkbox
-                  aria-label="Select all"
-                  checked={allOn ? true : selected.length ? "indeterminate" : false}
-                  onCheckedChange={(v) => setPicked(v ? new Set(rows.map(getRowId)) : new Set())}
-                />
-              ),
+              header: () => <Checkbox aria-label="Select all" checked={allOn ? true : selected.length ? "indeterminate" : false} onCheckedChange={(v) => setPicked(v ? new Set(rows.map(getRowId)) : new Set())} />,
               cell: ({ row }) => {
                 const id = getRowId(row.original)
                 return (
@@ -205,7 +205,10 @@ export function DataTable<T extends RowData & object>({
           {toolbar}
         </div>
       )}
-      <DataGrid table={table} recordCount={rows.length} onRowClick={
+      <DataGrid
+        table={table}
+        recordCount={rows.length}
+        onRowClick={
           onRowClick
             ? (r) => {
                 // The grid keeps keyboard focus on click; a drawer opened over it would hide a focused element.
@@ -215,7 +218,10 @@ export function DataTable<T extends RowData & object>({
             : canExpand
               ? (r) => table.getRow(getRowId(r)).toggleExpanded()
               : undefined
-        } emptyMessage={empty} tableLayout={{ headerBackground: false, rowBorder: true, width: "auto" }}>
+        }
+        emptyMessage={empty}
+        tableLayout={{ headerBackground: false, rowBorder: true, width: "auto" }}
+      >
         <div className="w-full space-y-2.5">
           <DataGridContainer className="rounded-xl">
             <DataGridScrollArea>
