@@ -1,0 +1,1323 @@
+{
+ "source": "Read-only, with only the LiveKit Cloud project's URL, API key and secret, on 2026-10-14. Server identity: Room.ServerInfo from a throwaway room (Go server-sdk). Watch 1, 09:48 to 10:03: ListRooms and ListParticipants every 10 s; LiveKit playground rooms; track detail was not kept. Watch 2, 11:05 to 11:10: full room, participant, track and dispatch info every 2 s, during one call we placed with a scripted caller and our capture agent. Region is the LiveKit edge each participant connected through. Identities, names and metadata are not stored.",
+ "server": {
+  "edition": "Cloud",
+  "version": "1.13.8",
+  "protocol": 17,
+  "region": "Canada",
+  "nodeId": "NM_OTORONTO1A_pacx8aBTHLoh",
+  "joinMs": 201,
+  "url": "wss://mahimai-kan8nzy4.livekit.cloud"
+ },
+ "rooms": [
+  {
+   "sid": "RM_aMSCHWX9u9ZE",
+   "name": "playground-86a0b802-5629-4e29-a593-bf6d03426dba",
+   "createdMs": 1791985668000,
+   "firstSeen": 1791985727.6,
+   "lastSeen": 1791985727.6,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_W5axyVQ5ewAm",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791985668378,
+     "agentName": null,
+     "firstSeen": 1791985727.6,
+     "lastSeen": 1791985727.6,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_4mid5Rn5pBGW",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791985668701,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791985727.6,
+     "lastSeen": 1791985727.6,
+     "states": [
+      {
+       "t": 1791985727.6,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_FS79M3BvVNX6",
+   "name": "playground-4f27a275-b8ef-40a6-8483-6bfc56a02719",
+   "createdMs": 1791985736000,
+   "firstSeen": 1791985747.6,
+   "lastSeen": 1791985817.6,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_9nyfLLBbBtN8",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791985736461,
+     "agentName": null,
+     "firstSeen": 1791985747.6,
+     "lastSeen": 1791985817.6,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_Sc3SdPCkd4RL",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791985736793,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791985747.6,
+     "lastSeen": 1791985817.6,
+     "states": [
+      {
+       "t": 1791985747.6,
+       "state": "listening"
+      },
+      {
+       "t": 1791985787.6,
+       "state": "thinking"
+      },
+      {
+       "t": 1791985797.6,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_nohdwS5Y3CR6",
+   "name": "playground-75063277-5596-4c2b-8372-0670c0936877",
+   "createdMs": 1791985831000,
+   "firstSeen": 1791985837.7,
+   "lastSeen": 1791985917.7,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_fxZbiCyrMpud",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791985831225,
+     "agentName": null,
+     "firstSeen": 1791985837.7,
+     "lastSeen": 1791985917.7,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_bsEyCEYWQHrF",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791985831554,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791985837.7,
+     "lastSeen": 1791985917.7,
+     "states": [
+      {
+       "t": 1791985837.7,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_M3gzjNro54Bk",
+   "name": "playground-02cec8e3-a08d-4f88-9d37-842ee1c11900",
+   "createdMs": 1791985931000,
+   "firstSeen": 1791985937.7,
+   "lastSeen": 1791985987.7,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_YEWa2XRP6sDW",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791985931172,
+     "agentName": null,
+     "firstSeen": 1791985937.7,
+     "lastSeen": 1791985987.7,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_AveoKD9Vytjf",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791985931486,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791985937.7,
+     "lastSeen": 1791985987.7,
+     "states": [
+      {
+       "t": 1791985937.7,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_cUS4EvE53LZy",
+   "name": "playground-e401717a-77a5-4750-9ffb-ddf5d9d9c8b2",
+   "createdMs": 1791986000000,
+   "firstSeen": 1791986007.7,
+   "lastSeen": 1791986087.8,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_oBMS5zkabKy6",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791986000196,
+     "agentName": null,
+     "firstSeen": 1791986007.7,
+     "lastSeen": 1791986087.8,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_JfCe33Fdmx5P",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791986000564,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791986007.7,
+     "lastSeen": 1791986087.8,
+     "states": [
+      {
+       "t": 1791986007.7,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_Dyumea68GdgW",
+   "name": "playground-f85fb58e-29fc-48d0-b14f-1de5deab3647",
+   "createdMs": 1791986101000,
+   "firstSeen": 1791986107.8,
+   "lastSeen": 1791986187.9,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_WYsyEYWWiCEp",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791986101932,
+     "agentName": null,
+     "firstSeen": 1791986107.8,
+     "lastSeen": 1791986187.9,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_7xpe4iS6VKH5",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791986102241,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791986107.8,
+     "lastSeen": 1791986187.9,
+     "states": [
+      {
+       "t": 1791986107.8,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_srwZHoeQ9Z8M",
+   "name": "playground-547eb3de-7b82-41a1-8f5d-01d2100a6999",
+   "createdMs": 1791986206000,
+   "firstSeen": 1791986217.9,
+   "lastSeen": 1791986287.9,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_HZQjBM8qttCx",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791986206821,
+     "agentName": null,
+     "firstSeen": 1791986217.9,
+     "lastSeen": 1791986287.9,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_z7CDwGnbDFXp",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791986207140,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791986217.9,
+     "lastSeen": 1791986287.9,
+     "states": [
+      {
+       "t": 1791986217.9,
+       "state": "listening"
+      },
+      {
+       "t": 1791986227.9,
+       "state": "thinking"
+      },
+      {
+       "t": 1791986237.9,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_jKX97C9djQu5",
+   "name": "playground-08024cfa-e3ea-4b70-b76e-05409cc5db49",
+   "createdMs": 1791986308000,
+   "firstSeen": 1791986317.9,
+   "lastSeen": 1791986327.9,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_emz5m9MA6Kkm",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791986308198,
+     "agentName": null,
+     "firstSeen": 1791986317.9,
+     "lastSeen": 1791986327.9,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_dYXGJwES6C2X",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791986308511,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791986317.9,
+     "lastSeen": 1791986327.9,
+     "states": [
+      {
+       "t": 1791986317.9,
+       "state": "speaking"
+      },
+      {
+       "t": 1791986327.9,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_sk7duyZVt5Wt",
+   "name": "playground-99a9c25f-e946-40e0-8ca3-e1d5568b894b",
+   "createdMs": 1791986341000,
+   "firstSeen": 1791986347.9,
+   "lastSeen": 1791986417.9,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_baMmt5cM6gHq",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791986341353,
+     "agentName": null,
+     "firstSeen": 1791986347.9,
+     "lastSeen": 1791986417.9,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_4J8cgd3worKr",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791986341705,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791986347.9,
+     "lastSeen": 1791986417.9,
+     "states": [
+      {
+       "t": 1791986347.9,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_7eN2tfcXKFe7",
+   "name": "playground-2da757a6-522d-4e02-a6de-571475062da4",
+   "createdMs": 1791986427000,
+   "firstSeen": 1791986437.9,
+   "lastSeen": 1791986507.9,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_hfUMcGAoSUbV",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791986427071,
+     "agentName": null,
+     "firstSeen": 1791986437.9,
+     "lastSeen": 1791986507.9,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_vjCQZu4HkpwA",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791986427411,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791986437.9,
+     "lastSeen": 1791986507.9,
+     "states": [
+      {
+       "t": 1791986437.9,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_cveMQWRw4HRv",
+   "name": "playground-9761baa6-374a-41f3-9baa-7b54b60aa690",
+   "createdMs": 1791986523000,
+   "firstSeen": 1791986527.9,
+   "lastSeen": 1791986567.9,
+   "settings": {
+    "emptyTimeout": null,
+    "departureTimeout": null,
+    "maxParticipants": 2,
+    "codecs": null,
+    "egressRecording": null
+   },
+   "dispatches": null,
+   "participants": [
+    {
+     "sid": "PA_je8QPmGS2aYy",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAtMs": 1791986523401,
+     "agentName": null,
+     "firstSeen": 1791986527.9,
+     "lastSeen": 1791986557.9,
+     "states": [],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_QaxGCKaDhVgf",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAtMs": 1791986523715,
+     "agentName": "mahimai-playground-coffee",
+     "firstSeen": 1791986527.9,
+     "lastSeen": 1791986557.9,
+     "states": [
+      {
+       "t": 1791986527.9,
+       "state": "listening"
+      }
+     ],
+     "permission": null,
+     "tracks": null,
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_e22ztuhDvgpj",
+   "name": "vg-capture-1791990376",
+   "createdMs": 1791990383262,
+   "firstSeen": 1791990389.29,
+   "lastSeen": 1791990597.44,
+   "settings": {
+    "emptyTimeout": 120,
+    "departureTimeout": 20,
+    "maxParticipants": 0,
+    "codecs": [
+     "audio/red",
+     "video/H264",
+     "video/VP8",
+     "video/VP9",
+     "video/AV1",
+     "audio/opus",
+     "audio/PCMU",
+     "audio/PCMA"
+    ],
+    "egressRecording": false
+   },
+   "dispatches": [
+    {
+     "id": "AD_yKhfofes4zPu",
+     "agentName": null,
+     "createdAtMs": 1791990383548,
+     "jobs": []
+    },
+    {
+     "id": "AD_SJRKb8MTtfxc",
+     "agentName": "vg-capture",
+     "createdAtMs": 1791990383565,
+     "jobs": [
+      {
+       "id": "AJ_dcYdb2d22w4c",
+       "status": "JS_RUNNING",
+       "statuses": [
+        {
+         "t": 1791990389.29,
+         "status": "JS_RUNNING"
+        }
+       ],
+       "startedAtMs": 1791990383569,
+       "workerId": "AW_A8S7FnAs2Mxu",
+       "agentId": "A_v6m4ajkYbQwn",
+       "recording": true
+      }
+     ]
+    }
+   ],
+   "participants": [
+    {
+     "sid": "PA_BDHD4NruyAgQ",
+     "kind": "standard",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791990384756,
+     "agentName": null,
+     "firstSeen": 1791990389.29,
+     "lastSeen": 1791990593.44,
+     "states": [],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": false
+     },
+     "tracks": [
+      {
+       "sid": "TR_AMp9VmptaN6v3m",
+       "name": "mic",
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "mime": "audio/red",
+       "versionMs": 1791990384915,
+       "muted": false,
+       "stereo": false,
+       "dtx": true,
+       "red": true,
+       "encryption": "NONE",
+       "features": []
+      }
+     ],
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_YHn8aswLVDst",
+     "kind": "agent",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791990388739,
+     "agentName": "vg-capture",
+     "firstSeen": 1791990389.29,
+     "lastSeen": 1791990597.44,
+     "states": [
+      {
+       "t": 1791990389.29,
+       "state": "thinking"
+      },
+      {
+       "t": 1791990393.3,
+       "state": "speaking"
+      },
+      {
+       "t": 1791990397.3,
+       "state": "listening"
+      },
+      {
+       "t": 1791990403.3,
+       "state": "thinking"
+      },
+      {
+       "t": 1791990435.35,
+       "state": "speaking"
+      },
+      {
+       "t": 1791990445.36,
+       "state": "listening"
+      },
+      {
+       "t": 1791990451.36,
+       "state": "thinking"
+      },
+      {
+       "t": 1791990453.36,
+       "state": "speaking"
+      },
+      {
+       "t": 1791990459.37,
+       "state": "listening"
+      },
+      {
+       "t": 1791990465.37,
+       "state": "thinking"
+      },
+      {
+       "t": 1791990471.38,
+       "state": "listening"
+      },
+      {
+       "t": 1791990473.38,
+       "state": "thinking"
+      },
+      {
+       "t": 1791990475.38,
+       "state": "listening"
+      },
+      {
+       "t": 1791990479.38,
+       "state": "thinking"
+      },
+      {
+       "t": 1791990529.41,
+       "state": "speaking"
+      }
+     ],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": true
+     },
+     "tracks": [
+      {
+       "sid": "TR_AMMpVh4hMc9uR9",
+       "name": "roomio_audio",
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "mime": "audio/red",
+       "versionMs": 1791990388875,
+       "muted": false,
+       "stereo": false,
+       "dtx": true,
+       "red": true,
+       "encryption": "NONE",
+       "features": []
+      }
+     ],
+     "audioTracks": 1
+    }
+   ],
+   "recording": null
+  },
+  {
+   "sid": "RM_mVQFRQtyjpiJ",
+   "name": "vg-capture-1791992994",
+   "createdMs": 1791993001086,
+   "firstSeen": 1791993006.61,
+   "lastSeen": 1791993256.78,
+   "settings": {
+    "emptyTimeout": 120,
+    "departureTimeout": 20,
+    "maxParticipants": 0,
+    "codecs": [
+     "audio/red",
+     "video/H264",
+     "video/VP8",
+     "video/VP9",
+     "video/AV1",
+     "audio/opus",
+     "audio/PCMU",
+     "audio/PCMA"
+    ],
+    "egressRecording": false
+   },
+   "dispatches": [
+    {
+     "id": "AD_ajtHFFdgUNyG",
+     "agentName": null,
+     "createdAtMs": 1791993001514,
+     "jobs": []
+    },
+    {
+     "id": "AD_5mjqvgue4Lcv",
+     "agentName": "vg-capture",
+     "createdAtMs": 1791993001583,
+     "jobs": [
+      {
+       "id": "AJ_m47k87wk9Fzc",
+       "status": "JS_FAILED",
+       "statuses": [
+        {
+         "t": 1791993006.61,
+         "status": "JS_RUNNING"
+        },
+        {
+         "t": 1791993028.64,
+         "status": "JS_FAILED"
+        }
+       ],
+       "startedAtMs": 1791993027172,
+       "workerId": "AW_eRfNAJqcZZS4",
+       "agentId": "A_v6m4ajkYbQwn",
+       "recording": true
+      }
+     ]
+    }
+   ],
+   "participants": [
+    {
+     "sid": "PA_YrwsYwECre6U",
+     "kind": "standard",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791993002562,
+     "agentName": null,
+     "firstSeen": 1791993006.61,
+     "lastSeen": 1791993232.76,
+     "states": [],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": false
+     },
+     "tracks": [
+      {
+       "sid": "TR_AMM6VvSBwbWY8z",
+       "name": "mic",
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "mime": "audio/red",
+       "versionMs": 1791993002677,
+       "muted": false,
+       "stereo": false,
+       "dtx": true,
+       "red": true,
+       "encryption": "NONE",
+       "features": []
+      }
+     ],
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_HFR5b2pKvDy6",
+     "kind": "agent",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791993006074,
+     "agentName": "vg-capture",
+     "firstSeen": 1791993006.61,
+     "lastSeen": 1791993026.63,
+     "states": [
+      {
+       "t": 1791993006.61,
+       "state": "thinking"
+      }
+     ],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": true
+     },
+     "tracks": [
+      {
+       "sid": "TR_AMd8iXnwfr6EFp",
+       "name": "roomio_audio",
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "mime": "audio/red",
+       "versionMs": 1791993006204,
+       "muted": false,
+       "stereo": false,
+       "dtx": true,
+       "red": true,
+       "encryption": "NONE",
+       "features": []
+      }
+     ],
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_eMXzFqJs7Bha",
+     "kind": "agent",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791993030872,
+     "agentName": "vg-capture",
+     "firstSeen": 1791993032.64,
+     "lastSeen": 1791993256.78,
+     "states": [
+      {
+       "t": 1791993032.64,
+       "state": "thinking"
+      },
+      {
+       "t": 1791993064.66,
+       "state": "speaking"
+      },
+      {
+       "t": 1791993068.66,
+       "state": "listening"
+      },
+      {
+       "t": 1791993074.66,
+       "state": "thinking"
+      },
+      {
+       "t": 1791993076.66,
+       "state": "speaking"
+      },
+      {
+       "t": 1791993120.71,
+       "state": "listening"
+      },
+      {
+       "t": 1791993122.71,
+       "state": "thinking"
+      },
+      {
+       "t": 1791993124.71,
+       "state": "speaking"
+      },
+      {
+       "t": 1791993132.72,
+       "state": "listening"
+      },
+      {
+       "t": 1791993138.72,
+       "state": "thinking"
+      },
+      {
+       "t": 1791993140.72,
+       "state": "speaking"
+      },
+      {
+       "t": 1791993150.73,
+       "state": "listening"
+      },
+      {
+       "t": 1791993152.73,
+       "state": "thinking"
+      },
+      {
+       "t": 1791993154.73,
+       "state": "speaking"
+      },
+      {
+       "t": 1791993254.77,
+       "state": "listening"
+      }
+     ],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": true
+     },
+     "tracks": [
+      {
+       "sid": "TR_AMUwfpRBG8cpVz",
+       "name": "roomio_audio",
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "mime": "audio/red",
+       "versionMs": 1791993030999,
+       "muted": false,
+       "stereo": false,
+       "dtx": true,
+       "red": true,
+       "encryption": "NONE",
+       "features": []
+      }
+     ],
+     "audioTracks": 1
+    }
+   ],
+   "recording": {
+    "callRoom": "vg-capture-1791992994",
+    "url": "/captures/RM_mVQFRQtyjpiJ.ogg",
+    "durationS": 228.709,
+    "startedAt": "2026-10-14T15:50:30.539Z"
+   }
+  },
+  {
+   "sid": "RM_f5kJqT59WGMD",
+   "name": "vg-sip-_vgtest-937b5111_ur5wYcJ4D4dA",
+   "createdMs": 1791993896874,
+   "firstSeen": 1791993902.2,
+   "lastSeen": 1791993926.22,
+   "settings": {
+    "emptyTimeout": 300,
+    "departureTimeout": 20,
+    "maxParticipants": 0,
+    "codecs": [
+     "audio/red",
+     "video/H264",
+     "video/VP8",
+     "video/VP9",
+     "video/AV1",
+     "audio/opus",
+     "audio/PCMU",
+     "audio/PCMA"
+    ],
+    "egressRecording": false
+   },
+   "dispatches": [
+    {
+     "id": "AD_CUYnKFserysj",
+     "agentName": "vg-capture",
+     "createdAtMs": 1791993897038,
+     "jobs": [
+      {
+       "id": "AJ_vj2J4cVQcRr8",
+       "status": "JS_FAILED",
+       "statuses": [
+        {
+         "t": 1791993902.2,
+         "status": "JS_RUNNING"
+        },
+        {
+         "t": 1791993922.22,
+         "status": "JS_FAILED"
+        }
+       ],
+       "startedAtMs": 1791993921964,
+       "workerId": "AW_LEJHUxJfCk3p",
+       "agentId": "A_v6m4ajkYbQwn",
+       "recording": true
+      }
+     ]
+    }
+   ],
+   "participants": [
+    {
+     "sid": "PA_6vutqwbewzSC",
+     "kind": "agent",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791993900772,
+     "agentName": "vg-capture",
+     "firstSeen": 1791993902.2,
+     "lastSeen": 1791993920.21,
+     "states": [
+      {
+       "t": 1791993902.2,
+       "state": "thinking"
+      }
+     ],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": true
+     },
+     "tracks": [
+      {
+       "sid": "TR_AMCjuVBHrZwBEz",
+       "name": "roomio_audio",
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "mime": "audio/red",
+       "versionMs": 1791993900991,
+       "muted": false,
+       "stereo": false,
+       "dtx": true,
+       "red": true,
+       "encryption": "NONE",
+       "features": []
+      }
+     ],
+     "audioTracks": 1
+    },
+    {
+     "sid": "PA_Ajd5vJkmzFvv",
+     "kind": "agent",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791993925275,
+     "agentName": "vg-capture",
+     "firstSeen": 1791993926.22,
+     "lastSeen": 1791993926.22,
+     "states": [
+      {
+       "t": 1791993926.22,
+       "state": "thinking"
+      }
+     ],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": true
+     },
+     "tracks": [],
+     "audioTracks": 0
+    }
+   ],
+   "recording": {
+    "callRoom": null,
+    "url": "/captures/RM_f5kJqT59WGMD.ogg",
+    "durationS": 19.787,
+    "startedAt": "2026-10-14T16:05:24.924Z"
+   }
+  },
+  {
+   "sid": "RM_X3FtUso5XS4A",
+   "name": "vg-sip-_vgtest-937b5111_BmXxNoTq78G2",
+   "createdMs": 1791994017157,
+   "firstSeen": 1791994021.51,
+   "lastSeen": 1791994105.99,
+   "settings": {
+    "emptyTimeout": 300,
+    "departureTimeout": 20,
+    "maxParticipants": 0,
+    "codecs": [
+     "audio/red",
+     "video/H264",
+     "video/VP8",
+     "video/VP9",
+     "video/AV1",
+     "audio/opus",
+     "audio/PCMU",
+     "audio/PCMA"
+    ],
+    "egressRecording": false
+   },
+   "dispatches": [
+    {
+     "id": "AD_Lu94aQdGBwZT",
+     "agentName": "vg-capture",
+     "createdAtMs": 1791994017297,
+     "jobs": [
+      {
+       "id": "AJ_JEtUJ2y4Mk7b",
+       "status": "JS_RUNNING",
+       "statuses": [
+        {
+         "t": 1791994021.51,
+         "status": "JS_RUNNING"
+        }
+       ],
+       "startedAtMs": 1791994017301,
+       "workerId": "AW_LEJHUxJfCk3p",
+       "agentId": "A_v6m4ajkYbQwn",
+       "recording": true
+      }
+     ]
+    }
+   ],
+   "participants": [
+    {
+     "sid": "PA_zAAW49G2JDWk",
+     "kind": "sip",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791994017158,
+     "agentName": null,
+     "firstSeen": 1791994021.51,
+     "lastSeen": 1791994083.86,
+     "states": [],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": false
+     },
+     "tracks": [
+      {
+       "sid": "TR_AMThYEEpJqGDCX",
+       "name": "sip_vgtest-937b5111",
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "mime": "audio/opus",
+       "versionMs": 1791994017321,
+       "muted": false,
+       "stereo": false,
+       "dtx": true,
+       "red": true,
+       "encryption": "NONE",
+       "features": []
+      }
+     ],
+     "audioTracks": 1,
+     "sip": {
+      "trunkId": "ST_7pughNvcmefm",
+      "ruleId": "SDR_u55DSn8mW8Uq",
+      "inviteMs": 1791994016534,
+      "trunkNumber": "\u2022\u2022\u2022\u2022 0100",
+      "twilio": false,
+      "statuses": [
+       {
+        "t": 1791994021.51,
+        "status": "active"
+       }
+      ]
+     }
+    },
+    {
+     "sid": "PA_ot2wGq5KWUJY",
+     "kind": "agent",
+     "region": "otoronto1a",
+     "joinedAtMs": 1791994020293,
+     "agentName": "vg-capture",
+     "firstSeen": 1791994021.51,
+     "lastSeen": 1791994105.99,
+     "states": [
+      {
+       "t": 1791994021.51,
+       "state": "thinking"
+      },
+      {
+       "t": 1791994029.51,
+       "state": "listening"
+      },
+      {
+       "t": 1791994033.51,
+       "state": "thinking"
+      },
+      {
+       "t": 1791994037.52,
+       "state": "speaking"
+      },
+      {
+       "t": 1791994045.56,
+       "state": "listening"
+      },
+      {
+       "t": 1791994049.56,
+       "state": "thinking"
+      },
+      {
+       "t": 1791994051.57,
+       "state": "speaking"
+      },
+      {
+       "t": 1791994059.57,
+       "state": "listening"
+      },
+      {
+       "t": 1791994063.82,
+       "state": "thinking"
+      },
+      {
+       "t": 1791994085.87,
+       "state": "listening"
+      }
+     ],
+     "permission": {
+      "canPublish": true,
+      "canSubscribe": true,
+      "canPublishData": true,
+      "hidden": false,
+      "agent": true
+     },
+     "tracks": [
+      {
+       "sid": "TR_AMP5pq8GKHwSyz",
+       "name": "roomio_audio",
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "mime": "audio/red",
+       "versionMs": 1791994020498,
+       "muted": false,
+       "stereo": false,
+       "dtx": true,
+       "red": true,
+       "encryption": "NONE",
+       "features": []
+      }
+     ],
+     "audioTracks": 1
+    }
+   ],
+   "recording": {
+    "callRoom": "vg-sip-_vgtest-937b5111_BmXxNoTq78G2",
+    "url": "/captures/RM_X3FtUso5XS4A.ogg",
+    "durationS": 67.519,
+    "startedAt": "2026-10-14T16:06:59.956Z"
+   }
+  }
+ ],
+ "windows": [
+  {
+   "start": 1791985727.6,
+   "end": 1791986617.9,
+   "everySeconds": 10,
+   "detail": false
+  },
+  {
+   "start": 1791990299.21,
+   "end": 1791990597.44,
+   "everySeconds": 2,
+   "detail": true
+  },
+  {
+   "start": 1791992952.56,
+   "end": 1791993311.49,
+   "everySeconds": 2,
+   "detail": true
+  },
+  {
+   "start": 1791993860.17,
+   "end": 1791994213.3,
+   "everySeconds": 2,
+   "detail": true
+  }
+ ],
+ "sipTrunks": {
+  "ST_7pughNvcmefm": {
+   "name": "temporary test trunk",
+   "direction": "inbound",
+   "mediaEncryption": "SIP_MEDIA_ENCRYPT_DISABLE",
+   "krispEnabled": false,
+   "numbers": 0,
+   "auth": true,
+   "source": "Settings it was created with for the test call; deleted after the call."
+  }
+ }
+}

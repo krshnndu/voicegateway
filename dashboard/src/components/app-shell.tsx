@@ -1,0 +1,192 @@
+import { Button } from "@/components/ui/button"
+import { useMemo, useState } from "react"
+import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router"
+import {
+  Bell,
+  MagnifyingGlass,
+  TreeStructure,
+  WarningCircle,
+  Pulse as Activity,
+  DownloadSimple as ArrowDownToLine,
+  UploadSimple as ArrowUpFromLine,
+  Robot as Bot,
+  BookOpenText as BookOpen,
+  SquaresFour as LayoutGrid,
+  Phone,
+  PhoneCall,
+  HardDrives as Server,
+  GearSix as Settings,
+} from "@phosphor-icons/react"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { ThemeToggle } from "@/components/theme"
+import { UserMenu } from "@/components/user-menu"
+import { listCalls } from "@/lib/api"
+import { useThresholds } from "@/lib/thresholds"
+import { SettingsDialog, type SettingsPage } from "@/features/settings/settings-dialog"
+import { OrgSwitcher, ProjectSwitcher } from "@/components/org-switcher"
+import mark from "@/assets/brand/mark.svg"
+import { motion } from "motion/react"
+import { CommandPalette, ShortcutsDialog, mod, useCommandHotkeys } from "@/components/command-palette"
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
+import { Toaster } from "@/components/ui/sonner"
+
+type Item = { to: string; label: string; icon: typeof Activity; badge?: string; key?: string }
+// Grouped by what you are doing: watch the calls, then the agents, then the LiveKit services under them.
+// The project's own page opens from the project switcher.
+const groups: { label: string | null; items: Item[] }[] = [
+  { label: null, items: [{ to: "/overview", label: "Overview", icon: LayoutGrid, key: "o" }] },
+  {
+    label: "Observe",
+    items: [
+      { to: "/live", label: "Live", icon: Activity, key: "l" },
+      { to: "/calls", label: "Calls", icon: PhoneCall, key: "c", badge: String(listCalls().length) },
+      { to: "/issues", label: "Issues", icon: WarningCircle, key: "i" },
+      { to: "/alerts", label: "Alerts", icon: Bell, key: "a" },
+    ],
+  },
+  { label: "Agents", items: [{ to: "/agents", label: "Agent workers", icon: Bot, key: "w" }] },
+  {
+    label: "LiveKit",
+    items: [
+      { to: "/sfu", label: "Media server", icon: Server, key: "m" },
+      { to: "/sip", label: "Phone (SIP)", icon: Phone, key: "p" },
+      { to: "/egress", label: "Egress", icon: ArrowUpFromLine, key: "e" },
+      { to: "/ingress", label: "Ingress", icon: ArrowDownToLine, key: "n" },
+    ],
+  },
+]
+
+export function AppShell() {
+  const path = useRouterState({ select: (s) => s.location.pathname })
+  const navigate = useNavigate()
+  // Settings is a modal over the current page: the sidebar item, Cmd or Ctrl + comma, or /settings.
+  const [settings, setSettings] = useState(false)
+  const [settingsPage, setSettingsPage] = useState<SettingsPage | undefined>(undefined)
+  const openSettings = (page?: SettingsPage) => {
+    setSettingsPage(page)
+    setSettings(true)
+  }
+  const settingsOpen = settings || path === "/settings"
+  const closeSettings = (o: boolean) => {
+    if (o) return setSettings(true)
+    setSettings(false)
+    if (path === "/settings") navigate({ to: "/overview" })
+  }
+  const [palette, setPalette] = useState(false)
+  const [shortcuts, setShortcuts] = useState(false)
+  const pages = useMemo(() => [...groups.flatMap((g) => g.items), { to: "/project", label: "Project", icon: TreeStructure, key: "j" }], [])
+  useCommandHotkeys({ pages, onPalette: () => setPalette((o) => !o), onSettings: () => setSettings(true), onShortcuts: () => setShortcuts(true) })
+  // A threshold change re-renders the page so its checks use the new numbers.
+  const thresholds = useThresholds()
+  // The current page carries a pill that slides between items as you move.
+  const nav = (it: Item) => {
+    const on = path.startsWith(it.to)
+    return (
+      <SidebarMenuItem key={it.to} className="relative">
+        {on && <motion.span layoutId="nav-active" transition={{ type: "spring", stiffness: 500, damping: 38 }} className="absolute inset-0 rounded-lg bg-background shadow-xs ring-1 ring-border" />}
+        <SidebarMenuButton
+          asChild
+          isActive={on}
+          tooltip={it.label}
+          className="relative h-8 rounded-lg text-[13.5px] font-medium text-muted-foreground hover:bg-foreground/[0.04] hover:text-foreground data-[active=true]:bg-transparent data-[active=true]:text-foreground"
+        >
+          <Link to={it.to}>
+            <it.icon className={on ? "text-foreground" : ""} />
+            <span>{it.label}</span>
+          </Link>
+        </SidebarMenuButton>
+        {it.badge && (
+          <SidebarMenuBadge style={{ top: "50%", transform: "translateY(-50%)" }} className="h-5 rounded-md bg-foreground/[0.07] px-1.5 text-[10.5px] !text-muted-foreground tnum">
+            {it.badge}
+          </SidebarMenuBadge>
+        )}
+      </SidebarMenuItem>
+    )
+  }
+
+  return (
+    <SidebarProvider>
+      <Sidebar collapsible="icon">
+        <SidebarHeader className="px-3 pt-3.5 pb-2">
+          <div className="flex h-8 items-center gap-2.5">
+            <img src={mark} alt="" className="size-7 shrink-0 rounded-[8px] group-data-[collapsible=icon]:hidden" />
+            <span className="truncate text-[14px] font-semibold tracking-[-0.01em] group-data-[collapsible=icon]:hidden">VoiceGateway</span>
+            <SidebarTrigger className="ml-auto text-muted-foreground group-data-[collapsible=icon]:mx-auto" />
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          {groups.map((g, i) => (
+            <SidebarGroup key={i}>
+              {g.label && <SidebarGroupLabel className="text-[10.5px] font-semibold tracking-[0.08em] text-muted-foreground/80 uppercase">{g.label}</SidebarGroupLabel>}
+              <SidebarMenu className="gap-0.5">{g.items.map(nav)}</SidebarMenu>
+            </SidebarGroup>
+          ))}
+        </SidebarContent>
+        <SidebarFooter className="pb-3">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Documentation">
+                <a href="https://docs.voicegateway.dev" target="_blank" rel="noreferrer">
+                  <BookOpen />
+                  <span>Documentation</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton isActive={settingsOpen} tooltip={`Settings (${mod} ,)`} onClick={() => setSettings(true)}>
+                <Settings />
+                <span>Settings</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+          <div className="mt-1 border-t pt-2">
+            <UserMenu />
+          </div>
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInset className="min-w-0">
+        <header className="sticky top-0 z-10 flex h-12 shrink-0 items-center gap-2 border-b bg-background/85 px-4 backdrop-blur md:px-6">
+          <SidebarTrigger className="-ml-1 text-muted-foreground lg:hidden" />
+          <OrgSwitcher onSettings={() => openSettings("organisation")} />
+          <span className="text-muted-foreground/50">/</span>
+          <ProjectSwitcher onManage={() => openSettings("organisation")} />
+          <div className="ml-auto flex items-center gap-1.5">
+            <button type="button" onClick={() => setPalette(true)} className="mr-1 hidden h-8 w-60 items-center gap-2 rounded-lg border bg-muted/40 pr-1.5 pl-2.5 text-[13px] text-muted-foreground transition-colors hover:bg-muted lg:flex">
+              <MagnifyingGlass size={15} />
+              Search or jump to
+              <KbdGroup className="ml-auto">
+                <Kbd>{mod}</Kbd>
+                <Kbd>K</Kbd>
+              </KbdGroup>
+            </button>
+            <Button variant="ghost" size="icon-sm" className="text-muted-foreground lg:hidden" onClick={() => setPalette(true)} aria-label="Search or jump to">
+              <MagnifyingGlass size={16} />
+            </Button>
+            <ThemeToggle />
+          </div>
+        </header>
+        <main className="mx-auto w-full max-w-[1200px] space-y-6 px-4 pt-8 pb-32 md:px-8">
+          <Outlet key={`${thresholds.answerMs}-${thresholds.joinMs}-${thresholds.ttsStartMs}`} />
+        </main>
+      </SidebarInset>
+      <SettingsDialog open={settingsOpen} onOpenChange={closeSettings} page={settingsPage} />
+      <CommandPalette open={palette} onOpenChange={setPalette} pages={pages} onSettings={() => setSettings(true)} onShortcuts={() => setShortcuts(true)} />
+      <ShortcutsDialog open={shortcuts} onOpenChange={setShortcuts} pages={pages} />
+      <Toaster position="bottom-right" duration={8000} />
+    </SidebarProvider>
+  )
+}

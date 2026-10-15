@@ -1,0 +1,123 @@
+{
+ "readAt": "2026-10-14T13:34:12Z",
+ "url": "wss://mahimai-kan8nzy4.livekit.cloud",
+ "rooms": [
+  {
+   "name": "playground-563164df-963d-4b60-8936-9b9bd8449796",
+   "sid": "RM_D7S7xEdGPgps",
+   "createdAt": 1791984777,
+   "participants": [
+    {
+     "identity": "agent-AJ_vpojv3Re4ixq",
+     "kind": "agent",
+     "region": "oashburn1b",
+     "joinedAt": 1791984778,
+     "agentName": "mahimai-playground-coffee",
+     "agentState": "listening",
+     "tracks": [
+      {
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "audioFeatures": []
+      }
+     ]
+    },
+    {
+     "identity": "visitor-563164df-963d-4b60-8936-9b9bd8449796",
+     "kind": "standard",
+     "region": "osanjose1a",
+     "joinedAt": 1791984777,
+     "agentName": null,
+     "agentState": null,
+     "tracks": [
+      {
+       "type": "AUDIO",
+       "source": "MICROPHONE",
+       "audioFeatures": []
+      }
+     ]
+    }
+   ],
+   "dispatches": [
+    {
+     "agentName": "mahimai-playground-coffee",
+     "id": "AD_7ovTRz6d7Ngq",
+     "jobs": [
+      {
+       "id": "AJ_vpojv3Re4ixq",
+       "workerId": "AW_zmwDBTQb8RY6",
+       "status": "JS_RUNNING"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "sip": {
+  "inbound": [
+   {
+    "id": "ST_V3jisppZGT7n",
+    "name": "Inbound (Telnyx)",
+    "numbers": [
+     "•••• 0749",
+     "•••• 0005"
+    ],
+    "krispEnabled": true
+   }
+  ],
+  "outbound": [
+   {
+    "id": "ST_AD2xTPsandcN",
+    "name": "Outbound (Telnyx)",
+    "address": "sip.telnyx.com",
+    "numbers": [
+     "•••• 0005"
+    ]
+   }
+  ],
+  "rules": [
+   {
+    "id": "SDR_4WfEH7ruvaVT",
+    "name": "Inbound caller",
+    "trunkIds": [
+     "ST_V3jisppZGT7n"
+    ],
+    "type": "dispatch_rule_individual",
+    "agents": [
+     "intake agent (name withheld)"
+    ]
+   }
+  ]
+ },
+ "egress": 0,
+ "ingress": 0,
+ "source": "Read-only snapshot taken 2026-10-14 with only the project's URL, API key and secret (RoomService, AgentDispatchService, SipService, EgressService, IngressService). Phone numbers are masked to their last 4 digits; trunk, rule and agent names that identify a client were withheld.",
+ "observed": {
+  "agentName": "vg-capture",
+  "note": "Asked over LiveKit's RemoteSession channel (topic lk.agent.session) by a hidden participant whose token was minted from the same API secret, 2026-10-14. Models appear in usage once used; this answer came right after the greeting started, so only speech to text had been used.",
+  "framework": {
+   "sdk": "python",
+   "version": "1.8.6"
+  },
+  "agentId": "support",
+  "tools": [
+   "check_order",
+   "current_time"
+  ],
+  "options": {
+   "endpointing": "fixed, 0.5 to 3.0 s",
+   "interruption": "on, min 0.5 s, resumes after false interruptions (2.0 s), backchannel window 1.0 s / 1.0 s",
+   "preemptive_generation": "on, LLM only",
+   "max_tool_steps": "3",
+   "user_away_timeout": "15 s",
+   "ivr_detection": "off"
+  },
+  "models": [
+   {
+    "role": "stt",
+    "provider": "Deepgram",
+    "model": "nova-3"
+   }
+  ]
+ }
+}

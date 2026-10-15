@@ -1,0 +1,64 @@
+{
+  "source": "Measured 2026-10-14 from the development Mac that ran the captured agent: TCP connect (one network round trip), TLS handshake and time to first byte, median of 5 samples per host (scratchpad probe.py). Locations: OpenAI and Cartesia report their edge in response headers (Cloudflare colo YYZ, CloudFront POP YTO50); Deepgram and LiveKit Cloud send none, so their IPs were located with ipinfo.io. The agent's location is approximate, from the machine's time zone (America/Toronto). An edge is where the connection lands, not necessarily where the model runs; the inference region is not exposed. Deepgram re-measured 2026-10-15 against its Virginia host after DNS moved it there; the earlier Santa Clara reading was 88.9 ms.",
+  "agent": {
+    "label": "Agent worker (this machine)",
+    "place": "Ontario, approximate",
+    "lat": 43.65,
+    "lng": -79.38
+  },
+  "endpoints": [
+    {
+      "role": "stt",
+      "provider": "Deepgram",
+      "model": "nova-3",
+      "host": "api.va1.deepgram.com",
+      "place": "Ashburn, Virginia",
+      "lat": 39.0438,
+      "lng": -77.4874,
+      "located": "DNS name api.va1.deepgram.com (va1 = Virginia), seen by traceroute on 2026-10-15. api.deepgram.com also resolves to sv1 (Silicon Valley).",
+      "tcpMs": 82.0,
+      "tlsMs": 45.5,
+      "ttfbMs": 132.8,
+      "measured": "2026-10-15, TCP connect median of 12 samples to api.va1.deepgram.com, range 40 to 139 ms; TLS and first byte median of 7"
+    },
+    {
+      "role": "llm",
+      "provider": "OpenAI",
+      "model": "gpt-4.1-mini",
+      "host": "api.openai.com",
+      "place": "Toronto edge (Cloudflare YYZ)",
+      "lat": 43.6777,
+      "lng": -79.6248,
+      "located": "cf-ray header",
+      "tcpMs": 11.1,
+      "tlsMs": 21.8,
+      "ttfbMs": 68.9
+    },
+    {
+      "role": "tts",
+      "provider": "OpenAI",
+      "model": "gpt-4o-mini-tts",
+      "host": "api.openai.com",
+      "place": "Toronto edge (Cloudflare YYZ)",
+      "lat": 43.6777,
+      "lng": -79.6248,
+      "located": "cf-ray header",
+      "tcpMs": 12.0,
+      "tlsMs": 22.2,
+      "ttfbMs": 68.9
+    },
+    {
+      "role": "sfu",
+      "provider": "LiveKit Cloud",
+      "model": null,
+      "host": "mahimai-kan8nzy4.livekit.cloud",
+      "place": "Toronto",
+      "lat": 43.7064,
+      "lng": -79.3986,
+      "located": "ipinfo.io",
+      "tcpMs": 18.5,
+      "tlsMs": 31.1,
+      "ttfbMs": 65.2
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+ "source": "Read-only ListIngress samples every 2 s during a test on the LiveKit Cloud project on 2026-10-14: one RTMP ingress fed 60 s of a 440 Hz test tone (AAC, 128 kbps) by ffmpeg, and one URL-pull ingress pointed at an address that does not resolve. Both were deleted after the test; the project has no ingress of its own. The stream key was never stored and the project hostname is masked. ListIngress shows each endpoint's current or last session only; earlier sessions need LiveKit's ingress webhooks (Phase 2).",
+ "push": {
+  "startedAt": 1792000416.692841,
+  "endedAt": 1792000478.0293639
+ },
+ "ingress": [
+  {
+   "id": "IN_Z4HdCjoVfTxS",
+   "name": "vg-test-rtmp",
+   "inputType": "RTMP_INPUT",
+   "url": "rtmps://<project>.rtmp.livekit.cloud/x",
+   "room": "vg-ingress-1792000409",
+   "participant": "vg-rtmp",
+   "transcoding": true,
+   "reusable": true,
+   "enabled": true,
+   "status": "ENDPOINT_INACTIVE",
+   "error": null,
+   "roomSid": "RM_NGVmVf7WWV2P",
+   "startedAt": 1792000417.3675945,
+   "endedAt": 1792000479.0878153,
+   "audioIn": {
+    "mimeType": "audio/aac",
+    "averageBitrate": 128108,
+    "channels": 2,
+    "sampleRate": 48000
+   },
+   "videoIn": null,
+   "createdAt": 1792000409.938838,
+   "published": [
+    {
+     "type": "AUDIO",
+     "mimeType": "audio/opus",
+     "source": "MICROPHONE"
+    }
+   ],
+   "history": [
+    {
+     "t": 1792000410.4456902,
+     "status": "ENDPOINT_INACTIVE"
+    },
+    {
+     "t": 1792000418.876251,
+     "status": "ENDPOINT_PUBLISHING"
+    },
+    {
+     "t": 1792000480.202913,
+     "status": "ENDPOINT_INACTIVE"
+    }
+   ]
+  },
+  {
+   "id": "IN_ZAjizZdZ2oNZ",
+   "name": "vg-test-url",
+   "inputType": "URL_INPUT",
+   "url": "https://vg-test.invalid/stream.m3u8",
+   "room": "vg-ingress-1792000409",
+   "participant": "vg-url",
+   "transcoding": true,
+   "reusable": false,
+   "enabled": true,
+   "status": "ENDPOINT_ERROR",
+   "error": "Could not resolve server name.",
+   "roomSid": "RM_NGVmVf7WWV2P",
+   "startedAt": 1792000410.0132592,
+   "endedAt": 1792000410.9364152,
+   "audioIn": null,
+   "videoIn": null,
+   "createdAt": 1792000410.320087,
+   "published": [],
+   "history": [
+    {
+     "t": 1792000410.4456902,
+     "status": "ENDPOINT_BUFFERING"
+    },
+    {
+     "t": 1792000412.608528,
+     "status": "ENDPOINT_ERROR"
+    }
+   ]
+  }
+ ]
+}

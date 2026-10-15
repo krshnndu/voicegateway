@@ -12,11 +12,11 @@ repos:
     hooks:
     -   id: check-added-large-files
         # 250 KiB, not the 500 KiB default. The default is why a 404 KiB
-        # duplicate screenshot once reached main and stayed there. uv.lock is
-        # the one tracked file allowed over it, path-anchored so a copy under
-        # any other name is still caught.
+        # duplicate screenshot once reached main and stayed there. uv.lock
+        # and the dashboard's npm lockfile are the tracked files allowed over it,
+        # path-anchored so a copy under any other name is still caught.
         args: [--maxkb=250]
-        exclude: ^uv\.lock$
+        exclude: ^(uv\.lock|dashboard/package-lock\.json)$
     -   id: check-toml
     -   id: check-yaml
         args:
