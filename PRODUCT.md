@@ -31,12 +31,13 @@ The only open-source, self-hosted tool that puts SIP, media server and agent tur
 6. Alerts: the checks VoiceGateway already runs (slow answers, failed agent jobs, lost recordings, unencrypted phone legs) notify Slack, Microsoft Teams, Discord, PagerDuty, Opsgenie, email or a webhook (decision 0020).
 7. Issues: the same checks grouped across calls and components, so a pattern reads as one row with the calls it was found on (decision 0021).
 8. Capacity test: from one click, synthetic calls ramp at an idle agent until a job is refused, giving calls at once per worker or replica (decision 0022).
+9. Embeddable widgets: answer time, calls, one call, turn anatomy and issues as frames a platform can put in its own product, behind a short-lived read-only token and an origin allow-list (decision 0023).
+10. VoiceGateway Cloud: the same product hosted. A team signs up, pays through Stripe and traces its first call without anyone from VoiceGateway acting; self-hosting stays free (decision 0024).
 
 ## Out of scope for V1
 
 - Prices and cost: usage numbers are exact, prices drift (decision 0010).
 - Frameworks other than LiveKit: depth on one stack beats shallow coverage of many.
-- A hosted service: V1 runs on your servers only.
 - An embedded single-process mode: one install shape to build and test (decision 0005).
 - Call scoring: it needs traces first.
 

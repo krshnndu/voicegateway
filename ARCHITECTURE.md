@@ -133,6 +133,7 @@ Proposed, for review:
 
 - One `deploy/compose.yaml` starts all six services. The image is published per release.
 - Upgrades run `voicegateway migrate` before the new roles start. Rolling back means the previous image tag; migrations only add.
+- VoiceGateway Cloud runs the same image, one stack per region, with its control plane (sign-up, provisioning, Stripe billing) in the private `voicegateway-cloud` repository (0017, 0024).
 
 ## Observability
 

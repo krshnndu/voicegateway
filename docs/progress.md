@@ -18,6 +18,7 @@ Phase 1: the console, UI first. Spec: docs/specs/phase01-console.md.
 
 ## In progress (Phase 1)
 
+- Console identity: selected Mergepoint concept 02 and Inter Semibold lettering form a single outlined wordmark, with light/dark SVGs in the existing ink and logo-only Gateway Teal. Typography was tuned to the system UI at 16px/600 after reviewing the earlier heavier geometric treatment. A brief electric sweep runs on entry and hover, with a static reduced-motion version. The tab icon and title match; the collapsed rail keeps its toggle. Artwork renders are checked at actual size; live browser verification is pending because localhost access is blocked by a saved browser permission.
 - Alerts (decision 0020, PRODUCT.md updated): a top-level page with seven rules built on the existing checks, each evaluated on the captured data (17 would have fired), channels picked per rule. Slack, Microsoft Teams, Discord, PagerDuty, Opsgenie, email and webhook sit under Settings, Integrations; they connect on the server in Phase 2 so no secret is kept in the browser.
 - Settings: a modal (sidebar-in-dialog) with eight OSS sections. Thresholds, tags and appearance work and are kept in the browser; the rest shows the captured project or "Not set" until Phase 2. One answer budget now drives every page (it was 1.5 s on Calls and 0.8 s on Overview). The OSS, Enterprise and Cloud line is decision 0017; Enterprise settings show as locked rows (0018); inviting people with organisation roles is open source (0019). Changes to tags and thresholds can be undone from a toast.
 - Overview: a one-line verdict and one tile per page (Calls, Alerts, Agent workers, Media server, Phone bridge, Egress, Ingress), each computed by the same model and checks as the page it opens. Failures from our own tests are labelled and kept out of the verdict. The model, worker and media-server layers stay below; the phone-bridge layer now links to the SIP page instead of saying no bridge is connected. With this, every Phase 1 page is built from captured data; nothing is committed yet.
@@ -34,16 +35,23 @@ Phase 1: the console, UI first. Spec: docs/specs/phase01-console.md.
 - Calls: select rows to archive; Archived is its own tab, the stat cards follow the tab, and the call drawer has Archive/Unarchive. Nothing is deleted. Kept in this browser (vg.call-archive).
 - Alerts revamp: would-have-fired chart by day and severity, compact stats, rule cards with a severity rail, on switch, count and per-day strip, an Active now pulse and channel toggles; history as a day-grouped timeline.
 - Responsive pass: 12 pages at 320, 375, 414, 768, 1024, 1280, 1440 and 1920 px have no sideways overflow and no console errors. Settings and its Access tabs were checked at 320, 360, 390, 768 and 1024 px. Below 1024 px the sidebar is a sheet. On phones, Settings swaps its side menu for a page picker, the call drawer stacks transcript over insights, and Turn anatomy scrolls sideways inside its card.
+- Deep links: every page lives under /org/<org>/project/<project>/ (the router's rewrite adds and strips the scope, so internal routes stay short; bare links such as /calls are moved under the current project). The org is default and the project is its name as a slug (/org/default/project/default-project/). Page state is in the query string: tabs, views, time range, table filters and sort, the open call with its turn and pane, open room or agent drawers, the Overview agent, and Settings with its page and Access tab.
+- Embeddable widgets (decision 0023): answer time, turn anatomy, calls, one call and issues at /org/<id>/project/<id>/embed/<widget>, with no console shell, ?theme=light|dark, links that stay inside the widgets, and "Powered by VoiceGateway". Settings, Embeds previews the real widget and gives the iframe snippet. Embed tokens and allowed origins are Phase 2 server work; per-customer tokens and removing the branding are Enterprise.
 - Live page: deviates from the Phase 1 spec, which asks for an empty state. Agreed 2026-10-14: a continuously running stream in the style of Logfire's live view. Each room is a bar that grows while it is open; clicking it opens the call drawer, or the room drawer when there is no call. It replays the captured rooms at real speed, skipping the hours between watches. The real feed stays Phase 2.
 - Call drawer rebuilt from the LiveKit Agents 1.8.6, rtc 1.1.20 and Go protocol 1.52.1 sources: whole-call timeline (turns, caller, agent, tools; zooms to a turn), turn inspector, call summary, event log and trace. Fixtures: two real LiveKit Agent Console sessions (cascaded and gpt-realtime-2) plus the spike calls. No backend yet.
 
 ## Next
 
-1. Phase 0, clean slate: remove the old Python core, the old dashboard and their CI, in their own PR, so agents stop reading them as current.
-2. Phase 1, console: the whole console shell with every page, the calls list and call detail built fully. Pre-built components only (DESIGN.md). Data comes from a mock API that serves real captured fixtures through the dashboard API contract.
-3. Phase 2 onward: the backend that fulfils the contract (ingest, worker, webhooks, spans), then SFU, SIP and the live view.
+Plan agreed 2026-10-15: a team builds V1 with Cloud (decision 0024) over 30 days, release target 5 Nov.
+
+1. Freeze the contract: finish Phase 1's OpenAPI spec with x-source, generated types and the mock API, so the lanes build against one interface.
+2. Build V1 on its own branch; main keeps the current release until V1 replaces it. Phase 0 (removing the old Python core) lands with that switch.
+3. Lanes in parallel: ingest and calls, projects and auth, LiveKit surfaces, actions (alerts, recordings, MCP, capacity test, embed tokens), Cloud control plane with Stripe self-serve, release hardening.
+4. One pinned tracking issue on GitHub, split into owned issues with acceptance checks.
 
 ## Open Questions
+
+- Cloud billing unit and prices (0024): set in Stripe before launch, never per audio minute.
 
 - Which LiveKit Agents releases we test the observability upload against (0014); the paths carry v0 and can change.
 

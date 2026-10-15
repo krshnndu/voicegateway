@@ -29,6 +29,8 @@ Option 1.
 | Audit log, advanced retention and PII masking policies | no | yes | yes |
 | Ingestion limits per API key and per project | no | yes | yes |
 | Organisation and instance management API, white-label | no | yes | yes |
+| Embeddable widgets with embed tokens and allowed origins (0023) | yes | yes | yes |
+| Embed tokens scoped to one end customer, widgets without VoiceGateway branding (0023) | no | yes | yes |
 | Support with an SLA | community | yes | yes |
 | Hosting, backups, upgrades | no | no | yes |
 
@@ -46,7 +48,7 @@ License keys:
 
 ## Consequences
 
-- V1 ships no Enterprise code and no keys (0005 keeps V1 self-hosted only). `ee/` stays empty until the first Enterprise customer.
+- V1 ships no Enterprise code and no keys. `ee/` stays empty until the first Enterprise customer. Cloud ships in V1, sold self-serve (0024).
 - Settings shows OSS sections only. Enterprise sections (members and roles, SSO, audit log, organisations, license) come with `ee/`, marked as Enterprise.
 - Every product change goes to the public repository first. The cloud repository never patches the product; if it needs a hook, the hook is added upstream.
 - Moving a feature across this line needs a new decision.

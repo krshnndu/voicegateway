@@ -23,6 +23,8 @@ A developer opens the VoiceGateway console, sees every page of the product, and 
 - TypeScript types generated from the contract. The console imports only generated types for API data.
 - A mock API with MSW serving fixtures through the contract.
 - Fixtures captured from a real local session: `livekit-server --dev`, one LiveKit Agents session, webhooks and OTLP spans, converted to contract shape. TURN passwords and keys are removed before they are committed.
+- Embeddable widgets (decision 0023): answer time, calls, one call, turn anatomy and issues at `/org/<id>/project/<id>/embed/<widget>`, without the console shell, with "Powered by VoiceGateway", plus Settings, Embeds with a preview and a snippet. Tokens and allowed origins wait for Phase 2.
+- Deep links: every page under `/org/<id>/project/<id>/`, with shareable page state in the query string.
 - Makefile targets for the web app: `make dev`, `make test`, `make lint` (web parts only in this phase).
 
 ## Out of Scope
