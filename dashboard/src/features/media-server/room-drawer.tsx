@@ -110,7 +110,7 @@ export function RoomDrawer({ room, open, onOpenChange }: { room: Room | null; op
 }
 
 const originIcon: Record<Origin["kind"], Icon> = { "phone-in": Phone, "phone-out": Phone, dispatch: Robot, unknown: Question }
-export function OriginLine({ room }: { room: Room }) {
+function OriginLine({ room }: { room: Room }) {
   const o = roomOrigin(room)
   const I = originIcon[o.kind]
   return (

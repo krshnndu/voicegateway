@@ -11,13 +11,3 @@ export function Unknown({ why }: { why: string }) {
     </Tooltip>
   )
 }
-
-export function Value({ v, unit, why }: { v: number | null | undefined; unit?: string; why: string }) {
-  if (v === null || v === undefined) return <Unknown why={why} />
-  return (
-    <span className="font-mono tabular-nums">
-      {v}
-      {unit && <span className="text-muted-foreground"> {unit}</span>}
-    </span>
-  )
-}

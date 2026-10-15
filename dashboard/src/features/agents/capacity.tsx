@@ -28,7 +28,7 @@ const median = (xs: number[]) => (xs.length ? [...xs].sort((a, b) => a - b)[Math
 
 // Idle as far as the captured data can tell: no watched room still had this agent in it when its watch
 // ended. The server checks again, live, just before it starts.
-export function idleNow(a: Agent) {
+function idleNow(a: Agent) {
   const name = a.name ?? "unnamed"
   const busy = data.rooms.filter((r) => openAtWatchEnd(r) && r.participants.some((p) => p.kind === "agent" && (p.agentName ?? "unnamed") === name && openAtWatchEnd(p)))
   const lastRead = Math.max(...data.windows.map((w) => w.end))

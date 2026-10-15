@@ -38,7 +38,7 @@ const at = (day: Date, time: string) => {
 }
 const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString()
 
-export function rangeLabel(r: TimeRange) {
+function rangeLabel(r: TimeRange) {
   const p = presets.find((x) => x.id === r.preset)
   if (p) return p.label
   const a = new Date(r.from * 1000)
