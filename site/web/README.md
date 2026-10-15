@@ -1,6 +1,6 @@
 # voicegateway.dev
 
-The production landing page now lives in the separate `voicegateway-web` repository on Cloudflare Pages. This Astro Worker remains the API owner for `/api/waitlist` and `/api/stats`, using the existing `voicegateway-waitlist` D1 database. Pages calls it through a private `VOICEGATEWAY_API` service binding. The old static site is retained here, but the apex custom domain belongs to Pages. Do not reattach `voicegateway.dev` to this Worker.
+The production landing page lives beside this Worker in `site/landing`, in this repository, on Cloudflare Pages. This Astro Worker remains the API owner for `/api/waitlist` and `/api/stats`, using the existing `voicegateway-waitlist` D1 database. Pages calls it through a private `VOICEGATEWAY_API` service binding. The old static site is retained here, but the apex custom domain belongs to Pages. Do not reattach `voicegateway.dev` to this Worker.
 
 ```bash
 npm ci

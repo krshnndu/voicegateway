@@ -17,7 +17,7 @@ repos:
         # The README teaser has its own 5 MiB cap below,
         # path-anchored so a copy under any other name is still caught.
         args: [--maxkb=250]
-        exclude: ^(uv\.lock|dashboard/package-lock\.json|docs/assets/voicegateway-teaser\.gif)$
+        exclude: ^(uv\.lock|dashboard/package-lock\.json|site/landing/pnpm-lock\.yaml|docs/assets/voicegateway-teaser\.gif)$
     -   id: check-added-large-files
         name: check README teaser size
         args: [--maxkb=5120]
