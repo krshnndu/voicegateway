@@ -1,0 +1,16 @@
+{
+  "name": "voicegateway-console-teaser",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.8.162 preview",
+    "check": "npx --yes hyperframes@0.8.162 check",
+    "render": "npx --yes hyperframes@0.8.162 render --quality high --fps 30 --workers 2 --output ../brag.raw.mp4",
+    "prepare-assets": "node scripts/prepare-assets.mjs",
+    "finish": "bash scripts/finish.sh",
+    "preview": "npx --yes hyperframes@0.8.162 preview --background"
+  },
+  "devDependencies": {
+    "gsap": "3.14.2"
+  }
+}

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1600, height=1000" />
+  <title>VoiceGateway · Follow the call</title>
+  <script src="assets/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html,body { margin:0; background:#fff; color:#1d1d1f; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    #film { position:relative; width:1600px; height:1000px; overflow:hidden; background:#fff; }
+    .masthead { position:absolute; left:64px; right:64px; top:48px; height:54px; display:flex; justify-content:space-between; align-items:center; z-index:20; }
+    .masthead img { display:block; width:288px; height:48px; }
+    .preview { font-size:25px; font-weight:500; color:#6e6e73; letter-spacing:-.4px; }
+    .footer { position:absolute; bottom:39px; left:64px; right:64px; height:32px; display:flex; justify-content:space-between; align-items:center; z-index:20; font-size:24px; color:#6e6e73; }
+    .footer-line { height:2px; width:106px; background:#d2d2d7; overflow:hidden; }
+    .footer-progress { height:2px; width:106px; background:#0071e3; transform-origin:left center; }
+    .clip { position:absolute; inset:0; overflow:hidden; }
+    .scene-inner { position:absolute; inset:0; }
+    .hook-layout { position:absolute; left:64px; right:64px; top:250px; display:grid; grid-template-columns:850px 520px; gap:66px; align-items:center; }
+    .eyebrow { margin:0 0 24px; color:#0071e3; font-size:26px; font-weight:600; letter-spacing:2px; text-transform:uppercase; }
+    h1,h2,p { margin:0; }
+    #question { max-width:850px; font-size:112px; font-weight:650; line-height:1.04; letter-spacing:-5.5px; }
+    #hook-sub { margin-top:30px; color:#6e6e73; font-size:31px; line-height:1.4; }
+    .gauge-frame { width:510px; height:425px; overflow:hidden; border-radius:36px; background:#fff; }
+    .gauge-image { width:1931.2px; height:425px; display:block; max-width:none; }
+    .heading { position:absolute; left:64px; right:64px; top:191px; }
+    .heading h2 { font-size:88px; line-height:1.05; letter-spacing:-4px; font-weight:650; }
+    .heading p { margin-top:22px; font-size:29px; line-height:1.35; color:#6e6e73; }
+    .surface { position:absolute; left:64px; right:64px; overflow:hidden; background:#f5f5f7; border:1px solid #d2d2d7; border-radius:28px; }
+    .surface img { display:block; width:100%; height:100%; object-fit:contain; }
+    .world { width:100%; height:100%; transform-origin:center center; }
+    #turn-surface { top:421px; height:348px; }
+    #wire-surface { top:369px; height:512px; }
+    .image-note { position:absolute; left:64px; top:798px; font-size:25px; color:#6e6e73; }
+    .annotation-paths { position:absolute; inset:0; width:1600px; height:1000px; pointer-events:none; }
+    .annotation-paths path { fill:none; stroke:#0071e3; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+    .annotation-note { position:absolute; padding:10px 17px; background:#fff; border:2px solid #0071e3; border-radius:12px; color:#0071e3; font-size:25px; font-weight:550; white-space:nowrap; }
+    #slow-note { left:725px; top:650px; }
+    #unknown-note { left:140px; top:787px; }
+    .close-layout { position:absolute; left:64px; right:64px; top:292px; }
+    .brand-lockup { position:relative; width:672px; height:112px; }
+    .brand-lockup img { display:block; width:672px; height:112px; }
+    .energy-mask { position:absolute; inset:0; mask:url(assets/wordmark.svg) center/contain no-repeat; -webkit-mask:url(assets/wordmark.svg) center/contain no-repeat; overflow:hidden; }
+    .energy-line { width:90px; height:112px; background:#1f96aa; opacity:0; }
+    #closing-line { margin-top:68px; font-size:82px; font-weight:600; line-height:1.12; letter-spacing:-3.6px; }
+    #closing-line span { display:block; color:#6e6e73; }
+    #closing-status { margin-top:42px; font-size:27px; color:#6e6e73; }
+  </style>
+</head>
+<body>
+  <div data-hf-id="hf-kx7z" id="film" data-composition-id="voicegateway" data-start="0" data-duration="18" data-width="1600" data-height="1000">
+    <header data-hf-id="hf-vcxt" class="masthead"><img data-hf-id="hf-u61r" src="assets/wordmark.svg" alt="VoiceGateway" /><div data-hf-id="hf-7u89" class="preview">Console preview</div></header>
+    <section data-hf-id="hf-m67u" id="hook" class="clip" data-start="0" data-duration="3.2" data-track-index="0">
+      <div data-hf-id="hf-r10z" class="scene-inner" id="hook-inner">
+        <div data-hf-id="hf-e60g" class="hook-layout">
+          <div data-hf-id="hf-yeow"><p data-hf-id="hf-u7vt" class="eyebrow" id="hook-label">Voice agent debugging</p><h1 data-hf-id="hf-js07" id="question">Why was that call slow?</h1><p data-hf-id="hf-3410" id="hook-sub">Start with the whole picture.</p></div>
+          <div data-hf-id="hf-iyn4" class="gauge-frame" id="gauge-frame"><img data-hf-id="hf-6eya" class="gauge-image" data-layout-allow-overflow src="assets/turns.jpg" alt="Captured console answer-time gauge" /></div>
+        </div>
+      </div>
+    </section>
+    <section data-hf-id="hf-o0g9" id="turns" class="clip" data-start="3.2" data-duration="4.8" data-track-index="0">
+      <div data-hf-id="hf-dgtk" class="scene-inner" id="turns-inner">
+        <div data-hf-id="hf-had6" class="heading"><h2 data-hf-id="hf-h37l" id="turn-title">Every turn. One view.</h2><p data-hf-id="hf-uezu" id="turn-sub">See the answer time against your budget.</p></div>
+        <div data-hf-id="hf-c5wo" class="surface" id="turn-surface"><div data-hf-id="hf-3555" class="world" id="turn-world" data-layout-allow-overflow><img data-hf-id="hf-xa04" src="assets/turns.jpg" alt="Actual Overview gauge and distribution of turn answer times" /></div></div>
+        <p data-hf-id="hf-lrv9" class="image-note" id="turn-note">Captured console data · each dot is a turn</p>
+      </div>
+    </section>
+    <section data-hf-id="hf-grmk" id="wire" class="clip" data-start="8" data-duration="5.4" data-track-index="0">
+      <div data-hf-id="hf-s2wd" class="scene-inner" id="wire-inner">
+        <div data-hf-id="hf-03fi" class="heading"><h2 data-hf-id="hf-asw6" id="wire-title">Follow the call.</h2><p data-hf-id="hf-ss2y" id="wire-sub">Phone line. Media server. Agent. Models.</p></div>
+        <div data-hf-id="hf-ss6y" class="surface" id="wire-surface"><div data-hf-id="hf-effr" class="world" id="wire-world" data-layout-allow-overflow><img data-hf-id="hf-nnul" src="assets/live-wire.jpg" alt="Actual Live wire view joining callers, phone bridge, media server, agents and model providers" /></div></div>
+        <svg data-hf-id="hf-pu3z" class="annotation-paths" viewBox="0 0 1600 1000" aria-hidden="true">
+          <path data-hf-id="hf-8coy" id="slow-pointer" d="M 855 648 C 850 620, 882 601, 887 561 M 880 571 L 887 560 L 895 570" />
+          <path data-hf-id="hf-xlhb" id="unknown-pointer" d="M 286 785 C 265 721, 352 659, 440 554 M 429 560 L 441 552 L 440 565" />
+        </svg>
+        <p data-hf-id="hf-7hb8" class="annotation-note" id="slow-note">Start with this hop</p>
+        <p data-hf-id="hf-iioy" class="annotation-note" id="unknown-note">Unknown stays unknown</p>
+      </div>
+    </section>
+    <section data-hf-id="hf-xj4v" id="closing" class="clip" data-start="13.4" data-duration="4.6" data-track-index="0">
+      <div data-hf-id="hf-y2e9" class="scene-inner" id="closing-inner">
+        <div data-hf-id="hf-uj03" class="close-layout">
+          <div data-hf-id="hf-rpr9" class="brand-lockup" id="closing-brand"><img data-hf-id="hf-u8bj" src="assets/wordmark.svg" alt="VoiceGateway" /><div data-hf-id="hf-sgkq" class="energy-mask" aria-hidden="true"><div data-hf-id="hf-prrl" class="energy-line" id="brand-energy"></div></div></div>
+          <h2 data-hf-id="hf-1llc" id="closing-line">Follow the call.<span data-hf-id="hf-yb5o">Find the cause.</span></h2>
+          <p data-hf-id="hf-sad2" id="closing-status">Console preview · OSS + Cloud V1 in progress</p>
+        </div>
+      </div>
+    </section>
+    <footer data-hf-id="hf-vadb" class="footer"><span data-hf-id="hf-92l8">voicegateway.dev</span><div data-hf-id="hf-3t94" class="footer-line"><div data-hf-id="hf-dcg9" class="footer-progress" id="film-progress"></div></div></footer>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused:true });
+    // The source screenshot is visible on frame zero. Short entrances settle before reading.
+    tl.fromTo('#question', {y:22, opacity:.3}, {y:0, opacity:1, duration:.45, ease:'power3.out'}, 0);
+    tl.fromTo('#hook-label', {opacity:.3}, {opacity:1, duration:.3}, 0);
+    tl.fromTo('#hook-sub', {y:12, opacity:0}, {y:0, opacity:1, duration:.4, ease:'power2.out'}, .2);
+    tl.fromTo('#gauge-frame', {scale:.97}, {scale:1, duration:.7, ease:'power2.out'}, 0);
+    // Adapted from the installed ui-focus-zoom primitive: one screenshot world owns the camera.
+    // No fake cursor, skeleton UI, halo, color grading or continuous micro-drift.
+    tl.fromTo('#turn-title', {y:20, opacity:0}, {y:0, opacity:1, duration:.45, ease:'power3.out'}, 3.2);
+    tl.fromTo('#turn-sub', {opacity:0}, {opacity:1, duration:.35}, 3.4);
+    tl.fromTo('#turn-surface', {y:22, opacity:.4}, {y:0, opacity:1, duration:.6, ease:'power2.out'}, 3.2);
+    tl.fromTo('#turn-note', {opacity:0}, {opacity:1, duration:.35}, 3.8);
+    tl.fromTo('#turn-world', {scale:1}, {scale:1.025, duration:1.0, ease:'power2.inOut'}, 5.2);
+    tl.fromTo('#wire-title', {y:20, opacity:0}, {y:0, opacity:1, duration:.45, ease:'power3.out'}, 8);
+    tl.fromTo('#wire-sub', {opacity:0}, {opacity:1, duration:.35}, 8.2);
+    tl.fromTo('#wire-surface', {y:22, opacity:.4}, {y:0, opacity:1, duration:.6, ease:'power2.out'}, 8);
+    tl.fromTo('#wire-world', {scale:1, x:0}, {scale:1.03, x:-9, duration:1.1, ease:'power2.inOut'}, 10);
+    // Callout gesture adapted from vox-annotate. The arrows point to captured labels,
+    // while the blue notes remain separate editorial overlays, never changed data.
+    for (const [selector, start] of [['#slow-pointer', 11.1], ['#unknown-pointer', 11.28]]) {
+      const path = document.querySelector(selector);
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = String(length);
+      tl.fromTo(path, {strokeDashoffset:length, opacity:0}, {strokeDashoffset:0, opacity:1, duration:.48, ease:'power2.out'}, start);
+    }
+    tl.fromTo('#slow-note', {y:8, opacity:0}, {y:0, opacity:1, duration:.3, ease:'power2.out'}, 11.4);
+    tl.fromTo('#unknown-note', {y:8, opacity:0}, {y:0, opacity:1, duration:.3, ease:'power2.out'}, 11.55);
+    tl.fromTo('#closing-brand' , {y:16, opacity:0}, {y:0, opacity:1, duration:.55, ease:'power3.out'}, 13.4);
+    tl.fromTo('#closing-line', {y:20, opacity:0}, {y:0, opacity:1, duration:.5, ease:'power3.out'}, 13.65);
+    tl.fromTo('#closing-status', {opacity:0}, {opacity:1, duration:.4}, 14);
+    tl.fromTo('#brand-energy', {x:-90, opacity:0}, {x:672, opacity:.8, duration:1.1, ease:'none'}, 14.1);
+    tl.to('#brand-energy', {opacity:0, duration:.2}, 15.2);
+    tl.fromTo('#film-progress', {scaleX:0}, {scaleX:1, duration:18, ease:'none'}, 0);
+    window.__timelines['voicegateway'] = tl;
+  </script>
+</body>
+</html>
