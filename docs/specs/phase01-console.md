@@ -30,7 +30,7 @@ A developer opens the VoiceGateway console, sees every page of the product, and 
 - Any Go code. The backend starts in Phase 2.
 - Removing the old Python code (Phase 0).
 - SFU, SIP and live data views beyond their empty states.
-- Recordings (0008), prices or cost (0010), MCP.
+- Recording capture and playback of real audio (0008): the console shows the recording panel with its turn regions and the recordings-off state only. Prices or cost (0010), MCP.
 - The docs and landing site in `site/`.
 
 ## Constraints

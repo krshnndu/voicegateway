@@ -21,19 +21,20 @@ It is a working tool, not a landing page. Pages are calm and spacious, while tab
 
 **Key Characteristics:**
 - Light first, with a dark mode designed on its own terms, not inverted.
-- One accent: VoiceGateway teal, rare on purpose.
+- One accent: Apple blue, rare on purpose.
 - Depth from tonal layers (white on soft grey), not shadows.
 - Large radii, hairline separators, generous space around dense data.
 - Real numbers are the hero; unknown values are shown as unknown.
 
 ## Colors
 
-A near-monochrome Apple palette with one teal signal.
+A near-monochrome Apple palette with one blue signal.
 
 ### Primary
-- **Gateway Teal Ink** (#167A8B light): the accent for text-sized use in light mode: primary buttons (white label, 5.0:1), links, the active nav item, focus rings, the one chart series that matters.
-- **Gateway Teal** (#1F96AA): the logo teal. In light mode only for large fills and the logo (3.5:1 on white fails text contrast). In dark mode it is the accent for everything (6.0:1 on black, 4.9:1 on grouped grey, black label on it 6.0:1).
-- **Teal Mist** (#e6f4f6 light, #0d2a2f dark): accent backgrounds: selected rows, active filter chips.
+- **Apple Blue** (#0071E3 light): primary buttons (white label, 4.7:1), links, the active nav item, focus rings, the one chart series that matters. 4.7:1 on white, 4.3:1 on Grouped Grey, so text-sized blue sits on white surfaces only.
+- **Apple Blue, dark** (#2997FF dark): the same roles in dark mode (7.0:1 on black, 5.6:1 on grouped grey, black label on it 7.0:1).
+- **Blue Mist** (#e8f1fc light, #0b2340 dark): accent backgrounds: selected rows, active filter chips.
+- **Gateway Teal** (#1F96AA): the logo only. Never a UI color.
 
 ### Neutral
 - **Canvas** (#ffffff light, #000000 dark): page background and cards.
@@ -49,13 +50,13 @@ A near-monochrome Apple palette with one teal signal.
 - Status is always a label plus color, never color alone.
 
 ### Named Rules
-**The One Signal Rule.** Teal appears on at most one interactive element per viewport outside charts. If two teal things compete, one is wrong.
-**The Ink Rule.** Text-sized teal in light mode is always Gateway Teal Ink (#167A8B), never the logo teal.
+**The One Signal Rule.** Blue appears on at most one interactive element per viewport outside charts. If two blue things compete, one is wrong.
+**The White Ground Rule.** Text-sized blue sits on white (4.7:1), never on Grouped Grey (4.3:1).
 
 ## Typography
 
 **Display and Body Font:** the system stack (`-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, sans-serif`), which renders as SF Pro on Apple devices.
-**Mono Font:** `"SF Mono", ui-monospace, "JetBrains Mono", monospace`, with tabular figures, for latency, tokens, ids and timestamps.
+**Mono Font:** `"SF Mono", ui-monospace, "JetBrains Mono", monospace`, for ids, span names and code only. Never as a costume for numbers.
 
 **Character:** Apple's own voice: confident, tight headlines over plain, comfortable text.
 
@@ -68,7 +69,7 @@ A near-monochrome Apple palette with one teal signal.
 
 ### Named Rules
 **The Two-Tone Headline Rule.** A page headline may pair an Ink statement with a Secondary Ink follow-up, Apple style. Never more than two tones.
-**The Tabular Rule.** Every number that can sit in a column uses the mono font with tabular figures.
+**The Tabular Rule.** Every number that can sit in a column uses the system sans with tabular figures, so columns align without a monospace font.
 
 ## Layout
 
@@ -84,6 +85,17 @@ Flat by default. Depth comes from tonal layering: white Raised cards on Grouped 
 
 Soft, generous corners in the Apple manner: large radius on cards and panels (about 16 to 20px), smaller on controls, pill shapes for status chips and segmented controls. Borders are 1px hairlines in Separator, used only where tonal layering cannot separate. [exact radii to be resolved during implementation]
 
+## Components
+
+The console is assembled from libraries, themed only through the tokens above.
+
+- **Primitives:** shadcn/ui (Radix base): sidebar, table, card, input, toggle group, dropdown menu, avatar, breadcrumb, tooltip, empty state.
+- **Charts and data viz:** Tremor's copy-paste components (Apache-2.0, Tailwind v4), recoloured through an `accent` and a `quiet` entry in their chart colours. Bar charts, bar lists, trackers and category bars. The span timeline stays on shadcn Chart range bars.
+- **Gauges:** Gauge UI (@gauge-ui registry), for infrastructure limits.
+- **Icons:** Phosphor, regular weight, 18px, one family everywhere. No Lucide in our own code.
+- **Containers:** one bordered panel per block (white, 1px hairline, 12px radius), never nested. Measurements sit in one divided stat strip, not a grid of hero cards.
+- **Status:** a dot plus a word, never color alone.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -91,11 +103,11 @@ Soft, generous corners in the Apple manner: large radius on cards and panels (ab
 - **Do** keep text contrast at 4.5:1 or above in both themes; the ratios above are the reference.
 - **Do** show unknown and unobserved values as a dash with a reason on hover, never as 0.
 - **Do** let real data lead each page: a latency, a call, a node.
-- **Do** design dark mode as its own world (black canvas, grouped greys, logo teal accent).
+- **Do** design dark mode as its own world (black canvas, grouped greys, #2997FF accent).
 
 ### Don't:
 - **Don't** hand-write component markup, CSS or SVG when a library component exists.
-- **Don't** use the logo teal (#1F96AA) for text or white labels in light mode.
+- **Don't** use the logo teal (#1F96AA) anywhere in the interface.
 - **Don't** add gradients, glass effects, heavy shadows, decorative illustration or a second accent.
 - **Don't** use em dashes in UI copy.
 - **Don't** reuse the old teal dashboard look (teal on #F7FAFB with soft shadows) or the purple site palette in the console.

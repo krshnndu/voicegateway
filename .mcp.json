@@ -26,6 +26,14 @@
         "@magicuidesign/mcp@2.0.0"
       ],
       "env": {}
+    },
+    "reui": {
+      "type": "http",
+      "url": "https://mcp.reui.io"
+    },
+    "langchain-docs": {
+      "type": "http",
+      "url": "https://docs.langchain.com/mcp"
     }
   }
 }

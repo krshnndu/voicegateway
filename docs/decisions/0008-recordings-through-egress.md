@@ -1,7 +1,7 @@
 # 0008: Recordings through LiveKit Egress, opt-in
 
-- Status: proposed
-- Date: 2026-10-11
+- Status: accepted
+- Date: 2026-10-12
 
 ## Context
 
@@ -14,10 +14,11 @@ A complete call trace includes what the call sounded like. Until now VoiceGatewa
 
 ## Decision
 
-Option 2, off by default and enabled per project. Planned for after the V1 launch.
+Option 2, off by default and enabled per project. Ships in V1.
 
 ## Consequences
 
 - Audio never passes through VoiceGateway's services.
 - The rule "No audio is stored" in ARCHITECTURE.md changes to "Audio is stored only when a project turns recordings on, and only in the user's own bucket".
+- In the call view, the recording sits above the observed metrics with each agent turn as a selectable region. A project with recordings off says so instead of showing an empty player.
 - Retention applies to recording links and, where configured, to the objects in the bucket.

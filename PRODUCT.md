@@ -23,11 +23,14 @@ The only open-source, self-hosted tool that puts SIP, media server and agent tur
 
 ## V1 capabilities
 
-1. Call trace: every call with its transcript, per-turn latency for STT, LLM and TTS, and usage (tokens, audio seconds, characters).
+1. Call trace: every call with its transcript, per-turn latency for STT, LLM and TTS, usage (tokens, audio seconds, characters), and its recording when the project opts in (decision 0008).
 2. Media server and SIP: room, participant and SIP events, plus compute and memory of the servers, tied to the calls they served.
 3. Live view: calls in progress, updating as they happen.
-4. One install: `docker compose up` brings up the whole platform; one line in the agent connects it, or OpenTelemetry with no code.
+4. One install: `docker compose up` brings up the whole platform; one environment variable connects a LiveKit agent (decision 0014), one line connects other frameworks, or OpenTelemetry with no code.
 5. MCP access: coding agents can query calls and traces.
+6. Alerts: the checks VoiceGateway already runs (slow answers, failed agent jobs, lost recordings, unencrypted phone legs) notify Slack, Microsoft Teams, Discord, PagerDuty, Opsgenie, email or a webhook (decision 0020).
+7. Issues: the same checks grouped across calls and components, so a pattern reads as one row with the calls it was found on (decision 0021).
+8. Capacity test: from one click, synthetic calls ramp at an idle agent until a job is refused, giving calls at once per worker or replica (decision 0022).
 
 ## Out of scope for V1
 
@@ -35,8 +38,7 @@ The only open-source, self-hosted tool that puts SIP, media server and agent tur
 - Frameworks other than LiveKit: depth on one stack beats shallow coverage of many.
 - A hosted service: V1 runs on your servers only.
 - An embedded single-process mode: one install shape to build and test (decision 0005).
-- Recordings at launch: opt-in through LiveKit Egress, shipped after the first release (decision 0008).
-- Alerting and call scoring: users keep their existing alerting; scoring needs traces first.
+- Call scoring: it needs traces first.
 
 ## Success at launch
 

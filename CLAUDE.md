@@ -45,6 +45,7 @@ Every task goes through the root Makefile.
 
 - Use the framework's own way first. LiveKit tokens, webhooks, egress and SIP types: livekit skills and the livekit-docs MCP. ClickHouse and Redis: their skills. Go libraries: Context7. Our own code: gopls MCP.
 - UI: compose screens from pre-built components (shadcn/ui, Magic UI and other shadcn registries, via the shadcn and magicui MCPs). No hand-written component markup, CSS or SVG when a library component exists.
+- Lists and their filters use `src/components/data-table.tsx` (TanStack Table through ReUI's data grid, ReUI filter chips). A filter field's `get` returns null for unknown, which matches only "is empty". Files under `src/components/reui/` are vendored; keep local edits minimal.
 - Build from scratch only when no library method exists, and say so in the PR.
 - When we adopt a framework with an official skill or docs MCP, install it at project scope. If it cannot be installed, ask me.
 

@@ -13,18 +13,18 @@ VoiceGateway is one Go binary, `voicegateway`, run in two roles (0013): `web` ta
 
 | Component | Responsibility | Owns |
 | --- | --- | --- |
-| web | Checks keys, accepts events, webhooks and OTLP spans, appends them to the stream and answers fast. Serves the API, MCP and the dashboard files. | Nothing stored; reads Postgres and ClickHouse for queries |
+| web | Checks keys, accepts events, webhooks, OTLP spans and LiveKit agents' observability uploads (0014), appends them to the stream and answers fast. Serves the API, MCP and the dashboard files. | Nothing stored; reads Postgres and ClickHouse for queries |
 | worker | Reads the stream, joins events into calls, writes batches to ClickHouse, scrapes server metrics, closes stale calls, applies retention. | All writes to ClickHouse and the call index |
-| SDK (`sdk/python`) | `attach()` inside the agent: sends turns, metrics and usage. Fails open. | Nothing |
+| SDK (`sdk/python`) | `attach()` inside the agent, for frameworks without LiveKit's uploader and for data it lacks: sends turns, metrics and usage. Fails open. | Nothing |
 | Dashboard (`dashboard/`) | React app, built in its own Docker stage and served from disk by web (0011). | Nothing |
-| Postgres | Projects, API keys, settings, the call index. | Configuration |
+| Postgres | Projects (each one LiveKit project, with its URL, key and encrypted secret, 0016), API keys, settings, the call index. | Configuration |
 | ClickHouse | Events, turns, spans, usage and server metrics. | Everything measured |
 | Redis | The ingest stream, the live view feed, and locks for one-at-a-time jobs (0007). | Data in flight |
-| S3 or MinIO | Recordings written by LiveKit Egress, opt-in, after the first release (0008). | Audio |
+| S3 or MinIO | Recordings from the agent's session upload, or from LiveKit Egress, opt-in per project (0008, 0015). | Audio |
 
 ## Data Flow
 
-1. The SDK, LiveKit webhooks and OTLP spans reach web.
+1. LiveKit agents' observability uploads (0014), the SDK, LiveKit webhooks and OTLP spans reach web.
 2. web checks the key or the webhook signature, appends the event to the Redis stream and answers.
 3. worker reads the stream in a consumer group and matches each event to a call by room and time window, job id or trace id (0012).
 4. worker writes in batches to ClickHouse and acknowledges the stream entries only after the write lands. Entries that fail repeatedly go to a dead-letter stream.

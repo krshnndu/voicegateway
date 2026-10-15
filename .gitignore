@@ -484,3 +484,10 @@ qa/
 # Working documents for superpowers skills stay local; never committed.
 docs/superpowers/plans/
 docs/superpowers/specs/
+
+# Design-preview media generated locally, never committed
+dashboard/public/preview/
+dashboard/public/captures/
+
+# Impeccable design-review working notes stay local
+.impeccable/
