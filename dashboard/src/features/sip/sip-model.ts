@@ -15,8 +15,18 @@ export type CallHint = { trunkId: string | null; twilio: boolean }
 const docs = "https://docs.livekit.io"
 export const enc = (e: string | null | undefined) => (e === "SIP_MEDIA_ENCRYPT_REQUIRE" ? "SRTP" : e === "SIP_MEDIA_ENCRYPT_ALLOW" ? "SRTP if offered" : "RTP")
 export const transport = (t: string) => t.replace("SIP_TRANSPORT_", "")
-export const providerOf = (address: string) =>
-  address.endsWith("telnyx.com") ? "Telnyx" : address.endsWith("twilio.com") ? "Twilio" : address.endsWith("plivo.com") ? "Plivo" : address.includes("wavix") ? "Wavix" : address.includes("didlogic") ? "didlogic" : address.includes("sinch") ? "Sinch" : null
+// The trunk's host (no scheme, user or port) is the provider's domain or a subdomain of it.
+const hostOf = (address: string) =>
+  address
+    .replace(/^sips?:/, "")
+    .replace(/^[^@]*@/, "")
+    .replace(/:\d+$/, "")
+    .toLowerCase()
+const onDomain = (host: string, domain: string) => host === domain || host.endsWith(`.${domain}`)
+export const providerOf = (address: string) => {
+  const host = hostOf(address)
+  return onDomain(host, "telnyx.com") ? "Telnyx" : onDomain(host, "twilio.com") ? "Twilio" : onDomain(host, "plivo.com") ? "Plivo" : host.includes("wavix") ? "Wavix" : host.includes("didlogic") ? "didlogic" : host.includes("sinch") ? "Sinch" : null
+}
 
 export type Provider = { name: string; how: string; known: boolean }
 export type Route = { key: string; number: string; wildcard: boolean; livekit: boolean; trunk: Inbound | null; rules: Rule[]; provider: Provider; duplicate: boolean }
