@@ -481,3 +481,8 @@ dashboard/public/captures/
 
 # Impeccable design-review working notes stay local
 .impeccable/
+
+# Local README media authoring workspaces. Publish only the finished assets.
+/brag-output/
+/docs/assets/flow-source/
+/docs/assets/voicegateway-flow.reladraw

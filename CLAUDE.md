@@ -50,6 +50,10 @@ Every task goes through the root Makefile.
 - Build from scratch only when no library method exists, and say so in the PR.
 - When we adopt a framework with an official skill or docs MCP, install it at project scope. If it cannot be installed, ask me.
 
+## Git identity
+
+- Author and commit as `mahimairaja <mahimairaja3@gmail.com>`. Use the `mahimairaja` account for GitHub comments, pull requests and other writes. Verify the active account before writing; never add a bot or agent co-author.
+
 ## Versions
 
 - Pin exact versions: the `go` and `toolchain` lines, dev tools (golangci-lint, sqlc, goose, gofumpt) as `tool` directives in go.mod, images by tag and digest, npm with save-exact and the lockfile, Python dev tools in uv.lock.
