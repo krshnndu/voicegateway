@@ -1,6 +1,7 @@
-// voicegateway.dev: prerendered pages served as static assets, plus the Worker for
-// the on-demand routes (/api/waitlist, /api/stats, /demo/*). Signups are stored
-// in the voicegateway-waitlist D1 database.
+// API Worker for the Cloudflare Pages landing project in voicegateway-web.
+// Pages privately forwards /api/waitlist and /api/stats through its
+// VOICEGATEWAY_API service binding. D1 remains the signup source of truth.
+// The apex domain belongs to Pages; never reattach it to this Worker.
 //
 // Secrets, set once with `npx wrangler secret put <NAME>`:
 //   STATS_KEY           guards /api/stats
@@ -19,6 +20,6 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "voicegateway-waitlist", "database_id": "087d0e19-3e37-49a2-8750-ce52072a4f3c" }
   ],
-  "routes": [{ "pattern": "voicegateway.dev", "custom_domain": true }],
+  "routes": [],
   "observability": { "logs": { "enabled": true } }
 }
