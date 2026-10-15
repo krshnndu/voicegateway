@@ -1,77 +1,79 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project
 
-VoiceGateway: cost tracking and reconciliation for voice agents on LiveKit, Pipecat and OpenRTC. Meters the native STT, LLM, and TTS instances you pass to `attach()` / `guard()` across cloud providers (OpenAI, Deepgram, Anthropic, Groq, Cartesia, ElevenLabs, AssemblyAI) and local models (Whisper, Kokoro, Piper). LLM, STT, and TTS prices all flow through `voice-prices` (a fork of `pydantic/genai-prices`). Ships `voicegw reconcile` for verifying recorded numbers against provider invoices, plus per-modality cost tracking, resolver-time fallback chains, rate limiting, and a web dashboard.
+VoiceGateway: a self-hosted platform that profiles LiveKit voice agents end to end, one view per call, from the phone line to the model.
+
+## Source of truth
+
+Read these before any feature work. Do not restate their contents here.
+
+- PRODUCT.md: who it is for, what it does, what is out of scope.
+- ARCHITECTURE.md: components, boundaries, stack and the reasons for it.
+- DESIGN.md: visual system. Only for UI work.
+- docs/decisions/: why each major choice was made. Never reverse one without writing a new decision.
+- docs/specs/: one file per phase. The current phase is the one named in the prompt.
+- docs/progress.md: what is done, what is next, open questions.
+
+## Stack
+
+Go 1.26 (one binary, `voicegateway`), Postgres 16, ClickHouse 26.1, Redis 8, MinIO. Dashboard: React 19, TypeScript 5, Vite, Tailwind v4, shadcn/ui. SDK: Python 3.11 to 3.13. Exact versions live in go.mod, package.json, uv.lock and deploy/compose.yaml.
 
 ## Commands
 
-```bash
-# Install (editable, with dev dependencies)
-pip install -e ".[dev]"
+Every task goes through the root Makefile.
 
-# Run tests
-pytest
-pytest src/voicegateway/tests/core/test_config.py              # single file
-pytest src/voicegateway/tests/core/test_config.py::test_name   # single test
-pytest --cov                                                   # with coverage
+- Run locally: `make dev` (compose stack, web, worker, Vite dev server)
+- Test: `make test` (Go with `-race`, web, SDK); `make e2e` for test/
+- Lint and format: `make lint`; pre-commit runs the same on commit
 
-# CLI
-voicegw init                             # create config template
-voicegw serve --port 8080                # start HTTP API
-voicegw dashboard                        # open the web UI served by `voicegw serve`
-voicegw status                           # show provider status
+## Boundaries
 
-# Dashboard frontend (src/dashboard/frontend/)
-npm install && npm run dev               # dev server
-npm run build                            # production build
+- web never writes to ClickHouse; worker never answers HTTP. The Redis stream is their only contract.
+- Flat packages under `internal/`. Share only `event`, `stream`, `store`. No `utils/`, `common/`, `shared/`, `pkg/`.
+- Interfaces live in the package that uses them. Wiring is constructor injection in `internal/app` only.
+- The dashboard reads only through web's API, never a database.
 
-# Docker
-docker compose up -d                     # API + Dashboard
-docker compose --profile local up -d     # + Ollama
-```
+## Code quality
 
-## Architecture
+- Every commit passes the pre-commit hooks. Go: gofumpt, goimports, golangci-lint (vet, staticcheck, errcheck, gosec), `go mod tidy` clean. `sdk/python`: ruff, ruff format, mypy. `dashboard/`: eslint, prettier, `tsc --noEmit`.
+- Tests prove behaviour; coverage is not the goal. One test per rule that matters (a join, an ack after insert, unknown is not zero). Table-driven, run with `-race`.
+- Run the real thing instead of mocking it: Redis, ClickHouse and Postgres through testcontainers-go, webhooks from `livekit-server --dev`. Use `testing/synctest` for timers and batch flushes.
+- Frontend: Vitest with Testing Library, Playwright for user flows. Python SDK: pytest with LiveKit Agents' own test helpers (testing-livekit-agents skill).
 
-**Metering flow:** `voicegateway.attach(session)` detects the framework (LiveKit `AgentSession` or Pipecat `PipelineTask`) without importing it eagerly, subscribes to its metrics events, and `MetricCapture` turns each STT/LLM/TTS metric into a `RequestRecord` (audio seconds, tokens, characters). `inference/pricing/` prices it through `voice-prices`, then a `Sink` writes it: embedded SQLite by default, a remote collector in fleet mode, or ClickHouse. The dashboard and `/v1/*` read what the sinks stored. `guard()` wraps a single provider for fallback, rate limit and budget and writes no metrics.
+## Before writing code
 
-**Metering (`src/voicegateway/inference/`):**
-- `session/attach.py`: `attach()`, framework detection, turn, dead-air, tool-call, transcript and snapshot capture; `session/policy.py` holds the named capture policies
-- `session/capture.py`: `MetricCapture`, converts framework metrics to priced records
-- `livekit/`, `pipecat/`: framework-specific `guard()` implementations and the Pipecat `Observer`
-- `pricing/`: `calculate_cost_detail()` dispatches by modality to `voice-prices`; self-hosted `local/*` and `ollama/*` price at $0, catalogue matches without a rate are tagged `voice-prices-unrated`
-- `providers/`: 11 `BaseProvider` classes, registered in `core/registry.py`. They back the server's provider management and status endpoints, not the metering path.
+- Use the framework's own way first. LiveKit tokens, webhooks, egress and SIP types: livekit skills and the livekit-docs MCP. ClickHouse and Redis: their skills. Go libraries: Context7. Our own code: gopls MCP.
+- UI: compose screens from pre-built components (shadcn/ui, Magic UI and other shadcn registries, via the shadcn and magicui MCPs). No hand-written component markup, CSS or SVG when a library component exists.
+- Lists and their filters use `src/components/data-table.tsx` (TanStack Table through ReUI's data grid, ReUI filter chips). A filter field's `get` returns null for unknown, which matches only "is empty". Files under `src/components/reui/` are vendored; keep local edits minimal.
+- Page state someone would want to share (tabs, ranges, filters, the open drawer, the selected item) goes in the URL with `useUrlState` or `useUrlPick` from `src/lib/url-state.ts`, never in `useState`. Links stay scope-free (`/calls`); the router adds `/org/<id>/project/<id>`.
+- Build from scratch only when no library method exists, and say so in the PR.
+- When we adopt a framework with an official skill or docs MCP, install it at project scope. If it cannot be installed, ask me.
 
-**Core (`src/voicegateway/core/`):**
-- `gateway.py`: `Gateway`, a shared-state container (config, rate card, cost tracker, rate limiter, budget enforcer, storage) for the server, CLI and MCP; not a request router
-- `config.py`: YAML parser with `${ENV_VAR}` substitution
-- `container.py`, `app_wiring.py`: dependency-injector and SQLAlchemy wiring for the FastAPI app
-- `provider_names.py`: canonical provider ids, resolved against the `voice-prices` catalog
+## Versions
 
-**Accounting and billing:** `accounting/` holds versioned, strict wire contracts (decimal-string money) and `AccountingOutbox`, a restart-safe store-and-forward queue to a collector's `/v1/accounting/usage`. `billing/` holds the rate card, rating, and margin reconciliation.
+- Pin exact versions: the `go` and `toolchain` lines, dev tools (golangci-lint, sqlc, goose, gofumpt) as `tool` directives in go.mod, images by tag and digest, npm with save-exact and the lockfile, Python dev tools in uv.lock.
+- Exception: the published Python SDK declares compatible ranges for runtime dependencies so it does not break users' installs. Its lockfile stays exact.
 
-**Middleware (`src/voicegateway/middleware/`):** cost tracking, latency monitoring, rate limiting, budget enforcement, turn tracking, dead-air detection, replay capture, and background workers (node samples, latency and agent observations).
+## Never do
 
-**Storage:** SQLModel models in `models/`, repositories in `repository/`, services in `services/` (`storage_service.py` is the SQLite facade, `sinks.py` the write seam). Alembic migrations live in `alembic/` at the repo root and define the `daily_costs` and `project_daily_costs` views. Optional ClickHouse support lives in `clickhouse/`.
+- Never commit secrets or .env files.
+- Never invent data, API responses or test results. If something is unknown, say so.
+- Never mark a phase done until its acceptance checks pass.
+- Never change behaviour outside the current spec without asking first.
+- Never show a missing value as zero. Unknown stays unknown; inferred values say so.
+- Never log raw webhook or request bodies.
+- Never panic in the pipeline; return wrapped errors.
 
-**HTTP API (`src/voicegateway/server/main.py`):** one FastAPI app mounting the system router (`/health`), the `/v1/*` router (`server/api/`: costs, projects, logs, metrics, models, providers, accounting, ingest, sessions, and more), the dashboard router, and the openorca router. The MCP server behind `voicegw mcp` lives in `server/mcp/`.
+## How to ask me
 
-**Dashboard API (`/api/*`):** served by the same combined server, not a separate process. `server/routes.py` builds `dashboard_router = APIRouter(prefix="/api")` from `server/api/dashboard/` and `server/main.py` includes it. Read endpoints live here under `require_principal`; `/v1/*` above carries reads as well as every write and ingest route. The standalone dashboard FastAPI at `src/dashboard/api/main.py` was deleted in 2026-05: the routes moved, they did not go away.
+- When a choice is ambiguous, ask: "A or B? I recommend B because ...".
+- Ask one question at a time and wait for the answer.
+- If the spec contradicts PRODUCT.md or a decision record, stop and point at the contradiction.
 
-**Dashboard UI (`src/dashboard/`):** two SPAs plus branding assets. `frontend/` is the React/TypeScript/Vite dashboard (Recharts, Neo-Brutalism aesthetic); `console/` is a smaller SPA built on `@openorca-ui/react`. `api/` now holds only `static/branding/` images and no Python. The combined server serves the built SPA at `/` (see `server/static.py`).
+## Working loop
 
-**Docs:** The documentation site (<https://docs.voicegateway.dev>) is a Fumadocs app in `site/docs/` (Next.js static export served from Cloudflare via `site/docs/wrangler.jsonc`). Pages are MDX in `site/docs/content/docs/`, ordered by `meta.json`; brand assets in `site/docs/public/assets/`. The shared palette is `site/theme.css`. Keep it small: six pages while the project is early. Voice: short declarative sentences, sentence-case headings, no em dashes (CI fails on one). Docs version with the code: change them in the same PR as any behavior or API change. Contributor guides live in `contributing/`.
-
-**Landing page:** <https://voicegateway.dev> is an Astro app in `site/web/` on Cloudflare Workers: prerendered pages plus `/api/waitlist` and `/api/stats` (Cloudflare D1) and the `/demo` dashboard build. It shares `site/theme.css` with the docs. `collector.sh` and `install.sh` at the repo root are copied into it at build, so the published scripts cannot drift. It replaces the old `mahimairaja/voicegateway-web` repo.
-
-**Public API:** `voicegateway/__init__.py` exports `attach`, `guard`, `Observer`, `register_worker`, `inference`, `__version__`. There is no `Gateway` / `ModelId` factory surface: it was removed in the framework-agnostic reshape, and metering now happens by wrapping instances you construct.
-
-## Key Patterns
-
-- **Async throughout** — all DB, HTTP, and provider operations use async/await
-- **Framework-agnostic**: install provider plugins in your own agent (livekit.plugins.* / pipecat.services.*), not as VoiceGateway extras. VG meters the native instances you pass to attach()/guard() and prices by model_id via voice-prices.
-- **Config format** — YAML at `voicegw.yaml`, env vars via `${VAR_NAME}` syntax
-- **pytest-asyncio** — `asyncio_mode = "auto"` in pyproject.toml, no manual `@pytest.mark.asyncio` needed
-- **Test fixtures** in `src/voicegateway/tests/conftest.py` set fake API keys for all providers
+1. Read the spec for this phase, plus the files above.
+2. Build only what the spec asks for.
+3. Run the acceptance checks in the spec and report each result with its number.
+4. Update docs/progress.md. Add any new lasting rule to this file.

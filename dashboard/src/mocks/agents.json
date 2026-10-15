@@ -1,0 +1,81 @@
+{
+ "readAt": "2026-10-14T16:52:21+00:00",
+ "source": "Read-only with the project's URL, API key and secret: LiveKit Cloud's CloudAgent ListAgents and ListAgentVersions (what lk agent list, status and versions show). Covers agents deployed to LiveKit Cloud only; self-hosted workers appear on this page through the jobs they took in the rooms we watched.",
+ "agents": [
+  {
+   "id": "CA_gLEjzpm2tZLW",
+   "name": "assistant-1ada",
+   "version": "5VrpEbwh8ydf",
+   "deployedAt": "2026-10-12T22:48:24.160959Z",
+   "deployments": [
+    {
+     "deployment": null,
+     "region": "us-east",
+     "serverRegion": "osbxash1b",
+     "status": "Sleeping",
+     "replicas": null,
+     "minReplicas": 1,
+     "maxReplicas": 1,
+     "curCpu": "0",
+     "cpuReq": "1",
+     "cpuLimit": "2",
+     "curMem": "0",
+     "memReq": "1Gi",
+     "memLimit": "4Gi",
+     "deploymentEnabled": true,
+     "lastScrapedAt": "2026-10-12T23:58:04.566736Z",
+     "version": "5VrpEbwh8ydf",
+     "events": []
+    }
+   ],
+   "versions": [
+    {
+     "version": "5VrpEbwh8ydf",
+     "current": true,
+     "draining": null,
+     "active": true,
+     "status": "Available",
+     "createdAt": "2026-10-12T22:48:24.160959Z",
+     "deployedAt": "2026-10-12T22:48:22.897541Z"
+    },
+    {
+     "version": "dKU9abreJUkS",
+     "current": null,
+     "draining": null,
+     "active": null,
+     "status": "Available",
+     "createdAt": "2026-09-15T21:53:56.367134Z",
+     "deployedAt": "2026-09-15T21:53:55.682603Z"
+    }
+   ]
+  },
+  {
+   "id": "CA_kDtozBG4y3LS",
+   "name": null,
+   "version": "---",
+   "deployedAt": "0001-01-01T00:00:00Z",
+   "deployments": [
+    {
+     "deployment": null,
+     "region": "us-east",
+     "serverRegion": "osbxash1b",
+     "status": "Setting Up",
+     "replicas": null,
+     "minReplicas": 1,
+     "maxReplicas": 1,
+     "curCpu": "0",
+     "cpuReq": "1",
+     "cpuLimit": "2",
+     "curMem": "0",
+     "memReq": "1Gi",
+     "memLimit": "4Gi",
+     "deploymentEnabled": null,
+     "lastScrapedAt": null,
+     "version": "---",
+     "events": []
+    }
+   ],
+   "versions": []
+  }
+ ]
+}

@@ -1,0 +1,1000 @@
+{
+ "source": "Captured 2026-10-11 from livekit-server 1.13.3 --dev and a text-only LiveKit Agents 1.5.7 session (Go spike, gate 2 and 3). Webhook bodies and secrets are not included. Span attributes are as stored by the spike receiver, which cut long values at about 80 characters and marked them with \"...\".",
+ "calls": [
+  {
+   "room": "spike-room-11",
+   "roomSid": "RM_WadbAnQb5b9a",
+   "startedAt": "2026-10-11T10:00:31Z",
+   "endedAt": "2026-10-11T10:00:37Z",
+   "durationSeconds": 6,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": null,
+   "turns": null
+  },
+  {
+   "room": "spike-room-10",
+   "roomSid": "RM_eUDcWraoqDDb",
+   "startedAt": "2026-10-11T09:59:21Z",
+   "endedAt": "2026-10-11T09:59:27Z",
+   "durationSeconds": 6,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": [
+    {
+     "name": "job_entrypoint",
+     "spanId": "58c2ddb182aa503f",
+     "parentId": null,
+     "startMs": 0.0,
+     "durationMs": 230.289,
+     "attrs": {
+      "lk.agent_name": "",
+      "lk.job_id": "AJ_jcKS5aPDX8zV",
+      "lk.room_name": "spike-room-10"
+     }
+    },
+    {
+     "name": "agent_session",
+     "spanId": "f715cb328a975d21",
+     "parentId": "58c2ddb182aa503f",
+     "startMs": 3.0,
+     "durationMs": 5086.946,
+     "attrs": {
+      "lk.agent_label": "default_agent",
+      "lk.agent_name": "",
+      "lk.job_id": "AJ_jcKS5aPDX8zV",
+      "lk.room_name": "spike-room-10"
+     }
+    },
+    {
+     "name": "start_agent_activity",
+     "spanId": "883924e78c6a4dde",
+     "parentId": "f715cb328a975d21",
+     "startMs": 10.0,
+     "durationMs": 4.62,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "on_enter",
+     "spanId": "951db1e25751f27f",
+     "parentId": "883924e78c6a4dde",
+     "startMs": 15.0,
+     "durationMs": 0.025,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "agent_turn",
+     "spanId": "8f01e69b4d45224d",
+     "parentId": "f715cb328a975d21",
+     "startMs": 2256.0,
+     "durationMs": 122.214,
+     "attrs": {
+      "lk.generation_id": "speech_bc543efe6e32_1",
+      "lk.interrupted": "false",
+      "lk.participant_id": "PA_kvbwBPuHqZek",
+      "lk.participant_identity": "agent-AJ_jcKS5aPDX8zV",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT",
+      "lk.response.text": "fake reply to: hello agent ",
+      "lk.speech_id": "speech_bc543efe6e32",
+      "lk.user_input": "hello agent"
+     }
+    },
+    {
+     "name": "llm_node",
+     "spanId": "f4ca80ed386403bb",
+     "parentId": "8f01e69b4d45224d",
+     "startMs": 2260.0,
+     "durationMs": 115.508,
+     "attrs": {
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "lk.chat_ctx": "{\"items\": [{\"id\": \"lk.agent_task.instructions\", \"type\": \"message\", \"role\": \"system\", \"content\": [\"You are a test agent.\"...",
+      "lk.function_tools": "[]",
+      "lk.provider_tools": "[]",
+      "lk.response.function_calls": "[]",
+      "lk.response.text": "fake reply to: hello agent ",
+      "lk.response.ttft": "0.02398020774126053",
+      "lk.tool_sets": "[]"
+     }
+    },
+    {
+     "name": "llm_request",
+     "spanId": "22f9b2426e2be45b",
+     "parentId": "f4ca80ed386403bb",
+     "startMs": 2262.0,
+     "durationMs": 112.699,
+     "attrs": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "gen_ai.usage.input_tokens": "0",
+      "gen_ai.usage.output_tokens": "0",
+      "langfuse.observation.completion_start_time": "\"2026-10-11T09:59:24.424097+00:00\"",
+      "lk.llm_metrics": "{\"type\":\"llm_metrics\",\"label\":\"__mp_main__.FakeLLM\",\"request_id\":\"fake\",\"timestamp\":1791712764.509866,\"duration\":0.10739..."
+     }
+    },
+    {
+     "name": "llm_request_run",
+     "spanId": "06f35fd7316e30d8",
+     "parentId": "22f9b2426e2be45b",
+     "startMs": 2262.0,
+     "durationMs": 104.815,
+     "attrs": {
+      "lk.provider_request_ids": "[\"fake\"]",
+      "lk.retry_count": "0"
+     }
+    },
+    {
+     "name": "agent_speaking",
+     "spanId": "ee3b8aa8abdfacda",
+     "parentId": "8f01e69b4d45224d",
+     "startMs": 2285.0,
+     "durationMs": 92.7,
+     "attrs": {
+      "lk.participant_id": "PA_kvbwBPuHqZek",
+      "lk.participant_identity": "agent-AJ_jcKS5aPDX8zV",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT"
+     }
+    },
+    {
+     "name": "agent_turn",
+     "spanId": "932ca70f37fed114",
+     "parentId": "f715cb328a975d21",
+     "startMs": 2880.0,
+     "durationMs": 169.014,
+     "attrs": {
+      "lk.generation_id": "speech_df1402437935_1",
+      "lk.interrupted": "false",
+      "lk.participant_id": "PA_kvbwBPuHqZek",
+      "lk.participant_identity": "agent-AJ_jcKS5aPDX8zV",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT",
+      "lk.response.text": "fake reply to: what is two plus two ",
+      "lk.speech_id": "speech_df1402437935",
+      "lk.user_input": "what is two plus two"
+     }
+    },
+    {
+     "name": "llm_node",
+     "spanId": "1e90dca10540558f",
+     "parentId": "932ca70f37fed114",
+     "startMs": 2880.0,
+     "durationMs": 167.567,
+     "attrs": {
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "lk.chat_ctx": "{\"items\": [{\"id\": \"lk.agent_task.instructions\", \"type\": \"message\", \"role\": \"system\", \"content\": [\"You are a test agent.\"...",
+      "lk.function_tools": "[]",
+      "lk.provider_tools": "[]",
+      "lk.response.function_calls": "[]",
+      "lk.response.text": "fake reply to: what is two plus two ",
+      "lk.response.ttft": "0.0215747500769794",
+      "lk.tool_sets": "[]"
+     }
+    },
+    {
+     "name": "llm_request",
+     "spanId": "042d0569677a5bcb",
+     "parentId": "1e90dca10540558f",
+     "startMs": 2881.0,
+     "durationMs": 167.127,
+     "attrs": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "gen_ai.usage.input_tokens": "0",
+      "gen_ai.usage.output_tokens": "0",
+      "langfuse.observation.completion_start_time": "\"2026-10-11T09:59:25.042409+00:00\"",
+      "lk.llm_metrics": "{\"type\":\"llm_metrics\",\"label\":\"__mp_main__.FakeLLM\",\"request_id\":\"fake\",\"timestamp\":1791712765.1878421,\"duration\":0.1668..."
+     }
+    },
+    {
+     "name": "llm_request_run",
+     "spanId": "67317494981830e6",
+     "parentId": "042d0569677a5bcb",
+     "startMs": 2881.0,
+     "durationMs": 166.333,
+     "attrs": {
+      "lk.provider_request_ids": "[\"fake\"]",
+      "lk.retry_count": "0"
+     }
+    },
+    {
+     "name": "agent_speaking",
+     "spanId": "66643694164ead52",
+     "parentId": "932ca70f37fed114",
+     "startMs": 2903.0,
+     "durationMs": 146.00008,
+     "attrs": {
+      "lk.participant_id": "PA_kvbwBPuHqZek",
+      "lk.participant_identity": "agent-AJ_jcKS5aPDX8zV",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT"
+     }
+    },
+    {
+     "name": "drain_agent_activity",
+     "spanId": "a46c66a8395f4338",
+     "parentId": "f715cb328a975d21",
+     "startMs": 5088.0,
+     "durationMs": 1.098,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "on_exit",
+     "spanId": "dc286db08cc17c3c",
+     "parentId": "a46c66a8395f4338",
+     "startMs": 5089.0,
+     "durationMs": 0.031,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    }
+   ],
+   "turns": [
+    {
+     "userText": "hello agent",
+     "agentText": "fake reply to: hello agent",
+     "model": "fake-model",
+     "llmMs": 115.5,
+     "ttftMs": 24.0,
+     "sttMs": null,
+     "ttsMs": null,
+     "endOfTurnMs": null,
+     "inputTokens": 0,
+     "outputTokens": 0,
+     "audioSeconds": null,
+     "characters": null
+    },
+    {
+     "userText": "what is two plus two",
+     "agentText": "fake reply to: what is two plus two",
+     "model": "fake-model",
+     "llmMs": 167.6,
+     "ttftMs": 21.6,
+     "sttMs": null,
+     "ttsMs": null,
+     "endOfTurnMs": null,
+     "inputTokens": 0,
+     "outputTokens": 0,
+     "audioSeconds": null,
+     "characters": null
+    }
+   ]
+  },
+  {
+   "room": "spike-room-9",
+   "roomSid": "RM_hvmE5FrWKEs8",
+   "startedAt": "2026-10-11T09:57:39Z",
+   "endedAt": "2026-10-11T09:57:48Z",
+   "durationSeconds": 9,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": null,
+   "turns": null
+  },
+  {
+   "room": "spike-room-8",
+   "roomSid": "RM_WLDdsYE8CPww",
+   "startedAt": "2026-10-11T09:56:59Z",
+   "endedAt": "2026-10-11T09:57:05Z",
+   "durationSeconds": 6,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": null,
+   "turns": null
+  },
+  {
+   "room": "spike-room-7",
+   "roomSid": "RM_gb392uutegaX",
+   "startedAt": "2026-10-11T09:56:08Z",
+   "endedAt": "2026-10-11T09:56:13Z",
+   "durationSeconds": 5,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": [
+    {
+     "name": "job_entrypoint",
+     "spanId": "d9de51e99d11bea2",
+     "parentId": null,
+     "startMs": 0.0,
+     "durationMs": 213.806,
+     "attrs": {
+      "lk.agent_name": "",
+      "lk.job_id": "AJ_LLL9HLi7RmrZ",
+      "lk.room_name": "spike-room-7"
+     }
+    },
+    {
+     "name": "agent_session",
+     "spanId": "57e6ef363c717aa2",
+     "parentId": "d9de51e99d11bea2",
+     "startMs": 1.0,
+     "durationMs": 4987.298,
+     "attrs": {
+      "lk.agent_label": "default_agent",
+      "lk.agent_name": "",
+      "lk.job_id": "AJ_LLL9HLi7RmrZ",
+      "lk.room_name": "spike-room-7"
+     }
+    },
+    {
+     "name": "start_agent_activity",
+     "spanId": "29141c81af21356f",
+     "parentId": "57e6ef363c717aa2",
+     "startMs": 3.0,
+     "durationMs": 3.021,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "on_enter",
+     "spanId": "6a63b0535b2bf726",
+     "parentId": "29141c81af21356f",
+     "startMs": 7.0,
+     "durationMs": 0.012,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "agent_turn",
+     "spanId": "c4d8ec07692ae202",
+     "parentId": "57e6ef363c717aa2",
+     "startMs": 2146.0,
+     "durationMs": 108.573,
+     "attrs": {
+      "lk.generation_id": "speech_2856200f9ab6_1",
+      "lk.interrupted": "false",
+      "lk.participant_id": "PA_fdSiZ9PEJZYJ",
+      "lk.participant_identity": "agent-AJ_LLL9HLi7RmrZ",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT",
+      "lk.response.text": "fake reply to: hello agent ",
+      "lk.speech_id": "speech_2856200f9ab6",
+      "lk.user_input": "hello agent"
+     }
+    },
+    {
+     "name": "llm_node",
+     "spanId": "3d999fdc485107bb",
+     "parentId": "c4d8ec07692ae202",
+     "startMs": 2146.0,
+     "durationMs": 106.994,
+     "attrs": {
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "lk.chat_ctx": "{\"items\": [{\"id\": \"lk.agent_task.instructions\", \"type\": \"message\", \"role\": \"system\", \"content\": [\"You are a test agent.\"...",
+      "lk.function_tools": "[]",
+      "lk.provider_tools": "[]",
+      "lk.response.function_calls": "[]",
+      "lk.response.text": "fake reply to: hello agent ",
+      "lk.response.ttft": "0.022131499834358692",
+      "lk.tool_sets": "[]"
+     }
+    },
+    {
+     "name": "llm_request",
+     "spanId": "ef848a1fe29e25fa",
+     "parentId": "3d999fdc485107bb",
+     "startMs": 2147.0,
+     "durationMs": 106.629,
+     "attrs": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "gen_ai.usage.input_tokens": "0",
+      "gen_ai.usage.output_tokens": "0",
+      "langfuse.observation.completion_start_time": "\"2026-10-11T09:56:10.401858+00:00\"",
+      "lk.llm_metrics": "{\"type\":\"llm_metrics\",\"label\":\"__mp_main__.FakeLLM\",\"request_id\":\"fake\",\"timestamp\":1791712570.484799,\"duration\":0.10558..."
+     }
+    },
+    {
+     "name": "llm_request_run",
+     "spanId": "ae0107344c7af0cc",
+     "parentId": "ef848a1fe29e25fa",
+     "startMs": 2147.0,
+     "durationMs": 104.705,
+     "attrs": {
+      "lk.provider_request_ids": "[\"fake\"]",
+      "lk.retry_count": "0"
+     }
+    },
+    {
+     "name": "agent_speaking",
+     "spanId": "c567a0c7718796c7",
+     "parentId": "c4d8ec07692ae202",
+     "startMs": 2172.0,
+     "durationMs": 82.568912,
+     "attrs": {
+      "lk.participant_id": "PA_fdSiZ9PEJZYJ",
+      "lk.participant_identity": "agent-AJ_LLL9HLi7RmrZ",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT"
+     }
+    },
+    {
+     "name": "agent_turn",
+     "spanId": "aeebbb9b64270752",
+     "parentId": "57e6ef363c717aa2",
+     "startMs": 2757.0,
+     "durationMs": 168.487,
+     "attrs": {
+      "lk.generation_id": "speech_0170b524e01a_1",
+      "lk.interrupted": "false",
+      "lk.participant_id": "PA_fdSiZ9PEJZYJ",
+      "lk.participant_identity": "agent-AJ_LLL9HLi7RmrZ",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT",
+      "lk.response.text": "fake reply to: what is two plus two ",
+      "lk.speech_id": "speech_0170b524e01a",
+      "lk.user_input": "what is two plus two"
+     }
+    },
+    {
+     "name": "llm_node",
+     "spanId": "9218bc1d914f2e0e",
+     "parentId": "aeebbb9b64270752",
+     "startMs": 2757.0,
+     "durationMs": 167.504,
+     "attrs": {
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "lk.chat_ctx": "{\"items\": [{\"id\": \"lk.agent_task.instructions\", \"type\": \"message\", \"role\": \"system\", \"content\": [\"You are a test agent.\"...",
+      "lk.function_tools": "[]",
+      "lk.provider_tools": "[]",
+      "lk.response.function_calls": "[]",
+      "lk.response.text": "fake reply to: what is two plus two ",
+      "lk.response.ttft": "0.021359415724873543",
+      "lk.tool_sets": "[]"
+     }
+    },
+    {
+     "name": "llm_request",
+     "spanId": "120e5ab0bdf19530",
+     "parentId": "9218bc1d914f2e0e",
+     "startMs": 2757.0,
+     "durationMs": 167.3,
+     "attrs": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "gen_ai.usage.input_tokens": "0",
+      "gen_ai.usage.output_tokens": "0",
+      "langfuse.observation.completion_start_time": "\"2026-10-11T09:56:11.011174+00:00\"",
+      "lk.llm_metrics": "{\"type\":\"llm_metrics\",\"label\":\"__mp_main__.FakeLLM\",\"request_id\":\"fake\",\"timestamp\":1791712571.1567428,\"duration\":0.1668..."
+     }
+    },
+    {
+     "name": "llm_request_run",
+     "spanId": "d1965740afa9dd39",
+     "parentId": "120e5ab0bdf19530",
+     "startMs": 2757.0,
+     "durationMs": 166.449,
+     "attrs": {
+      "lk.provider_request_ids": "[\"fake\"]",
+      "lk.retry_count": "0"
+     }
+    },
+    {
+     "name": "agent_speaking",
+     "spanId": "b1c2cfc548c2e8a1",
+     "parentId": "aeebbb9b64270752",
+     "startMs": 2780.0,
+     "durationMs": 145.82908,
+     "attrs": {
+      "lk.participant_id": "PA_fdSiZ9PEJZYJ",
+      "lk.participant_identity": "agent-AJ_LLL9HLi7RmrZ",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT"
+     }
+    },
+    {
+     "name": "drain_agent_activity",
+     "spanId": "f3fe3b4629b82b81",
+     "parentId": "57e6ef363c717aa2",
+     "startMs": 4988.0,
+     "durationMs": 0.234,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "on_exit",
+     "spanId": "36d362c669fc8169",
+     "parentId": "f3fe3b4629b82b81",
+     "startMs": 4988.0,
+     "durationMs": 0.01,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    }
+   ],
+   "turns": null
+  },
+  {
+   "room": "spike-room-6",
+   "roomSid": "RM_RfiRUHPCmjGi",
+   "startedAt": "2026-10-11T09:55:19Z",
+   "endedAt": "2026-10-11T09:55:25Z",
+   "durationSeconds": 6,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": null,
+   "turns": null
+  },
+  {
+   "room": "spike-room-5",
+   "roomSid": "RM_qD5EGLbxk83g",
+   "startedAt": "2026-10-11T09:54:13Z",
+   "endedAt": "2026-10-11T09:54:17Z",
+   "durationSeconds": 4,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": null,
+   "turns": null
+  },
+  {
+   "room": "spike-room-4",
+   "roomSid": "RM_4sMXnaZrE2pD",
+   "startedAt": "2026-10-11T09:53:05Z",
+   "endedAt": "2026-10-11T09:53:53Z",
+   "durationSeconds": 48,
+   "participantCount": 1,
+   "endReason": null,
+   "spans": null,
+   "turns": null
+  },
+  {
+   "room": "spike-room-3",
+   "roomSid": "RM_9Y7yByfsnmbA",
+   "startedAt": "2026-10-11T09:49:43Z",
+   "endedAt": "2026-10-11T09:49:50Z",
+   "durationSeconds": 7,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": [
+    {
+     "name": "job_entrypoint",
+     "spanId": "78cccd34b7f0e6eb",
+     "parentId": null,
+     "startMs": 0.0,
+     "durationMs": 1694.684,
+     "attrs": {
+      "lk.agent_name": "",
+      "lk.job_id": "AJ_FVAdHj75G5Li",
+      "lk.room_name": "spike-room-3"
+     }
+    },
+    {
+     "name": "agent_session",
+     "spanId": "de9974e8f8ff1dc4",
+     "parentId": "78cccd34b7f0e6eb",
+     "startMs": 3.0,
+     "durationMs": 5579.293,
+     "attrs": {
+      "lk.agent_label": "default_agent",
+      "lk.agent_name": "",
+      "lk.job_id": "AJ_FVAdHj75G5Li",
+      "lk.room_name": "spike-room-3"
+     }
+    },
+    {
+     "name": "start_agent_activity",
+     "spanId": "51b87753928e8327",
+     "parentId": "de9974e8f8ff1dc4",
+     "startMs": 44.0,
+     "durationMs": 46.316,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "on_enter",
+     "spanId": "8693f84cbb9a6cba",
+     "parentId": "51b87753928e8327",
+     "startMs": 91.0,
+     "durationMs": 0.094,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "agent_turn",
+     "spanId": "b501532b4f18777c",
+     "parentId": "de9974e8f8ff1dc4",
+     "startMs": 2925.0,
+     "durationMs": 407.731,
+     "attrs": {
+      "lk.generation_id": "speech_792822ac3bad_1",
+      "lk.interrupted": "false",
+      "lk.participant_id": "PA_oCWXDeMxJN5b",
+      "lk.participant_identity": "agent-AJ_FVAdHj75G5Li",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT",
+      "lk.response.text": "fake reply to: hello agent ",
+      "lk.speech_id": "speech_792822ac3bad",
+      "lk.user_input": "hello agent"
+     }
+    },
+    {
+     "name": "llm_node",
+     "spanId": "6f14f1d25ebf8763",
+     "parentId": "b501532b4f18777c",
+     "startMs": 2969.0,
+     "durationMs": 362.441,
+     "attrs": {
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "lk.chat_ctx": "{\"items\": [{\"id\": \"lk.agent_task.instructions\", \"type\": \"message\", \"role\": \"system\", \"content\": [\"You are a test agent.\"...",
+      "lk.function_tools": "[]",
+      "lk.provider_tools": "[]",
+      "lk.response.function_calls": "[]",
+      "lk.response.text": "fake reply to: hello agent ",
+      "lk.response.ttft": "0.10799100017175078",
+      "lk.tool_sets": "[]"
+     }
+    },
+    {
+     "name": "llm_request",
+     "spanId": "5df7f54ccf4a555e",
+     "parentId": "6f14f1d25ebf8763",
+     "startMs": 3055.0,
+     "durationMs": 275.705,
+     "attrs": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "gen_ai.usage.input_tokens": "0",
+      "gen_ai.usage.output_tokens": "0",
+      "langfuse.observation.completion_start_time": "\"2026-10-11T09:49:46.530327+00:00\"",
+      "lk.llm_metrics": "{\"type\":\"llm_metrics\",\"label\":\"__mp_main__.FakeLLM\",\"request_id\":\"fake\",\"timestamp\":1791712186.722421,\"duration\":0.21362..."
+     }
+    },
+    {
+     "name": "llm_request_run",
+     "spanId": "fcd9014f0bb55fa2",
+     "parentId": "5df7f54ccf4a555e",
+     "startMs": 3055.0,
+     "durationMs": 212.468,
+     "attrs": {
+      "lk.provider_request_ids": "[\"fake\"]",
+      "lk.retry_count": "0"
+     }
+    },
+    {
+     "name": "agent_speaking",
+     "spanId": "f0e040c9c01ad1ad",
+     "parentId": "b501532b4f18777c",
+     "startMs": 3205.0,
+     "durationMs": 127.123952,
+     "attrs": {
+      "lk.participant_id": "PA_oCWXDeMxJN5b",
+      "lk.participant_identity": "agent-AJ_FVAdHj75G5Li",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT"
+     }
+    },
+    {
+     "name": "agent_turn",
+     "spanId": "e72950934aecd37f",
+     "parentId": "de9974e8f8ff1dc4",
+     "startMs": 3835.0,
+     "durationMs": 167.833,
+     "attrs": {
+      "lk.generation_id": "speech_07fa08834ed1_1",
+      "lk.interrupted": "false",
+      "lk.participant_id": "PA_oCWXDeMxJN5b",
+      "lk.participant_identity": "agent-AJ_FVAdHj75G5Li",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT",
+      "lk.response.text": "fake reply to: what is two plus two ",
+      "lk.speech_id": "speech_07fa08834ed1",
+      "lk.user_input": "what is two plus two"
+     }
+    },
+    {
+     "name": "llm_node",
+     "spanId": "eb523f11fe83f256",
+     "parentId": "e72950934aecd37f",
+     "startMs": 3835.0,
+     "durationMs": 166.844,
+     "attrs": {
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "lk.chat_ctx": "{\"items\": [{\"id\": \"lk.agent_task.instructions\", \"type\": \"message\", \"role\": \"system\", \"content\": [\"You are a test agent.\"...",
+      "lk.function_tools": "[]",
+      "lk.provider_tools": "[]",
+      "lk.response.function_calls": "[]",
+      "lk.response.text": "fake reply to: what is two plus two ",
+      "lk.response.ttft": "0.02084341738373041",
+      "lk.tool_sets": "[]"
+     }
+    },
+    {
+     "name": "llm_request",
+     "spanId": "96b76d9f190faa6c",
+     "parentId": "eb523f11fe83f256",
+     "startMs": 3835.0,
+     "durationMs": 166.615,
+     "attrs": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "gen_ai.usage.input_tokens": "0",
+      "gen_ai.usage.output_tokens": "0",
+      "langfuse.observation.completion_start_time": "\"2026-10-11T09:49:47.309607+00:00\"",
+      "lk.llm_metrics": "{\"type\":\"llm_metrics\",\"label\":\"__mp_main__.FakeLLM\",\"request_id\":\"fake\",\"timestamp\":1791712187.4550989,\"duration\":0.1662..."
+     }
+    },
+    {
+     "name": "llm_request_run",
+     "spanId": "78bdd2232eb4d21e",
+     "parentId": "96b76d9f190faa6c",
+     "startMs": 3836.0,
+     "durationMs": 165.706,
+     "attrs": {
+      "lk.provider_request_ids": "[\"fake\"]",
+      "lk.retry_count": "0"
+     }
+    },
+    {
+     "name": "agent_speaking",
+     "spanId": "cdff0aad46e16ed9",
+     "parentId": "e72950934aecd37f",
+     "startMs": 3857.0,
+     "durationMs": 145.944096,
+     "attrs": {
+      "lk.participant_id": "PA_oCWXDeMxJN5b",
+      "lk.participant_identity": "agent-AJ_FVAdHj75G5Li",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT"
+     }
+    },
+    {
+     "name": "drain_agent_activity",
+     "spanId": "342c04ffd9698380",
+     "parentId": "de9974e8f8ff1dc4",
+     "startMs": 5582.0,
+     "durationMs": 0.197,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "on_exit",
+     "spanId": "efc177ad45cacdf4",
+     "parentId": "342c04ffd9698380",
+     "startMs": 5583.0,
+     "durationMs": 0.012,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    }
+   ],
+   "turns": null
+  },
+  {
+   "room": "spike-room-2",
+   "roomSid": "RM_s55tQBLeLnNH",
+   "startedAt": "2026-10-11T09:48:42Z",
+   "endedAt": "2026-10-11T09:48:47Z",
+   "durationSeconds": 5,
+   "participantCount": 2,
+   "endReason": null,
+   "spans": [
+    {
+     "name": "job_entrypoint",
+     "spanId": "7f92c36497cdb6d8",
+     "parentId": null,
+     "startMs": 0.0,
+     "durationMs": 324.733,
+     "attrs": {
+      "lk.agent_name": "",
+      "lk.job_id": "AJ_gU9YGc9kv2Cm",
+      "lk.room_name": "spike-room-2"
+     }
+    },
+    {
+     "name": "agent_session",
+     "spanId": "361d60d954740508",
+     "parentId": "7f92c36497cdb6d8",
+     "startMs": 1.0,
+     "durationMs": 4480.574,
+     "attrs": {
+      "lk.agent_label": "default_agent",
+      "lk.agent_name": "",
+      "lk.job_id": "AJ_gU9YGc9kv2Cm",
+      "lk.room_name": "spike-room-2"
+     }
+    },
+    {
+     "name": "start_agent_activity",
+     "spanId": "494cfa7cfa14d971",
+     "parentId": "361d60d954740508",
+     "startMs": 11.0,
+     "durationMs": 59.984,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "on_enter",
+     "spanId": "781a9173680908ac",
+     "parentId": "494cfa7cfa14d971",
+     "startMs": 75.0,
+     "durationMs": 0.124,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "agent_turn",
+     "spanId": "1fe8a56db652a56c",
+     "parentId": "361d60d954740508",
+     "startMs": 1346.0,
+     "durationMs": 111.817,
+     "attrs": {
+      "lk.generation_id": "speech_f5c3bcc73ab3_1",
+      "lk.interrupted": "false",
+      "lk.participant_id": "PA_JxwaAcStyU3M",
+      "lk.participant_identity": "agent-AJ_gU9YGc9kv2Cm",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT",
+      "lk.response.text": "fake reply to: hello agent ",
+      "lk.speech_id": "speech_f5c3bcc73ab3",
+      "lk.user_input": "hello agent"
+     }
+    },
+    {
+     "name": "llm_node",
+     "spanId": "c2371512fff39880",
+     "parentId": "1fe8a56db652a56c",
+     "startMs": 1347.0,
+     "durationMs": 109.669,
+     "attrs": {
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "lk.chat_ctx": "{\"items\": [{\"id\": \"lk.agent_task.instructions\", \"type\": \"message\", \"role\": \"system\", \"content\": [\"You are a test agent.\"...",
+      "lk.function_tools": "[]",
+      "lk.provider_tools": "[]",
+      "lk.response.function_calls": "[]",
+      "lk.response.text": "fake reply to: hello agent ",
+      "lk.response.ttft": "0.022185000125318766",
+      "lk.tool_sets": "[]"
+     }
+    },
+    {
+     "name": "llm_request",
+     "spanId": "1ac72c889e7f685e",
+     "parentId": "c2371512fff39880",
+     "startMs": 1348.0,
+     "durationMs": 108.226,
+     "attrs": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "gen_ai.usage.input_tokens": "0",
+      "gen_ai.usage.output_tokens": "0",
+      "langfuse.observation.completion_start_time": "\"2026-10-11T09:48:44.105345+00:00\"",
+      "lk.llm_metrics": "{\"type\":\"llm_metrics\",\"label\":\"__mp_main__.FakeLLM\",\"request_id\":\"fake\",\"timestamp\":1791712124.1903648,\"duration\":0.1058..."
+     }
+    },
+    {
+     "name": "llm_request_run",
+     "spanId": "dcf59b8da362cd12",
+     "parentId": "1ac72c889e7f685e",
+     "startMs": 1348.0,
+     "durationMs": 104.294,
+     "attrs": {
+      "lk.provider_request_ids": "[\"fake\"]",
+      "lk.retry_count": "0"
+     }
+    },
+    {
+     "name": "agent_speaking",
+     "spanId": "a6f5d63047b39189",
+     "parentId": "1fe8a56db652a56c",
+     "startMs": 1370.0,
+     "durationMs": 87.40088,
+     "attrs": {
+      "lk.participant_id": "PA_JxwaAcStyU3M",
+      "lk.participant_identity": "agent-AJ_gU9YGc9kv2Cm",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT"
+     }
+    },
+    {
+     "name": "agent_turn",
+     "spanId": "ce82f2aa7107e5ce",
+     "parentId": "361d60d954740508",
+     "startMs": 1960.0,
+     "durationMs": 169.528,
+     "attrs": {
+      "lk.generation_id": "speech_8156a903fd3e_1",
+      "lk.interrupted": "false",
+      "lk.participant_id": "PA_JxwaAcStyU3M",
+      "lk.participant_identity": "agent-AJ_gU9YGc9kv2Cm",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT",
+      "lk.response.text": "fake reply to: what is two plus two ",
+      "lk.speech_id": "speech_8156a903fd3e",
+      "lk.user_input": "what is two plus two"
+     }
+    },
+    {
+     "name": "llm_node",
+     "spanId": "c5b33d06157a1817",
+     "parentId": "ce82f2aa7107e5ce",
+     "startMs": 1960.0,
+     "durationMs": 168.31,
+     "attrs": {
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "lk.chat_ctx": "{\"items\": [{\"id\": \"lk.agent_task.instructions\", \"type\": \"message\", \"role\": \"system\", \"content\": [\"You are a test agent.\"...",
+      "lk.function_tools": "[]",
+      "lk.provider_tools": "[]",
+      "lk.response.function_calls": "[]",
+      "lk.response.text": "fake reply to: what is two plus two ",
+      "lk.response.ttft": "0.021543124690651894",
+      "lk.tool_sets": "[]"
+     }
+    },
+    {
+     "name": "llm_request",
+     "spanId": "bbc9df44c3dfcfd7",
+     "parentId": "c5b33d06157a1817",
+     "startMs": 1961.0,
+     "durationMs": 168.016,
+     "attrs": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "fake-provider",
+      "gen_ai.request.model": "fake-model",
+      "gen_ai.usage.input_tokens": "0",
+      "gen_ai.usage.output_tokens": "0",
+      "langfuse.observation.completion_start_time": "\"2026-10-11T09:48:44.718576+00:00\"",
+      "lk.llm_metrics": "{\"type\":\"llm_metrics\",\"label\":\"__mp_main__.FakeLLM\",\"request_id\":\"fake\",\"timestamp\":1791712124.864737,\"duration\":0.16754..."
+     }
+    },
+    {
+     "name": "llm_request_run",
+     "spanId": "4906d610cd81f009",
+     "parentId": "bbc9df44c3dfcfd7",
+     "startMs": 1961.0,
+     "durationMs": 167.076,
+     "attrs": {
+      "lk.provider_request_ids": "[\"fake\"]",
+      "lk.retry_count": "0"
+     }
+    },
+    {
+     "name": "agent_speaking",
+     "spanId": "3a6a053d5c19cd28",
+     "parentId": "ce82f2aa7107e5ce",
+     "startMs": 1983.0,
+     "durationMs": 146.400064,
+     "attrs": {
+      "lk.participant_id": "PA_JxwaAcStyU3M",
+      "lk.participant_identity": "agent-AJ_gU9YGc9kv2Cm",
+      "lk.participant_kind": "PARTICIPANT_KIND_AGENT"
+     }
+    },
+    {
+     "name": "drain_agent_activity",
+     "spanId": "8090f31e47c8231b",
+     "parentId": "361d60d954740508",
+     "startMs": 4482.0,
+     "durationMs": 0.169,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    },
+    {
+     "name": "on_exit",
+     "spanId": "851ccd7853994e29",
+     "parentId": "8090f31e47c8231b",
+     "startMs": 4482.0,
+     "durationMs": 0.009,
+     "attrs": {
+      "lk.agent_label": "default_agent"
+     }
+    }
+   ],
+   "turns": null
+  }
+ ]
+}

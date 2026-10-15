@@ -1,0 +1,72 @@
+{
+ "readAt": "2026-10-14T16:46:03+00:00",
+ "source": "Read-only with the project's URL, API key and secret: ListSIPInboundTrunk, ListSIPOutboundTrunk, ListSIPDispatchRule and ListPhoneNumbers (0 LiveKit numbers). Trunk, rule and agent names and room prefixes are withheld; numbers show their last 4 digits; passwords are never read into the page, only whether one is set.",
+ "livekitNumbers": [],
+ "inbound": [
+  {
+   "id": "ST_V3jisppZGT7n",
+   "numbers": [
+    "•••• 0749",
+    "•••• 0005"
+   ],
+   "allowedNumbers": 0,
+   "allowedAddresses": 0,
+   "auth": false,
+   "krisp": true,
+   "media": {
+    "encryption": "SIP_MEDIA_ENCRYPT_DISABLE",
+    "codecs": [],
+    "onlyListedCodecs": false,
+    "mediaTimeout": null
+   },
+   "ringingTimeout": null,
+   "maxCallDuration": null,
+   "headerMappings": 0,
+   "createdAt": "2026-09-17T13:52:58.495122Z",
+   "updatedAt": "2026-09-17T14:09:43.861804Z"
+  }
+ ],
+ "outbound": [
+  {
+   "id": "ST_AD2xTPsandcN",
+   "address": "sip.telnyx.com",
+   "transport": "SIP_TRANSPORT_TCP",
+   "numbers": [
+    "•••• 0005"
+   ],
+   "destinationCountry": null,
+   "auth": true,
+   "headerNames": [],
+   "media": {
+    "encryption": "SIP_MEDIA_ENCRYPT_DISABLE",
+    "codecs": [],
+    "onlyListedCodecs": false,
+    "mediaTimeout": null
+   },
+   "createdAt": "2026-09-17T13:57:03.360145Z",
+   "updatedAt": "2026-09-17T14:45:03.384513Z"
+  }
+ ],
+ "rules": [
+  {
+   "id": "SDR_4WfEH7ruvaVT",
+   "type": "dispatchRuleIndividual",
+   "prefixSet": true,
+   "pin": false,
+   "trunkIds": [
+    "ST_V3jisppZGT7n"
+   ],
+   "hidePhoneNumber": false,
+   "inboundNumbers": 0,
+   "agents": 1,
+   "media": {
+    "encryption": null,
+    "codecs": [],
+    "onlyListedCodecs": false,
+    "mediaTimeout": null
+   },
+   "createdAt": "2026-09-17T13:53:16.801296Z",
+   "updatedAt": "2026-09-17T13:53:16.714168Z"
+  }
+ ]
+}

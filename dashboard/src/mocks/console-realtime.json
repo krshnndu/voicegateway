@@ -1,0 +1,639 @@
+{
+ "source": "Captured 2026-10-12 from the LiveKit Cloud Agent Console (RemoteSession events) during a live test of agent assistant-1ada switched to OpenAI gpt-realtime-2 (Agents python 1.6.10). The realtime model reported no per-message latency metrics; interruptions come from each agent message's interrupted flag. Only final transcripts are kept. Event times are seconds from the first event, 10 ms precision. No audio was recorded.",
+ "call": {
+  "room": "console-realtime-1849",
+  "roomSid": "unknown",
+  "startedAt": "2026-10-12T22:49:07.430000Z",
+  "endedAt": "2026-10-12T22:50:24.070000Z",
+  "durationSeconds": 77,
+  "participantCount": 2,
+  "endReason": null,
+  "spans": null,
+  "turns": [
+   {
+    "userText": "So actually, what is her name?",
+    "agentText": "You can just call me ChatGPT. I don’t have a personal name, but I’m here",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 8.66,
+    "agentItemAt": 13.84,
+    "interrupted": true
+   },
+   {
+    "userText": "That's okay, tell me and",
+    "agentText": "Let me pull that into Bengali for you.",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 17.67,
+    "agentItemAt": 21.25,
+    "interrupted": false
+   },
+   {
+    "userText": "Richard, not that I mean, like, I mean, Elon Musk, do you know about Elon Musk?",
+    "agentText": "Yes, I know who Elon Musk is.",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 27.45,
+    "agentItemAt": 30.34,
+    "interrupted": true
+   },
+   {
+    "userText": "Actually, what, who is Elon Musk?",
+    "agentText": "Elon Musk is a billionaire entrepreneur",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 33.15,
+    "agentItemAt": 35.45,
+    "interrupted": true
+   },
+   {
+    "userText": "Yeah, we are not doing backchanneling. You can talk with me, I don't care.",
+    "agentText": "Got it, I’ll keep things straightforward and direct",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 40.71,
+    "agentItemAt": 43.94,
+    "interrupted": true
+   },
+   {
+    "userText": "OK. OK.",
+    "agentText": "Alright. If you want to talk about something else, just say it.",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 48.69,
+    "agentItemAt": 52.05,
+    "interrupted": true
+   },
+   {
+    "userText": "Yeah, yeah, let's talk about, you don't stop talking, you keep talking.",
+    "agentText": "Okay, I’ll keep the conversation",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 59.88,
+    "agentItemAt": 61.74,
+    "interrupted": true
+   },
+   {
+    "userText": "Okay, I will tell you what is backhandling.",
+    "agentText": "Got it, I’ll listen and keep my responses",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 65.23,
+    "agentItemAt": 68.55,
+    "interrupted": true
+   },
+   {
+    "userText": "Ok, sure, sure, sure.",
+    "agentText": "Go ahead, I’m listening.",
+    "model": "openai/gpt-realtime-2",
+    "llmMs": null,
+    "ttftMs": null,
+    "sttMs": null,
+    "ttsMs": null,
+    "endOfTurnMs": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "audioSeconds": null,
+    "characters": null,
+    "transcriptionDelayMs": null,
+    "e2eMs": null,
+    "eotProbability": null,
+    "eotThreshold": null,
+    "userItemAt": 74.16,
+    "agentItemAt": 76.64,
+    "interrupted": false
+   }
+  ],
+  "events": [
+   {
+    "t": 0.0,
+    "type": "item",
+    "id": "item_b76c1d697962",
+    "role": "handoff"
+   },
+   {
+    "t": 0.25,
+    "type": "agent_state",
+    "from": "initializing",
+    "to": "listening"
+   },
+   {
+    "t": 0.64,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 0.65,
+    "type": "item",
+    "id": "item_b9935a1cb0e6",
+    "role": "handoff"
+   },
+   {
+    "t": 0.66,
+    "type": "item",
+    "id": "item_1d51f8cb06c7",
+    "role": "handoff"
+   },
+   {
+    "t": 1.95,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 2.4,
+    "type": "item",
+    "id": "item_EYJ7MJ61izc43ySXIzVpf",
+    "role": "user"
+   },
+   {
+    "t": 2.4,
+    "type": "transcript",
+    "final": true,
+    "text": ""
+   },
+   {
+    "t": 2.45,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 8.15,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 8.66,
+    "type": "item",
+    "id": "item_EYJ7NZw6qQOKvmqdffoBV",
+    "role": "user"
+   },
+   {
+    "t": 8.66,
+    "type": "transcript",
+    "final": true,
+    "text": "So actually, what is her name?"
+   },
+   {
+    "t": 8.91,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 13.84,
+    "type": "item",
+    "id": "item_EYJ7TZZD3v5qwCeqPV6c2",
+    "role": "assistant"
+   },
+   {
+    "t": 13.84,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 13.84,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 17.17,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 17.67,
+    "type": "item",
+    "id": "item_EYJ7ZoxZn7SyJ0LKHbQVM",
+    "role": "user"
+   },
+   {
+    "t": 17.67,
+    "type": "transcript",
+    "final": true,
+    "text": "That's okay, tell me and"
+   },
+   {
+    "t": 18.08,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 21.24,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 21.25,
+    "type": "item",
+    "id": "item_EYJ7cgpoD20nkpbfA9H4s",
+    "role": "assistant"
+   },
+   {
+    "t": 21.25,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 26.85,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 27.45,
+    "type": "item",
+    "id": "item_EYJ7gEupfMlKtHU49R6n6",
+    "role": "user"
+   },
+   {
+    "t": 27.45,
+    "type": "transcript",
+    "final": true,
+    "text": "Richard, not that I mean, like, I mean, Elon Musk, do you know about Elon Musk?"
+   },
+   {
+    "t": 28.19,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 30.34,
+    "type": "item",
+    "id": "item_EYJ7m5OOmz5W9bsAgU5sN",
+    "role": "assistant"
+   },
+   {
+    "t": 30.34,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 30.34,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 32.74,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 33.15,
+    "type": "item",
+    "id": "item_EYJ7pfxygoPJigM6ijYAa",
+    "role": "user"
+   },
+   {
+    "t": 33.15,
+    "type": "transcript",
+    "final": true,
+    "text": "Actually, what, who is Elon Musk?"
+   },
+   {
+    "t": 33.51,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 35.44,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 35.45,
+    "type": "item",
+    "id": "item_EYJ7s7y2RpJPrjHToy9o1",
+    "role": "assistant"
+   },
+   {
+    "t": 35.45,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 40.21,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 40.71,
+    "type": "item",
+    "id": "item_EYJ7uwYgvfhNUBzawY57u",
+    "role": "user"
+   },
+   {
+    "t": 40.71,
+    "type": "transcript",
+    "final": true,
+    "text": "Yeah, we are not doing backchanneling. You can talk with me, I don't care."
+   },
+   {
+    "t": 41.04,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 43.94,
+    "type": "item",
+    "id": "item_EYJ7zNy0XHlaHezCNamyk",
+    "role": "assistant"
+   },
+   {
+    "t": 43.94,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 43.94,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 48.22,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 48.69,
+    "type": "item",
+    "id": "item_EYJ8375agLjzNvB18Lbpb",
+    "role": "user"
+   },
+   {
+    "t": 48.69,
+    "type": "transcript",
+    "final": true,
+    "text": "OK. OK."
+   },
+   {
+    "t": 49.14,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 52.04,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 52.05,
+    "type": "item",
+    "id": "item_EYJ87Vk0UKuuw40aMWsRB",
+    "role": "assistant"
+   },
+   {
+    "t": 52.05,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 59.33,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 59.88,
+    "type": "item",
+    "id": "item_EYJ8B7R2GSJpEqGTEtGif",
+    "role": "user"
+   },
+   {
+    "t": 59.88,
+    "type": "transcript",
+    "final": true,
+    "text": "Yeah, yeah, let's talk about, you don't stop talking, you keep talking."
+   },
+   {
+    "t": 60.0,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 61.74,
+    "type": "item",
+    "id": "item_EYJ8IgN1r3ggcHHUXfwaT",
+    "role": "assistant"
+   },
+   {
+    "t": 61.74,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 61.74,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 64.72,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 65.23,
+    "type": "item",
+    "id": "item_EYJ8LyRxi09a1LRMhCn2M",
+    "role": "user"
+   },
+   {
+    "t": 65.23,
+    "type": "transcript",
+    "final": true,
+    "text": "Okay, I will tell you what is backhandling."
+   },
+   {
+    "t": 65.67,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 68.54,
+    "type": "user_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 68.55,
+    "type": "item",
+    "id": "item_EYJ8OjxfjB7ES9An49YDR",
+    "role": "assistant"
+   },
+   {
+    "t": 68.55,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 73.65,
+    "type": "user_state",
+    "from": "speaking",
+    "to": "listening"
+   },
+   {
+    "t": 74.16,
+    "type": "item",
+    "id": "item_EYJ8R6lM1R8c6YSKiCstC",
+    "role": "user"
+   },
+   {
+    "t": 74.16,
+    "type": "transcript",
+    "final": true,
+    "text": "Ok, sure, sure, sure."
+   },
+   {
+    "t": 74.64,
+    "type": "agent_state",
+    "from": "listening",
+    "to": "speaking"
+   },
+   {
+    "t": 76.64,
+    "type": "item",
+    "id": "item_EYJ8XxjKITrZhsqfNEoKh",
+    "role": "assistant"
+   },
+   {
+    "t": 76.64,
+    "type": "agent_state",
+    "from": "speaking",
+    "to": "listening"
+   }
+  ],
+  "usage": {
+   "llmInputTokens": 14698,
+   "llmOutputTokens": 2566,
+   "ttsCharacters": null,
+   "sttSeconds": null,
+   "note": "Session totals shown by the console summary after the session ended."
+  }
+ }
+}

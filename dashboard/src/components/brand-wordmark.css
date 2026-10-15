@@ -1,0 +1,49 @@
+.brand-wordmark {
+  position: relative;
+  width: 168px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.brand-wordmark__energy {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+/* A narrow charge travels through the artwork; the base remains readable. */
+.brand-wordmark__energy::before,
+.brand-wordmark__energy::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 42px;
+  opacity: 0;
+  background: linear-gradient(105deg, transparent 8%, #1f96aa 44%, #5de3df 70%, #eaffff 78%, #1f96aa 84%, transparent 94%);
+  transform: translateX(-44px);
+}
+
+.brand-wordmark__energy::after {
+  animation: wordmark-charge 1.4s linear 0.35s both;
+}
+
+@media (hover: hover) {
+  .brand-wordmark:hover .brand-wordmark__energy::before {
+    animation: wordmark-charge 1.4s linear both;
+  }
+}
+
+@keyframes wordmark-charge {
+  0% { transform: translateX(-44px); opacity: 0; }
+  12% { opacity: 0.95; }
+  76% { opacity: 0.95; }
+  100% { transform: translateX(180px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-wordmark__energy { display: none; }
+}

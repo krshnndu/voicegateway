@@ -1,0 +1,182 @@
+{
+ "source": "Read-only ListEgress samples every 2 s during the test egresses we started on the LiveKit Cloud project on 2026-10-14: audio-only room recordings to throwaway Google Cloud Storage buckets (deleted after the test), one on an empty room, and one with no storage. Credentials were never stored; the request shows only its shape. ListEgress shows recent egress only; history needs LiveKit's egress webhooks (Phase 2).",
+ "egress": [
+  {
+   "id": "EG_KuDoCyU5FxVv",
+   "room": "vg-egress-1791998148",
+   "roomSid": "RM_rAmJvTTQNnoX",
+   "status": "EGRESS_FAILED",
+   "startedAt": 1791998191.7509089,
+   "endedAt": 1791998457.8609679,
+   "error": "S3 upload failed: err: operation error S3: PutObject, https response error StatusCode: 403, RequestID: , HostID: , api error SignatureDoesNotMatch: Access denied., status code: 403",
+   "details": "End reason: Source closed",
+   "sourceType": "EGRESS_SOURCE_TYPE_SDK",
+   "request": {
+    "kind": "roomComposite",
+    "audioOnly": true,
+    "layout": false,
+    "customBaseUrl": false,
+    "fileType": "OGG",
+    "storage": "s3",
+    "outputs": [
+     "fileOutputs"
+    ]
+   },
+   "backupStorageUsed": false,
+   "file": {
+    "name": "vg-egress/vg-egress-1791998148-2026-10-14T171631.ogg",
+    "sizeBytes": 0,
+    "durationS": 263.464192466,
+    "bucketHost": null,
+    "playable": null
+   },
+   "streams": [],
+   "history": [
+    {
+     "t": 1791998192.374532,
+     "status": "EGRESS_STARTING"
+    },
+    {
+     "t": 1791998194.667933,
+     "status": "EGRESS_ACTIVE"
+    },
+    {
+     "t": 1791998458.754177,
+     "status": "EGRESS_FAILED"
+    }
+   ],
+   "sampled": true
+  },
+  {
+   "id": "EG_3t22DbUGDvFM",
+   "room": "vg-egress-probe-1791998483",
+   "roomSid": "RM_ogg6CuHMw4sG",
+   "status": "EGRESS_ABORTED",
+   "startedAt": 1791998484.3095949,
+   "endedAt": 1791998510.083822,
+   "error": "Start signal not received",
+   "details": "End reason: StopEgress API",
+   "sourceType": "EGRESS_SOURCE_TYPE_WEB",
+   "request": {
+    "kind": "roomComposite",
+    "audioOnly": true,
+    "layout": false,
+    "customBaseUrl": false,
+    "fileType": "OGG",
+    "storage": "s3",
+    "outputs": [
+     "fileOutputs"
+    ]
+   },
+   "backupStorageUsed": false,
+   "file": null,
+   "streams": [],
+   "history": [
+    {
+     "t": 1791998510.083822,
+     "status": "EGRESS_ABORTED"
+    }
+   ],
+   "sampled": false
+  },
+  {
+   "id": "EG_FdgEESDa6Koa",
+   "room": "vg-egress-1791998525",
+   "roomSid": "RM_GNriLWF5Co7i",
+   "status": "EGRESS_FAILED",
+   "startedAt": 1791998532.820533,
+   "endedAt": 1791998770.721531,
+   "error": "S3 upload failed: err: operation error S3: PutObject, https response error StatusCode: 403, RequestID: , HostID: , api error SignatureDoesNotMatch: Access denied., status code: 403",
+   "details": "End reason: Source closed",
+   "sourceType": "EGRESS_SOURCE_TYPE_SDK",
+   "request": {
+    "kind": "roomComposite",
+    "audioOnly": true,
+    "layout": false,
+    "customBaseUrl": false,
+    "fileType": "OGG",
+    "storage": "s3",
+    "outputs": [
+     "fileOutputs"
+    ]
+   },
+   "backupStorageUsed": false,
+   "file": {
+    "name": "vg-egress/vg-egress-1791998525-2026-10-14T172212.ogg",
+    "sizeBytes": 0,
+    "durationS": 236.356337114,
+    "bucketHost": null,
+    "playable": null
+   },
+   "streams": [],
+   "history": [
+    {
+     "t": 1791998533.492486,
+     "status": "EGRESS_STARTING"
+    },
+    {
+     "t": 1791998535.651086,
+     "status": "EGRESS_ACTIVE"
+    },
+    {
+     "t": 1791998772.62657,
+     "status": "EGRESS_FAILED"
+    }
+   ],
+   "sampled": true
+  },
+  {
+   "id": "EG_JWpdVt4gfE9F",
+   "room": "vg-egress-1791999210",
+   "roomSid": "RM_tfAGxscxv2jZ",
+   "status": "EGRESS_COMPLETE",
+   "startedAt": 1791999218.002434,
+   "endedAt": 1791999553.177972,
+   "error": null,
+   "details": "End reason: Source closed",
+   "sourceType": "EGRESS_SOURCE_TYPE_SDK",
+   "request": {
+    "kind": "roomComposite",
+    "audioOnly": true,
+    "layout": false,
+    "customBaseUrl": false,
+    "fileType": "OGG",
+    "storage": "gcp",
+    "outputs": [
+     "fileOutputs"
+    ]
+   },
+   "backupStorageUsed": false,
+   "file": {
+    "name": "vg-egress/vg-egress-1791999210-2026-10-14T173338.ogg",
+    "sizeBytes": 871412,
+    "durationS": 334.181546028,
+    "bucketHost": "vg-egress-test-d55ea4.storage.googleapis.com",
+    "playable": "/captures/EG_JWpdVt4gfE9F.ogg"
+   },
+   "streams": [],
+   "history": [
+    {
+     "t": 1791999218.634861,
+     "status": "EGRESS_STARTING"
+    },
+    {
+     "t": 1791999220.889514,
+     "status": "EGRESS_ACTIVE"
+    },
+    {
+     "t": 1791999554.306339,
+     "status": "EGRESS_COMPLETE"
+    }
+   ],
+   "sampled": true
+  }
+ ],
+ "rejected": [
+  {
+   "t": 1791998192.4955661,
+   "case": "no-storage",
+   "error": "ServerError: ServerError(code=invalid_argument, message=request has missing or invalid field: output, status=400)"
+  }
+ ]
+}

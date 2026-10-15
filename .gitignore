@@ -1,4 +1,17 @@
-.claude
+# Claude Code: only the shared setup is committed, named one by one so a
+# contributor's personal skills and agents never show up as untracked.
+# Personal settings and impeccable's downloaded engine stay out too.
+.claude/*
+!.claude/commands/
+!.claude/settings.json
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/impeccable/
+!.claude/agents/
+.claude/agents/*
+!.claude/agents/impeccable-*.md
+.claude/skills/impeccable/scripts/bin/
+.impeccable/config.local.json
 prompt.md
 src/voicegateway/_version.py
 .venv
@@ -461,3 +474,10 @@ qa/
 # Working documents for superpowers skills stay local; never committed.
 docs/superpowers/plans/
 docs/superpowers/specs/
+
+# Design-preview media generated locally, never committed
+dashboard/public/preview/
+dashboard/public/captures/
+
+# Impeccable design-review working notes stay local
+.impeccable/

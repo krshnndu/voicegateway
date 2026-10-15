@@ -1,0 +1,301 @@
+{
+ "source": "Scraped 2026-10-12 every 2.5 s from two LiveKit Agents 1.5.7 workers' Prometheus endpoints (lk_agents_worker_load, lk_agents_active_job_count) while 10 staggered local test calls ran; LiveKit split the jobs between them. load_threshold 0.7 is each worker's configured value. Both workers ran on the same shared dev Mac, so both read the same machine CPU as load.",
+ "workers": [
+  {
+   "id": "AW_pkaytWtmaPZd",
+   "nodename": "mac",
+   "loadThreshold": 0.7,
+   "host": "local dev machine",
+   "samples": [
+    {
+     "t": "2026-10-12T20:43:57Z",
+     "load": 0.7338,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:43:59Z",
+     "load": 0.4606,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:44:02Z",
+     "load": 0.4116,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:44:04Z",
+     "load": 0.4082,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:44:07Z",
+     "load": 0.3816,
+     "activeJobs": 3
+    },
+    {
+     "t": "2026-10-12T20:44:09Z",
+     "load": 0.3532,
+     "activeJobs": 3
+    },
+    {
+     "t": "2026-10-12T20:44:12Z",
+     "load": 0.3406,
+     "activeJobs": 3
+    },
+    {
+     "t": "2026-10-12T20:44:14Z",
+     "load": 0.3596,
+     "activeJobs": 2
+    },
+    {
+     "t": "2026-10-12T20:44:17Z",
+     "load": 0.331,
+     "activeJobs": 2
+    },
+    {
+     "t": "2026-10-12T20:44:19Z",
+     "load": 0.1958,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:22Z",
+     "load": 0.3482,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:24Z",
+     "load": 0.3914,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:27Z",
+     "load": 0.3578,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:29Z",
+     "load": 0.3138,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:32Z",
+     "load": 0.2928,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:34Z",
+     "load": 0.4564,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:37Z",
+     "load": 0.4428,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:39Z",
+     "load": 0.3364,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:42Z",
+     "load": 0.266,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:45Z",
+     "load": 0.2156,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:47Z",
+     "load": 0.3428,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:50Z",
+     "load": 0.3124,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:52Z",
+     "load": 0.2652,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:55Z",
+     "load": 0.3008,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:57Z",
+     "load": 0.4428,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:45:00Z",
+     "load": 0.5548,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:45:02Z",
+     "load": 0.41,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:45:05Z",
+     "load": 0.277,
+     "activeJobs": 0
+    }
+   ]
+  },
+  {
+   "id": "AW_gkc33RamYsrb",
+   "nodename": "mac",
+   "loadThreshold": 0.7,
+   "host": "local dev machine",
+   "samples": [
+    {
+     "t": "2026-10-12T20:43:57Z",
+     "load": 0.5666,
+     "activeJobs": 6
+    },
+    {
+     "t": "2026-10-12T20:43:59Z",
+     "load": 0.3366,
+     "activeJobs": 6
+    },
+    {
+     "t": "2026-10-12T20:44:02Z",
+     "load": 0.3144,
+     "activeJobs": 6
+    },
+    {
+     "t": "2026-10-12T20:44:04Z",
+     "load": 0.4136,
+     "activeJobs": 6
+    },
+    {
+     "t": "2026-10-12T20:44:07Z",
+     "load": 0.3742,
+     "activeJobs": 5
+    },
+    {
+     "t": "2026-10-12T20:44:09Z",
+     "load": 0.294,
+     "activeJobs": 5
+    },
+    {
+     "t": "2026-10-12T20:44:12Z",
+     "load": 0.3398,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:44:14Z",
+     "load": 0.2368,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:44:17Z",
+     "load": 0.2066,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:44:19Z",
+     "load": 0.1438,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:44:22Z",
+     "load": 0.3482,
+     "activeJobs": 4
+    },
+    {
+     "t": "2026-10-12T20:44:24Z",
+     "load": 0.2808,
+     "activeJobs": 3
+    },
+    {
+     "t": "2026-10-12T20:44:27Z",
+     "load": 0.3434,
+     "activeJobs": 2
+    },
+    {
+     "t": "2026-10-12T20:44:29Z",
+     "load": 0.313,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:32Z",
+     "load": 0.24,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:34Z",
+     "load": 0.4604,
+     "activeJobs": 1
+    },
+    {
+     "t": "2026-10-12T20:44:37Z",
+     "load": 0.3162,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:39Z",
+     "load": 0.336,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:42Z",
+     "load": 0.2642,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:45Z",
+     "load": 0.1146,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:47Z",
+     "load": 0.3398,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:50Z",
+     "load": 0.3156,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:52Z",
+     "load": 0.2618,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:55Z",
+     "load": 0.24,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:44:57Z",
+     "load": 0.447,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:45:00Z",
+     "load": 0.5494,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:45:02Z",
+     "load": 0.4076,
+     "activeJobs": 0
+    },
+    {
+     "t": "2026-10-12T20:45:05Z",
+     "load": 0.2214,
+     "activeJobs": 0
+    }
+   ]
+  }
+ ]
+}

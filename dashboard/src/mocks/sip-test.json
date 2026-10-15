@@ -1,0 +1,332 @@
+{
+  "test": true,
+  "readAt": "2026-10-14T16:40:00+00:00",
+  "source": "TEST DATA, not a real project. A hand-written SIP configuration that exercises the layout: two providers, a LiveKit number, a wildcard trunk, a number with no rule, a number on two trunks and two rules on one trunk with no PIN. Numbers use the fictional 555-01xx range.",
+  "livekitNumbers": [
+    {
+      "number": "•••• 0140",
+      "status": "PHONE_NUMBER_STATUS_ACTIVE",
+      "ruleIds": [
+        "SDR_test_support"
+      ]
+    }
+  ],
+  "inbound": [
+    {
+      "id": "ST_test_in_a",
+      "numbers": [
+        "•••• 0100",
+        "•••• 0101"
+      ],
+      "allowedNumbers": 0,
+      "allowedAddresses": 4,
+      "auth": false,
+      "krisp": true,
+      "media": {
+        "encryption": "SIP_MEDIA_ENCRYPT_REQUIRE",
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "ringingTimeout": null,
+      "maxCallDuration": null,
+      "headerMappings": 0,
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "ST_test_in_b",
+      "numbers": [
+        "•••• 0120"
+      ],
+      "allowedNumbers": 0,
+      "allowedAddresses": 0,
+      "auth": false,
+      "krisp": false,
+      "media": {
+        "encryption": "SIP_MEDIA_ENCRYPT_DISABLE",
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "ringingTimeout": null,
+      "maxCallDuration": null,
+      "headerMappings": 0,
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "ST_test_in_any",
+      "numbers": [],
+      "allowedNumbers": 0,
+      "allowedAddresses": 0,
+      "auth": true,
+      "krisp": true,
+      "media": {
+        "encryption": "SIP_MEDIA_ENCRYPT_ALLOW",
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "ringingTimeout": null,
+      "maxCallDuration": null,
+      "headerMappings": 0,
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "ST_test_in_d",
+      "numbers": [
+        "•••• 0130",
+        "•••• 0101"
+      ],
+      "allowedNumbers": 0,
+      "allowedAddresses": 0,
+      "auth": true,
+      "krisp": false,
+      "media": {
+        "encryption": "SIP_MEDIA_ENCRYPT_DISABLE",
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "ringingTimeout": null,
+      "maxCallDuration": null,
+      "headerMappings": 0,
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "ST_test_in_bulk",
+      "numbers": [
+        "•••• 2000",
+        "•••• 2001",
+        "•••• 2002",
+        "•••• 2003",
+        "•••• 2004",
+        "•••• 2005",
+        "•••• 2006",
+        "•••• 2007",
+        "•••• 2008",
+        "•••• 2009",
+        "•••• 2010",
+        "•••• 2011",
+        "•••• 2012",
+        "•••• 2013",
+        "•••• 2014",
+        "•••• 2015",
+        "•••• 2016",
+        "•••• 2017",
+        "•••• 2018",
+        "•••• 2019",
+        "•••• 2020",
+        "•••• 2021",
+        "•••• 2022",
+        "•••• 2023",
+        "•••• 2024",
+        "•••• 2025",
+        "•••• 2026",
+        "•••• 2027",
+        "•••• 2028",
+        "•••• 2029",
+        "•••• 2030",
+        "•••• 2031",
+        "•••• 2032",
+        "•••• 2033",
+        "•••• 2034",
+        "•••• 2035",
+        "•••• 2036",
+        "•••• 2037",
+        "•••• 2038",
+        "•••• 2039"
+      ],
+      "allowedNumbers": 0,
+      "allowedAddresses": 4,
+      "auth": false,
+      "krisp": true,
+      "media": {
+        "encryption": "SIP_MEDIA_ENCRYPT_REQUIRE",
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "ringingTimeout": null,
+      "maxCallDuration": null,
+      "headerMappings": 0,
+      "createdAt": null,
+      "updatedAt": null
+    }
+  ],
+  "outbound": [
+    {
+      "id": "ST_test_out_twilio",
+      "address": "example.pstn.twilio.com",
+      "transport": "SIP_TRANSPORT_TLS",
+      "numbers": [
+        "•••• 0100"
+      ],
+      "destinationCountry": "US",
+      "auth": true,
+      "headerNames": [],
+      "media": {
+        "encryption": "SIP_MEDIA_ENCRYPT_REQUIRE",
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "ST_test_out_telnyx",
+      "address": "sip.telnyx.com",
+      "transport": "SIP_TRANSPORT_UDP",
+      "numbers": [
+        "•••• 0120"
+      ],
+      "destinationCountry": null,
+      "auth": true,
+      "headerNames": [],
+      "media": {
+        "encryption": "SIP_MEDIA_ENCRYPT_DISABLE",
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "ST_test_out_bulk",
+      "address": "example.pstn.twilio.com",
+      "transport": "SIP_TRANSPORT_TLS",
+      "numbers": [
+        "•••• 2000",
+        "•••• 2001",
+        "•••• 2002",
+        "•••• 2003",
+        "•••• 2004",
+        "•••• 2005",
+        "•••• 2006",
+        "•••• 2007",
+        "•••• 2008",
+        "•••• 2009",
+        "•••• 2010",
+        "•••• 2011"
+      ],
+      "destinationCountry": "US",
+      "auth": true,
+      "headerNames": [],
+      "media": {
+        "encryption": "SIP_MEDIA_ENCRYPT_REQUIRE",
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "createdAt": null,
+      "updatedAt": null
+    }
+  ],
+  "rules": [
+    {
+      "id": "SDR_test_support",
+      "type": "dispatchRuleIndividual",
+      "prefixSet": true,
+      "pin": false,
+      "trunkIds": [
+        "ST_test_in_a"
+      ],
+      "hidePhoneNumber": true,
+      "inboundNumbers": 0,
+      "agents": 1,
+      "media": {
+        "encryption": null,
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "SDR_test_sales",
+      "type": "dispatchRuleIndividual",
+      "prefixSet": true,
+      "pin": false,
+      "trunkIds": [
+        "ST_test_in_b"
+      ],
+      "hidePhoneNumber": false,
+      "inboundNumbers": 0,
+      "agents": 1,
+      "media": {
+        "encryption": null,
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "SDR_test_lobby",
+      "type": "dispatchRuleDirect",
+      "prefixSet": false,
+      "pin": false,
+      "trunkIds": [
+        "ST_test_in_b"
+      ],
+      "hidePhoneNumber": false,
+      "inboundNumbers": 0,
+      "agents": 0,
+      "media": {
+        "encryption": null,
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "SDR_test_routed",
+      "type": "dispatchRuleCallee",
+      "prefixSet": false,
+      "pin": false,
+      "trunkIds": [
+        "ST_test_in_any"
+      ],
+      "hidePhoneNumber": true,
+      "inboundNumbers": 0,
+      "agents": 1,
+      "media": {
+        "encryption": null,
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "createdAt": null,
+      "updatedAt": null
+    },
+    {
+      "id": "SDR_test_bulk",
+      "type": "dispatchRuleIndividual",
+      "prefixSet": true,
+      "pin": false,
+      "trunkIds": [
+        "ST_test_in_bulk"
+      ],
+      "hidePhoneNumber": true,
+      "inboundNumbers": 0,
+      "agents": 1,
+      "media": {
+        "encryption": null,
+        "codecs": [],
+        "onlyListedCodecs": false,
+        "mediaTimeout": null
+      },
+      "createdAt": null,
+      "updatedAt": null
+    }
+  ]
+}
