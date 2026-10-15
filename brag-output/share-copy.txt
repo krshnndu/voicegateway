@@ -1,1 +1,0 @@
-Why was that call slow? A first look at VoiceGateway's console: follow a LiveKit call from the phone line to the model. OSS + Cloud V1 in progress.
