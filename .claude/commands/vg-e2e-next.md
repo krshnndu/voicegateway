@@ -11,9 +11,9 @@ You are the driver for a dependency graph. Do not try to finish the build in one
 
 Read, in this order:
 
-1. `.agents/e2e-graph.json` — the node graph and current status. This is the single source of truth for what is done.
-2. `docs/design/e2e-build-graph.md` — autonomy zones, gates, halt rules.
-3. `docs/design/end-to-end-profiling-scope.md` — the per-feature scope. **Section 9 ("Not being built") is a hard boundary.** Do not add anything from that table, however reasonable it seems.
+1. `.agents/e2e-graph.json`: the node graph and current status. This is the single source of truth for what is done.
+2. `docs/design/e2e-build-graph.md`: autonomy zones, gates, halt rules.
+3. `docs/design/end-to-end-profiling-scope.md`: the per-feature scope. **Section 9 ("Not being built") is a hard boundary.** Do not add anything from that table, however reasonable it seems.
 
 Confirm the current git branch matches `milestones.<milestone>.branch` for the node you are about to work. If it does not, create or switch to it (`git checkout -b <branch>`). Never work a node on `main`.
 
@@ -39,7 +39,7 @@ Set `status: "in_progress"` in the manifest before you start, so a crashed run i
 
 Delegate the implementation to the `vg-e2e-node-builder` subagent via Task. Pass it:
 
-- the node object verbatim from the manifest (its `name`, `touches`, and especially its `note` — the notes carry the traps that will otherwise cost a day)
+- the node object verbatim from the manifest (its `name`, `touches`, and especially its `note`, because the notes carry the traps that will otherwise cost a day)
 - the relevant per-feature scope section from `docs/design/end-to-end-profiling-scope.md`
 - the **entire** "Not being built" table from section 9 of that document
 - the gate command it must satisfy, resolved from `gates` in the manifest
@@ -80,4 +80,4 @@ Then stop. Do not begin the next node.
 
 ## 7. Ending the loop
 
-When you hit any halt condition — HITL node, failed gate, milestone review gate, or no ready nodes — **end the loop** by calling `ScheduleWakeup` with `stop: true`, and say plainly why it stopped and what the human needs to do. A loop that keeps waking up against a HITL boundary burns tokens and changes nothing.
+When you hit any halt condition (HITL node, failed gate, milestone review gate, or no ready nodes), **end the loop** by calling `ScheduleWakeup` with `stop: true`, and say plainly why it stopped and what the human needs to do. A loop that keeps waking up against a HITL boundary burns tokens and changes nothing.
