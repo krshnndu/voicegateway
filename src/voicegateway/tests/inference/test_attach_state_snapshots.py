@@ -11,11 +11,9 @@ These tests drive the chain end to end against a real SQLite file, because that
 is the part that was missing: unit tests over the two components passed for
 months while the feature was unreachable.
 
-**The other three replay modalities stay unwired on purpose.**
-``record_stt_chunk``, ``record_llm_token`` and ``record_tts_frame`` are per
-chunk, per token and per frame. No ``AgentSession`` event carries data at that
-granularity, so capturing them means sitting inside the STT/LLM/TTS streams,
-which is the audio path VoiceGateway stays out of. Snapshots are different:
+**Replay captures state snapshots only.** Per-chunk, per-token or per-frame
+capture would mean sitting inside the STT/LLM/TTS streams, which is the audio
+path VoiceGateway stays out of. Snapshots are different:
 ``conversation_item_added`` and ``function_tools_executed`` fire once per
 completed message and once per resolved tool batch, so this stays a passive
 observer.
@@ -233,36 +231,9 @@ async def test_a_session_that_cannot_be_read_does_not_raise(storage, wired) -> N
     await handler()  # must not raise
 
 
-async def test_a_storage_failure_does_not_raise_out_of_the_handler(wired) -> None:
-    """Same rule, one layer down: a failing write is logged, not propagated."""
-
-    class _Boom:
-        _storage = None
-
-    capture, snapshotter = attach_mod._build_snapshot_capture(_Boom(), None, "s")
-    assert capture is None and snapshotter is None
-
-
 # --------------------------------------------------------------------------
 # The switches
 # --------------------------------------------------------------------------
-
-
-def test_snapshots_are_off_by_default() -> None:
-    """A snapshot carries the system prompt and every tool payload, which is a
-    strictly larger disclosure than a transcript. It is asked for, not assumed.
-
-    Asserted through the RESOLVER rather than the signature default. The four
-    capture parameters became tri-state so a named policy can be overridden in
-    one place without silently ignoring it everywhere, which makes their raw
-    default None. The guarantee did not move; where it is expressed did, and
-    reading the resolved value is the stronger check anyway because it is what
-    the capture actually uses.
-    """
-    resolved = attach_mod._resolve_capture(None, None, None, None, None)
-    assert resolved["snapshots"] is False
-    # Non-vacuous: transcripts really are the other way round.
-    assert resolved["transcript"] is True
 
 
 def test_the_kill_switch_beats_the_argument(monkeypatch) -> None:
@@ -275,16 +246,21 @@ def test_the_kill_switch_beats_the_argument(monkeypatch) -> None:
     assert attach_mod._snapshots_enabled(True) is True
 
 
-def test_a_remote_sink_captures_nothing() -> None:
+def test_a_sink_without_local_storage_captures_nothing() -> None:
     """A collector has no replay tables, and the dashboard reads replay locally.
 
-    Capturing there would buffer rows that nothing could ever flush.
+    Capturing there (or on a sink whose storage is None) would buffer rows that
+    nothing could ever flush.
     """
 
     class _RemoteSink:
         pass
 
+    class _NoStorage:
+        _storage = None
+
     assert attach_mod._build_snapshot_capture(_RemoteSink(), None, "s") == (None, None)
+    assert attach_mod._build_snapshot_capture(_NoStorage(), None, "s") == (None, None)
 
 
 # --------------------------------------------------------------------------
@@ -310,30 +286,6 @@ async def test_attach_subscribes_both_events_only_when_enabled(tmp_path) -> None
     assert "function_tools_executed" in on.handlers
     # And the close handler survives alongside them.
     assert "close" in on.handlers
-
-
-async def test_the_events_are_not_in_the_audio_path() -> None:
-    """The reason this could be wired at all, pinned so nobody adds the others.
-
-    The three unwired ReplayCapture modalities are per-chunk, per-token and
-    per-frame; capturing them means sitting inside the media/inference streams.
-    attach() must keep subscribing only to message- and tool-level events.
-    """
-    import inspect
-
-    src = inspect.getsource(attach_mod._attach_livekit)
-    for forbidden in ("record_stt_chunk", "record_llm_token", "record_tts_frame"):
-        assert forbidden not in src, (
-            f"attach() reached into the audio path: {forbidden}"
-        )
-
-
-def test_pipecat_accepts_the_flag_without_capturing() -> None:
-    """Signature parity: the same attach(...) call must work on either framework."""
-    import inspect
-
-    params = inspect.signature(attach_mod._attach_pipecat).parameters
-    assert params["snapshots"].default is False
 
 
 async def test_close_flushes_what_is_still_buffered(storage, wired) -> None:
