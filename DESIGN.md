@@ -57,6 +57,7 @@ A near-monochrome Apple palette with one blue signal.
 
 **Display and Body Font:** the system stack (`-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, sans-serif`), which renders as SF Pro on Apple devices.
 **Mono Font:** `"SF Mono", ui-monospace, "JetBrains Mono", monospace`, for ids, span names and code only. Never as a costume for numbers.
+**Wordmark:** Mergepoint and Inter Semibold lettering form one outlined SVG, in light and dark variants. The 16px lettering uses 600 weight, −0.2px tracking and an 8px visible gap from the 28px symbol. Inter follows the neutral shape of the system UI. The logo alone has a brief teal electric sweep on entry and hover; it stays static with reduced motion.
 
 **Character:** Apple's own voice: confident, tight headlines over plain, comfortable text.
 
