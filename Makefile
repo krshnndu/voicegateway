@@ -10,7 +10,7 @@ help: ## List the targets
 dev: ## Start the dashboard dev server
 	npm --prefix $(DASHBOARD) run dev
 
-test: ## Run dashboard tests (requires the test script from issue 324)
+test: ## Run dashboard helper regression tests
 	npm --prefix $(DASHBOARD) test
 
 lint: ## Run dashboard lint and TypeScript checks

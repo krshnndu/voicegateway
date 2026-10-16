@@ -7,9 +7,19 @@ export type Thresholds = { answerMs: number; joinMs: number; ttsStartMs: number 
 export const DEFAULTS: Thresholds = { answerMs: 1500, joinMs: 2000, ttsStartMs: 1000 }
 const KEY = "vg.thresholds"
 
+function validated(value: unknown): Thresholds {
+  const saved = value && typeof value === "object" ? value as Partial<Thresholds> : {}
+  const positive = (value: unknown, fallback: number) => typeof value === "number" && Number.isFinite(value) && value > 0 ? value : fallback
+  return {
+    answerMs: positive(saved.answerMs, DEFAULTS.answerMs),
+    joinMs: positive(saved.joinMs, DEFAULTS.joinMs),
+    ttsStartMs: positive(saved.ttsStartMs, DEFAULTS.ttsStartMs),
+  }
+}
+
 function load(): Thresholds {
   try {
-    return { ...DEFAULTS, ...(JSON.parse(localStorage.getItem(KEY) ?? "{}") as Partial<Thresholds>) }
+    return validated(JSON.parse(localStorage.getItem(KEY) ?? "{}"))
   } catch {
     return DEFAULTS
   }
@@ -24,12 +34,12 @@ export let JOIN_MS = current.joinMs
 export let TTS_START_MS = current.ttsStartMs
 
 export function setThresholds(next: Thresholds) {
-  current = next
-  BUDGET_MS = next.answerMs
-  JOIN_MS = next.joinMs
-  TTS_START_MS = next.ttsStartMs
+  current = validated(next)
+  BUDGET_MS = current.answerMs
+  JOIN_MS = current.joinMs
+  TTS_START_MS = current.ttsStartMs
   try {
-    localStorage.setItem(KEY, JSON.stringify(next))
+    localStorage.setItem(KEY, JSON.stringify(current))
   } catch {
     // Storage is unavailable; the values last for this page view.
   }
