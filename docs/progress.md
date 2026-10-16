@@ -67,3 +67,7 @@ Plan agreed 2026-10-15: a team builds V1 with Cloud (decision 0024) over 30 days
 - The old Python code in src/ no longer matches the docs. It stays until Phase 0.
 - Docker Desktop on the dev Mac stopped starting new containers during the spike; it needs a restart.
 - Project MCP servers (gopls, shadcn, magicui) need a one-time approval in Claude Code.
+
+### 2026-10-15: landing consolidated into the product repository
+
+The current landing page is imported into `site/landing`, with its prebuilt controls, console visuals, Pages Functions and shared PostHog integration. `site/web` remains the existing D1/API Worker. Cloudflare Pages builds `site/landing` from this repository, and the separate landing repository is superseded. The Site workflow runs `make landing-check` for tests, static export and TypeScript. Installer assets are copied from the repository root before build/dev. See decision 0025.
